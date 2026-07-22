@@ -20940,13 +20940,15 @@ mod tests {
             _conflict: ConflictDecision,
         ) -> Result<ExecutionSummary, String> {
             let mut outcomes = Vec::new();
-            for (index, item) in self.items.iter().cloned().enumerate() {
-                let status = if index == 0 {
-                    let source = item.source.as_ref().ok_or("missing source")?;
-                    fs::remove_file(LocalFileProvider::path(&source.location).map_err(
-                        |error| format!("cannot map local source for partial operation: {error}"),
-                    )?)
-                    .map_err(|error| error.to_string())?;
+            for item in self.items.iter().cloned() {
+                let source = item.source.as_ref().ok_or("missing source")?;
+                let source_path = LocalFileProvider::path(&source.location).map_err(|error| {
+                    format!("cannot map local source for partial operation: {error}")
+                })?;
+                let status = if source_path.file_name().and_then(|name| name.to_str())
+                    == Some("alpha.txt")
+                {
+                    fs::remove_file(source_path).map_err(|error| error.to_string())?;
                     ItemStatus::Completed
                 } else {
                     ItemStatus::Failed("simulated partial failure".to_owned())
