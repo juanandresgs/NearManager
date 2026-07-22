@@ -21360,6 +21360,16 @@ mod tests {
         workspace.left.toggle_selection();
         workspace.left.set_cursor(1);
         workspace.left.toggle_selection();
+        let failed_location = workspace
+            .left
+            .entries()
+            .iter()
+            .find(|entry| entry.metadata.name == "beta.txt")
+            .unwrap()
+            .resource
+            .location
+            .as_str()
+            .to_owned();
         let mut keymap = Keymap::from_toml(KEYMAP).unwrap();
 
         workspace.handle_terminal_event(&mut keymap, key("F8"));
@@ -21402,7 +21412,7 @@ mod tests {
         let Some(Overlay::Message { body, .. }) = &workspace.overlay else {
             panic!()
         };
-        assert!(body.contains("beta.txt"));
+        assert!(body.contains(&failed_location));
         assert!(body.contains("simulated partial failure"));
         fs::remove_dir_all(fixture).unwrap();
     }
