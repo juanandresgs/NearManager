@@ -21,7 +21,10 @@ Near is pre-release software. Release binaries are the simplest way to install `
    If the GitHub CLI is installed, also verify the release attestation:
 
    ```sh
-   gh attestation verify near-PLATFORM.tar.gz -R juanandresgs/NearManager
+   gh attestation verify near-PLATFORM.tar.gz \
+     -R juanandresgs/NearManager \
+     --predicate-type https://spdx.dev/Document/v2.3 \
+     --signer-workflow juanandresgs/NearManager/.github/workflows/release.yml
    ```
 
 4. Extract the archive and place `near-fm` and the companion binaries in a directory on `PATH`, such as `~/.local/bin`. Windows binaries use the `.exe` suffix.
