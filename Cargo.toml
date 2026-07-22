@@ -1,0 +1,73 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/near-core",
+    "crates/near-app",
+    "crates/near-terminal",
+    "crates/near-ui",
+    "crates/near-testkit",
+    "crates/near-local-fs",
+    "crates/near-ops",
+    "crates/near-runtime",
+    "crates/near-search",
+    "crates/near-handlers",
+    "crates/near-config",
+    "crates/near-macros",
+    "crates/near-pty",
+    "crates/near-plugins",
+    "crates/near-reference-providers",
+    "crates/near-archive",
+    "crates/near-sftp",
+    "apps/near-fm",
+    "apps/near-view",
+    "apps/near-proc",
+    "apps/near-demo",
+    "apps/near-input-probe",
+]
+
+[workspace.package]
+version = "0.2.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT OR Apache-2.0"
+authors = ["Juan Andres Guerrero-Saade and Near contributors"]
+description = "Backend-independent platform for keyboard-first terminal applications"
+repository = "https://github.com/juanandresgs/NearManager"
+homepage = "https://github.com/juanandresgs/NearManager"
+readme = "README.md"
+
+[workspace.dependencies]
+crossterm = "0.29.0"
+ratatui = "0.30.2"
+serde = { version = "1.0.228", features = ["derive", "rc"] }
+signal-hook = "0.3.18"
+thiserror = "2.0.18"
+terminal_size = "0.4.4"
+toml = "1.1.2"
+unicode-width = "0.2.2"
+portable-pty = "0.9.0"
+vt100 = "0.16.2"
+semver = { version = "1.0.27", features = ["serde"] }
+serde_json = "1.0.145"
+wasmtime = { version = "36.0.7", default-features = false, features = ["component-model", "cranelift", "runtime", "std", "wat"] }
+wit-parser = "0.239.0"
+regex = "1"
+mio = { version = "1.2.1", features = ["os-poll", "os-ext"] }
+rustix = "1.1.4"
+zip = { version = "4.6.1", default-features = false, features = ["deflate"] }
+ssh2 = "0.9.5"
+sha2 = "0.10.9"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+
+[profile.release]
+strip = "symbols"
+lto = "thin"
+codegen-units = 1

@@ -1,0 +1,27 @@
+[package]
+name = "near-search"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+
+[dependencies]
+near-core = { path = "../near-core" }
+near-runtime = { path = "../near-runtime" }
+regex.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+near-archive = { path = "../near-archive" }
+near-local-fs = { path = "../near-local-fs" }
+toml.workspace = true
+zip.workspace = true
+
+[lints]
+workspace = true

@@ -1,0 +1,23 @@
+schema_version = 1
+
+[[workflow]]
+path = ".github/workflows/ci.yml"
+allowed_events = ["pull_request", "push", "workflow_dispatch"]
+
+[[workflow]]
+path = ".github/workflows/performance.yml"
+allowed_events = ["workflow_dispatch"]
+
+[[workflow]]
+path = ".github/workflows/qualification.yml"
+allowed_events = ["workflow_dispatch"]
+
+[[workflow]]
+path = ".github/workflows/release-api.yml"
+allowed_events = ["push", "workflow_dispatch"]
+required_tag_pattern = "v*"
+
+[[workflow]]
+path = ".github/workflows/release.yml"
+allowed_events = ["push"]
+required_tag_pattern = "v*"

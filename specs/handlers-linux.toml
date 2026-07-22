@@ -1,0 +1,16 @@
+schema = 1
+
+[[handlers]]
+id = "near.handler.linux-open"
+actions = ["open", "view", "edit", "inspect"]
+
+[handlers.predicate]
+schema_version = 1
+hidden = "include"
+ignore = "none"
+
+[handlers.invocation]
+mode = "argv"
+program = "xdg-open"
+arguments = [{ value = "native-path" }]
+current_directory = { value = "native-parent" }

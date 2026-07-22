@@ -1,0 +1,330 @@
+schema_version = 1
+
+[policy]
+allowed_layers = ["core-contract", "terminal-adapter", "runtime", "reusable-surface", "application-composition", "application-policy", "platform-adapter"]
+reusable_layers = ["core-contract", "terminal-adapter", "runtime", "reusable-surface", "platform-adapter"]
+required_evidence = ["model", "render", "application"]
+public_consumer_values = ["required", "not-required", "pending"]
+exception_statuses = ["active", "expired", "closed"]
+
+[[behavior]]
+id = "ABST-APPLICATION-001"
+title = "Backend-neutral surface application facade"
+layer = "runtime"
+owner = "crates/near-ui/src/application.rs"
+application_policy = "Applications provide semantic surfaces, commands, keymaps, and themes without selecting Ratatui or Crossterm backends. Contextual help presents bindings declared by the active surface before inherited bindings so domain commands remain discoverable as the global command set grows."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-ui/src/application.rs"]
+evidence_render = ["crates/near-app/src/lib.rs", "crates/near-ui/src/application.rs"]
+evidence_application = ["apps/near-view", "apps/near-proc", "crates/near-testkit/src/lib.rs"]
+public_consumer = "required"
+consumer_evidence = ["apps/near-view/Cargo.toml", "apps/near-proc/Cargo.toml", "crates/near-testkit/Cargo.toml", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "verified"
+
+[[behavior]]
+id = "ABST-COLLECTION-001"
+title = "Deterministic collection interaction kernel and semantic rendering"
+layer = "reusable-surface"
+owner = "crates/near-ui/src/interaction_kernel.rs"
+application_policy = "Near FM supplies Far-compatible bindings, peer-panel policy, navigation-only resources, and asynchronous reveal coordination while the reusable collection owns exact ResourceRef focus and the reducer owns cursor, selection, viewport, paging, and denial transitions."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-ui/src/interaction_kernel.rs", "crates/near-ui/src/collection.rs", "specs/far-behavior-contract.toml"]
+evidence_render = ["crates/near-ui/src/collection.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "apps/near-demo/Cargo.toml", "apps/near-demo/src/main.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py", "tools/validate_far_behavior_contract.py"]
+status = "verified"
+
+[[behavior]]
+id = "ABST-SEMANTIC-001"
+title = "Backend-independent semantic scene and snapshot contracts"
+layer = "reusable-surface"
+owner = "crates/near-ui/src/surface.rs"
+application_policy = "Applications define namespaced semantic roles while themes control their presentation."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-ui/src/surface.rs"]
+evidence_render = ["crates/near-ui/src/semantic.rs", "crates/near-ui/src/scene_renderer.rs"]
+evidence_application = ["apps/near-demo", "apps/near-view", "apps/near-proc"]
+public_consumer = "required"
+consumer_evidence = ["apps/near-demo/Cargo.toml", "apps/near-view/Cargo.toml", "apps/near-proc/Cargo.toml", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "verified"
+
+[[behavior]]
+id = "ABST-LAYOUT-001"
+title = "Resizable dual-surface geometry and hit testing"
+layer = "reusable-surface"
+owner = "crates/near-ui/src/layout.rs"
+application_policy = "Applications choose bindings, minimum dimensions, and whether composition temporarily replaces dual panes with one focused full-screen surface; shared layout mechanics own resize clamping, dual-pane geometry, reset, and pointer-side resolution. Full-screen composition must route the complete rendered viewport to the visible focused surface rather than the hidden peer."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-ui/src/layout.rs"]
+evidence_render = ["crates/near-ui/src/workspace.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-DIST-001"
+title = "Verifiable cross-platform binary distribution"
+layer = "application-composition"
+owner = "tools/package_release.py"
+application_policy = "Near release archives compose the supported application binaries with the public README and both project license texts. Platform artifacts use architecture-specific names, exact archive-member checks, extracted-binary help and version smoke tests, SHA-256 sidecars, portable provenance, SPDX SBOMs, and GitHub attestations. Third-party research media without an explicit redistribution license is excluded from the public tree and every release archive."
+public_api = []
+evidence_model = ["tools/test_release_packaging.py", "tools/validate_release.py"]
+evidence_render = ["docs/INSTALL.md", "docs/releases/README.md", "tools/test_release_packaging.py"]
+evidence_application = [".github/workflows/release.yml", "docs/releases/v0.2.0.md"]
+public_consumer = "not-required"
+consumer_evidence = []
+status = "implemented"
+
+[[behavior]]
+id = "ABST-LIST-001"
+title = "Filtered list navigation and Far-compatible resource-kind presentation"
+layer = "reusable-surface"
+owner = "crates/near-ui/src/list_navigation.rs"
+application_policy = "Applications choose commands columns themes and active lookup query while shared collection matching prefers case-insensitive filename prefixes and falls back to case-insensitive internal spans only when the prefix tier is empty. Shared collection rendering keeps names unadorned, exposes directory identity through semantic roles plus Folder and Up size labels, presents local file locations as decoded native paths, and overlays only the original matched filename cells with dedicated passive and focused lookup roles. Shared navigation owns filtered movement boundaries paging viewport following and pointer-row mapping. Near FM composes lookup as a transient status-and-keybar mode, labels the contains fallback explicitly, and closes zero-or-one-result lookup movement without leaving stale status text."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-ui/src/list_navigation.rs", "crates/near-ui/src/collection.rs"]
+evidence_render = ["crates/near-ui/src/menu.rs", "crates/near-ui/src/settings_surface.rs", "crates/near-ui/src/task.rs", "crates/near-ui/src/command_history.rs", "crates/near-ui/src/folder_history.rs", "crates/near-ui/src/resource_history.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-SCREEN-001"
+title = "Stable tabs with zoomable pane presentation"
+layer = "reusable-surface"
+owner = "crates/near-ui/src/tab_registry.rs"
+application_policy = "Shared tab mechanics own stable identity, active selection, cycling, closing, and title state independently of terminal or file-manager assumptions. Shared pane presentation owns base, first/second pane, and reversible full-screen zoom state. Near FM composes persistent PTY sessions into these primitives, keeps the ordinary Far dual-panel layout as the default, uses Ctrl+O as zoom/restore, and exposes tab creation, cycling, pane placement, hiding, and close-policy commands. The F12 switcher numbers its first nine retained screens for direct activation and combines terminal tab identity with foreground-process and lifecycle state. Near FM advertises legacy-representable Ctrl+Alt bindings for terminal workspace commands and treats Ctrl+Shift forms as enhanced-keyboard aliases because legacy control-letter encoding collapses Shift identity. A terminal session has one active input and viewport projection even when its retained tab is hidden."
+public_api = ["crates/near-ui/src/tab_registry.rs", "crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-ui/src/tab_registry.rs"]
+evidence_render = ["crates/near-ui/src/workspace_terminal.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "apps/near-demo/src/main.rs"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-TASK-001"
+title = "Runtime-owned task lifecycle and reusable task history"
+layer = "runtime"
+owner = "crates/near-runtime/src/lib.rs"
+application_policy = "The runtime owns task identity and queued running completed failed and cancelled record transitions. Applications provide titles totals and messages, register user-visible background work once, and compose the reusable TaskSurface without maintaining a separate lifecycle model."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-runtime/src/lib.rs", "crates/near-ui/src/task.rs"]
+evidence_render = ["crates/near-ui/src/task.rs", "crates/near-ui/src/workspace.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "apps/near-demo/src/main.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-FAR-001"
+title = "Far-compatible file-manager workspace composition"
+layer = "application-policy"
+owner = "crates/near-ui/src/workspace.rs"
+application_policy = "Owns Far key policy, active and passive panel composition, file-manager workflows, and compatibility decisions; reusable mechanics must be delegated to lower layers. Alt-letter starts filename lookup, additional Alt-letters while the modifier remains held extend the same query, and repeating the initial one-character chord cycles matches. Once panel command-line text is active, unmodified characters including Space edit that buffer before global panel bindings, while an initial Space with an empty buffer retains Far selection behavior."
+public_api = []
+evidence_model = ["crates/near-ui/src/workspace.rs"]
+evidence_render = ["crates/near-ui/src/workspace.rs"]
+evidence_application = ["apps/near-fm", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "not-required"
+consumer_evidence = []
+status = "implemented"
+
+[[behavior]]
+id = "ABST-KEYMAP-001"
+title = "Contextual semantic keymap and binding-derived discoverability"
+layer = "runtime"
+owner = "crates/near-ui/src/keymap.rs"
+application_policy = "Applications choose default bindings, contexts, and which workflow commands occupy a contextual keybar while the runtime owns parsing, text-input capture eligibility, resolution precedence, sequences, descriptions, binding-derived labels, and repeat dispatch. Active text inputs receive character presses and repeats without Control, Alt, or Super before contextual command bindings; release events remain available to routing and keymaps. Single-stroke navigation keys repeat by default, bindings may explicitly opt in or out, release events never dispatch, and repeats never alter a pending chord."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-terminal/src/input.rs", "crates/near-ui/src/keymap.rs", "crates/near-ui/tests/keymap.rs"]
+evidence_render = ["crates/near-ui/src/workspace.rs", "crates/near-ui/tests/keymap.rs"]
+evidence_application = ["apps/near-demo", "apps/near-view", "apps/near-proc", "crates/near-ui/src/workspace.rs", "crates/near-ui/tests/keymap.rs", "specs/interaction-conformance.toml"]
+public_consumer = "required"
+consumer_evidence = ["apps/near-demo/Cargo.toml", "apps/near-view/Cargo.toml", "apps/near-proc/Cargo.toml", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "verified"
+
+[[behavior]]
+id = "ABST-SETTINGS-001"
+title = "Typed settings coordination and generic searchable settings surface"
+layer = "core-contract"
+owner = "crates/near-config/src/settings.rs"
+application_policy = "Applications register typed descriptors and appliers while shared contracts own provenance validation persistence ordering rollback apply scopes and explicit advanced-setting disclosure with hidden-entry search."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-config/src/settings.rs"]
+evidence_render = ["crates/near-ui/src/settings_surface.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "verified"
+
+[[behavior]]
+id = "ABST-DOCPOL-001"
+title = "Versioned viewer and editor policy inputs"
+layer = "core-contract"
+owner = "crates/near-config/src/document_policy.rs"
+application_policy = "Applications select layered viewer and editor documents while the reusable configuration contract owns schema validation, open-policy values, encoding defaults, validated editor tab policy, and declared application scope. Each document surface captures one resolved immutable new-surface policy; reloads change subsequent surfaces without silently rewriting an open editing session."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-config/src/document_policy.rs"]
+evidence_render = ["crates/near-ui/src/viewer.rs", "crates/near-ui/src/editor.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "apps/near-demo/src/main.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-DOCUMENT-001"
+title = "Reusable viewer and editor surfaces with layered policy inputs"
+layer = "reusable-surface"
+owner = "crates/near-ui/src/viewer.rs"
+application_policy = "Applications choose resolved document policy while shared surfaces own encoding navigation selection persistence tab-aware editor insertion and semantic rendering. Viewer-backed previews command output and diagnostics use explicit viewer roles rather than the generic terminal text role; editors use the parallel editor roles so application composition cannot introduce opaque black document panes into panel workflows."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-config/src/document_policy.rs", "crates/near-ui/src/viewer.rs", "crates/near-ui/src/editor.rs"]
+evidence_render = ["crates/near-ui/src/viewer.rs", "crates/near-ui/src/editor.rs"]
+evidence_application = ["apps/near-view", "crates/near-ui/src/workspace.rs"]
+public_consumer = "required"
+consumer_evidence = ["apps/near-view/Cargo.toml", "crates/near-app/src/lib.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-OPERATION-001"
+title = "Provider-neutral operation intent presentation"
+layer = "core-contract"
+owner = "crates/near-ops/src/lib.rs"
+application_policy = "Applications request operations and render declared decisions without inferring reversibility denial or conflict choices from operation kinds. Backends report execution effects and exact per-item failures, including a platform-selected destination, so summaries and journals retain exact restoration targets rather than guessed plan paths. Applications must present failed completion visibly with the affected resource and error instead of relying on transient status text. Provider-neutral Restore intents return recorded Trash resources to their exact original destinations through immutable plans and ordinary collision decisions; Near FM owns only the last-completed-Trash affordance and retention of failed restoration entries."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-ops/src/lib.rs"]
+evidence_render = ["crates/near-ui/src/operation_preview.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-TERMINAL-001"
+title = "Normalized terminal lifecycle with invalidation-driven rendering"
+layer = "terminal-adapter"
+owner = "crates/near-terminal/src/reactor.rs"
+application_policy = "Applications and operator probes consume normalized input through the shared reactor, which blocks for terminal readiness, PTY output wakes, task wakes, signals, disconnection, or exact deadlines; rendering occurs only after invalidation. Normalized key strokes own backend-independent PTY byte encoding for native line editors. PTY snapshots preserve indexed and RGB colors, core text attributes, combining content, and wide-cell geometry; reusable terminal surfaces project those cells through backend-independent styled scene primitives rather than flattening output to theme text. The PTY adapter exposes foreground-process labels on platforms whose native TTY process inventory supports them, falling back to the resolved shell program without polling during ordinary rendering. The reusable terminal surface may project the same persistent PTY as a dock or full user screen; applications choose panel composition and reserved shortcuts but must not substitute a second prompt, history, completion, or line editor. In Near FM panel composition, an unbound Alt letter owns filename lookup before a nonempty shell draft can consume it; bound chords and active full-screen terminal applications retain their declared ownership. The Unix adapter coalesces escape-prefixed legacy input fragmented by a host terminal or tmux before any application surface can observe a partial sequence. Legacy encoding cannot preserve Shift identity on control letters, so advertised mandatory commands require a representable fallback rather than relying on synthetic enhanced-key tests. Legacy tmux sessions declare the bounded escape-time profile required for prompt standalone Escape instead of silently presenting ambiguous back navigation. No interactive binary may retain an independent timeout-poll loop that can spin after PTY hangup. Near FM reserves Ctrl+Alt+Q as a keymap-independent emergency quit that bypasses surface routing but still returns through terminal restoration."
+public_api = ["crates/near-pty/src/lib.rs", "crates/near-terminal/src/lib.rs", "crates/near-ui/src/scene.rs", "crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-pty/src/lib.rs", "crates/near-terminal/src/input.rs", "crates/near-terminal/src/session.rs", "crates/near-terminal/src/reactor.rs", "crates/near-runtime/src/lib.rs", "crates/near-ui/src/render_loop.rs"]
+evidence_render = ["crates/near-ui/src/terminal_surface.rs", "crates/near-ui/src/workspace_terminal.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "crates/near-ui/src/workspace_terminal.rs", "crates/near-ui/src/application.rs", "apps/near-input-probe", "tools/test_idle_cpu.py", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "apps/near-demo/src/main.rs", "apps/near-input-probe/Cargo.toml", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-TRASH-001"
+title = "Native macOS Trash and Restore adapter"
+layer = "platform-adapter"
+owner = "crates/near-local-fs/src/lib.rs"
+application_policy = "Near FM dispatches hidden bounded helper modes while the macOS adapter owns native collision-safe Trash placement and native restoration from privacy-protected Trash locations. Operation summaries retain the exact native target; application code never enumerates or guesses paths under ~/.Trash."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-local-fs/src/lib.rs"]
+evidence_render = ["crates/near-ui/src/operation_preview.rs"]
+evidence_application = ["apps/near-fm/src/main.rs", "tools/test_macos_mount_safety.py"]
+public_consumer = "not-required"
+consumer_evidence = []
+status = "implemented"
+
+[[behavior]]
+id = "ABST-MENU-001"
+title = "Inspectable menu catalogs with honest application applicability"
+layer = "reusable-surface"
+owner = "crates/near-ui/src/menu.rs"
+application_policy = "Reusable menus expose their declared title and items for diagnostics and conformance; applications own popup placement, exact pointer hit boundaries, resource-, provider-, policy-, and adapter-specific availability, and must never present an enabled inert action. Every rendered item row, including the final row above the border, must remain pointer-activatable. Switching top-level headers replaces the current category without adding overlay back-history."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-ui/src/menu.rs", "specs/menu-actions.toml"]
+evidence_render = ["crates/near-ui/src/menu.rs", "crates/near-ui/src/workspace.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "project/evidence/menu-action-assessment.md"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "apps/near-demo/src/main.rs", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-FAR-002"
+title = "Far-compatible mutable Temporary Panel lifecycle"
+layer = "application-policy"
+owner = "crates/near-ui/src/workspace.rs"
+application_policy = "Near FM owns the ten-slot Far workflow, Alt+F1 and Alt+F2 side-targeted location contribution, numbered persisted previews, restart persistence, copy-as-reference policy, contextual F7 removal, explicit one/all-slot clearing, reveal command, UTF-8 list interchange, asynchronous tmp command capture, labeled list menus, full-panel mode, safe-mode denial, arbitrary command-text rows, stale-reference retention, refresh availability, task-history presentation, and bindings. F5 into a Temporary Panel only adds durable references and never moves renames or deletes source resources. Safe mode denies every reference mutation path, including direct add/remove/clear, list import, replace mode, and command-output capture. Providers own parsing of native reference text while shared collection selection, provider-neutral ResourceRef identity, state-document persistence, tasks, menus, dialogs, dual-surface composition, and keymap resolution remain reusable lower-layer contracts."
+public_api = []
+evidence_model = ["crates/near-ui/src/workspace.rs", "crates/near-local-fs/src/lib.rs"]
+evidence_render = ["crates/near-ui/src/workspace.rs", "specs/keymap.toml"]
+evidence_application = ["docs/near-temporary-panels.md", "specs/operator-workflows.toml", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "not-required"
+consumer_evidence = []
+status = "partial"
+
+[[behavior]]
+id = "ABST-STATE-001"
+title = "Crash-recoverable application state documents"
+layer = "core-contract"
+owner = "crates/near-core/src/state.rs"
+application_policy = "Applications choose versioned state schemas and mutation timing. The core contract separates state serialization from storage, and the local adapter replaces complete documents while retaining the previous recoverable copy. A failed load or save must not silently replace the last persisted state."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-local-fs/src/lib.rs"]
+evidence_render = ["crates/near-ui/src/workspace.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs"]
+public_consumer = "not-required"
+consumer_evidence = []
+status = "implemented"
+
+[[behavior]]
+id = "ABST-MUTATION-001"
+title = "Provider-neutral resource classification and mutation eligibility"
+layer = "core-contract"
+owner = "crates/near-core/src/provider.rs"
+application_policy = "Applications choose how to present denials and safe alternatives; providers classify resources and deny Trash delete or wipe before operation planning while operation services retain defense-in-depth validation. On macOS every direct child of the /Volumes namespace remains a protected mount root even when the volume is currently unmounted or stale."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-core/src/resource.rs", "crates/near-core/src/provider.rs", "crates/near-local-fs/src/lib.rs"]
+evidence_render = ["crates/near-ui/src/workspace.rs"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "tools/test_macos_mount_safety.py", "specs/operator-workflows.toml"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-COMMAND-001"
+title = "Argument-safe command discoverability"
+layer = "core-contract"
+owner = "crates/near-core/src/command.rs"
+application_policy = "Command descriptors declare whether zero-argument invocation is valid. Generic palettes must exclude commands with required caller-supplied arguments; applications may expose those commands only through surfaces that collect and validate the required arguments before dispatch."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-core/src/command.rs"]
+evidence_render = ["crates/near-ui/src/workspace.rs", "tools/test_tmux_terminal_workflows.py"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "apps/near-demo/src/main.rs", "project/evidence/tui-abstraction-harvest.md", "tools/validate_tui_proof.py"]
+status = "implemented"
+
+[[behavior]]
+id = "ABST-PALETTE-001"
+title = "Command palette plain-text filtering and activation"
+layer = "application-composition"
+owner = "crates/near-ui/src/workspace.rs"
+application_policy = "Near FM composes the registry-backed zero-argument palette, filters descriptors through the reusable argument-safe discoverability contract, and must route ordinary text, paste, Backspace, selection-search input, navigation, and activation consistently; reusable command descriptors and selection search remain lower-layer contracts."
+public_api = []
+evidence_model = ["crates/near-ui/src/workspace.rs"]
+evidence_render = ["crates/near-ui/src/workspace.rs", "tools/test_tmux_terminal_workflows.py"]
+evidence_application = ["crates/near-ui/src/workspace.rs", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "not-required"
+consumer_evidence = []
+status = "implemented"
+
+[[behavior]]
+id = "ABST-SHELL-001"
+title = "Versioned shared shell profile and child close lifecycle"
+layer = "runtime"
+owner = "crates/near-pty/src/lib.rs"
+application_policy = "The runtime resolves and captures one immutable shell profile per PTY session, exposes the resolved mode and close policy, owns child termination, and wakes the blocking event reactor when the child exits. Applications present the policy honestly: warn presents terminate, keep-running/hide, and cancel decisions while a child runs and retains completed output; keep-open hides but retains the child; close terminates on request or removes the screen when the shell exits. A running child is never silently discarded, and settings changed after spawn apply only to new sessions."
+public_api = ["crates/near-app/src/lib.rs"]
+evidence_model = ["crates/near-pty/src/lib.rs", "crates/near-runtime/src/lib.rs"]
+evidence_render = ["crates/near-ui/src/terminal_surface.rs"]
+evidence_application = ["apps/near-fm/tests/shell_close_policy.rs", "tools/test_tmux_terminal_workflows.py"]
+public_consumer = "required"
+consumer_evidence = ["crates/near-app/src/lib.rs", "apps/near-demo/src/main.rs"]
+status = "implemented"

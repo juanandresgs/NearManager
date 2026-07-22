@@ -1,0 +1,40 @@
+[package]
+name = "near-ui"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+
+[features]
+default = []
+embedded-pty = ["dep:near-pty"]
+
+[dependencies]
+near-core = { path = "../near-core" }
+near-config = { path = "../near-config" }
+near-terminal = { path = "../near-terminal" }
+near-ops = { path = "../near-ops" }
+near-runtime = { path = "../near-runtime" }
+near-search = { path = "../near-search" }
+near-macros = { path = "../near-macros" }
+near-handlers = { path = "../near-handlers" }
+near-pty = { path = "../near-pty", optional = true }
+ratatui.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+toml.workspace = true
+unicode-width.workspace = true
+regex.workspace = true
+
+[dev-dependencies]
+near-archive = { path = "../near-archive" }
+near-local-fs = { path = "../near-local-fs" }
+zip.workspace = true
+
+[lints]
+workspace = true

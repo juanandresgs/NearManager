@@ -1,0 +1,15 @@
+name: Scheduled Performance
+
+on:
+  workflow_dispatch:
+
+jobs:
+  navigation-latency:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Enforce warm navigation p95 and idle wait policy
+        run: cargo test -p near-testkit --test performance && cargo test -p near-terminal idle_runtime_wait_is_blocking_and_nonzero

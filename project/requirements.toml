@@ -1,0 +1,856 @@
+schema = 1
+
+[[requirement]]
+id = "REQ-CORE-001"
+title = "Semantic platform abstraction"
+type = "constraint"
+priority = "must"
+status = "verified"
+statement = "The platform MUST represent user-visible behavior as semantic commands operating on contextual resources and presented through composable surfaces."
+capabilities = ["CAP-FOUNDATION", "CAP-INTERACTION", "CAP-RESOURCE", "CAP-WORKSPACE"]
+milestone = "M0"
+rationale = "This is the intended abstraction and prevents the framework from becoming a Far-specific widget collection."
+acceptance = ["No public command is named after a default key", "A non-filesystem provider can use the same command and surface contracts"]
+verification = "inspection"
+planned_evidence = ["crates/near-core/src/provider.rs", "crates/near-ui/src/workspace.rs", "apps/near-demo/src/main.rs", "project/evidence/M0-interaction-laboratory.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/decisions/0002-semantic-command-resource-model.md"]
+
+[[requirement]]
+id = "REQ-CMD-001"
+title = "Stable command registry"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST register every invocable behavior under a stable namespaced command identifier with metadata, availability, safety, and argument schema."
+capabilities = ["CAP-INTERACTION"]
+milestone = "M0"
+rationale = "Commands unify keys, menus, help, macros, plugins, tests, and automation."
+acceptance = ["Every visible action resolves to a registered command", "Unavailable commands report a reason", "Command IDs remain independent from labels and bindings"]
+verification = "test"
+planned_evidence = ["crates/near-ui/src/command.rs", "crates/near-ui/src/workspace.rs", "project/evidence/M0-interaction-laboratory.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/decisions/0002-semantic-command-resource-model.md"]
+
+[[requirement]]
+id = "REQ-KEY-001"
+title = "Contextual keymap resolution"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST resolve normalized key strokes through a layered context trie supporting single keys, sequences, inheritance, removal, and parameterized commands."
+capabilities = ["CAP-INTERACTION"]
+milestone = "M0"
+rationale = "A reusable key language is the main interaction contract across the suite."
+acceptance = ["More-specific contexts override broader contexts deterministically", "Sequence timeout is testable with a fake clock", "Bindings can pass typed command arguments"]
+verification = "test"
+planned_evidence = ["crates/near-ui/src/keymap.rs", "project/evidence/M0-interaction-laboratory.md"]
+design_refs = ["docs/near-platform-blueprint.md", "specs/keymap.toml", "project/decisions/0003-contextual-keymap-language.md"]
+
+[[requirement]]
+id = "REQ-KEY-002"
+title = "Binding-derived discoverability"
+type = "functional"
+priority = "must"
+status = "implemented"
+statement = "Near MUST generate key bars, effective-key help, command palette shortcuts, and pending-sequence hints from the resolved keymap rather than hard-coded labels."
+capabilities = ["CAP-INTERACTION", "CAP-WORKSPACE"]
+milestone = "M0"
+rationale = "Discoverability must remain correct after rebinding."
+acceptance = ["Changing a binding changes all visible hints on the next reload", "Conflicts include context and source origin", "Partial sequences show valid continuations"]
+verification = "test"
+planned_evidence = ["crates/near-ui/src/workspace.rs", "project/evidence/M0-interaction-laboratory.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-HELP-001"
+title = "Version-matched hypertext help"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST provide runtime-generated contextual hypertext help with contents, searchable topics, selectable links, back navigation, effective key bindings, and discoverable extension commands and prefixes."
+capabilities = ["CAP-INTERACTION", "CAP-WORKSPACE", "CAP-EXTENSIONS"]
+milestone = "M3"
+rationale = "Keyboard-first applications require help that matches the running command registry, active keymap, and installed extensions rather than a stale external manual."
+acceptance = ["F1 opens help for the active surface context", "Shift+F1 opens contents and F7 searches all topics", "Enter follows links while Alt+F1 or Backspace returns through topic history", "Shift+F2 lists installed extension commands and prefixes", "Rebound keys and runtime package version appear without editing help text"]
+verification = "test"
+planned_evidence = ["crates/near-ui/src/help.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-help.md", "project/evidence/M3-hypertext-help.md"]
+design_refs = ["docs/farmanager-3-hotkeys.md", "docs/near-platform-blueprint.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-HISTORY-001"
+title = "Persistent operational histories"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST persist searchable command, folder, viewed-resource, and edited-resource histories with provider identity, locking, clearing, unavailable-entry diagnostics, and independently configurable retention."
+capabilities = ["CAP-INTERACTION", "CAP-WORKSPACE", "CAP-CONFIG", "CAP-RESOURCE"]
+milestone = "M3"
+rationale = "A keyboard-first workspace depends on durable recall across commands, navigation, viewing, and editing without silently losing unavailable resources."
+acceptance = ["Alt+F8 Alt+F11 and Alt+F12 expose the Far history families", "Filtering locking and unlocked-entry clearing work in every history", "Layered configuration controls command folder and resource retention independently", "Unavailable provider entries remain visible with diagnostics"]
+verification = "test"
+planned_evidence = ["crates/near-core/src/navigation.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/resource_history.rs", "crates/near-ui/src/workspace.rs", "specs/history.toml", "specs/keymap.toml", "project/evidence/M3-histories.md"]
+design_refs = ["docs/farmanager-3-research.md", "docs/near-configuration.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-THEME-001"
+title = "Semantic theme roles"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST style rendered cells through semantic role identifiers with documented fallback chains and terminal color degradation."
+capabilities = ["CAP-RENDERING", "CAP-CONFIG"]
+milestone = "M0"
+rationale = "Themes must apply across unrelated applications without knowing widget coordinates."
+acceptance = ["Application roles declare a core fallback", "The same scene renders under Far classic terminal-native and high-contrast themes", "Focus and selection remain distinguishable with 16 colors"]
+verification = "test"
+planned_evidence = ["crates/near-ui/src/theme.rs", "crates/near-ui/src/semantic.rs", "crates/near-ui/src/workspace.rs", "project/evidence/M0-interaction-laboratory.md"]
+design_refs = ["docs/near-platform-blueprint.md", "specs/theme.toml", "project/decisions/0004-semantic-theme-system.md"]
+
+[[requirement]]
+id = "REQ-HIGHLIGHT-001"
+title = "Rule-based panel decoration and grouping"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST decorate and group collection resources through versioned provider-neutral rules that combine masks metadata and attributes with explicit priority inheritance semantic roles marks and sort groups."
+capabilities = ["CAP-RENDERING", "CAP-WORKSPACE", "CAP-SEARCH", "CAP-CONFIG"]
+milestone = "M3"
+rationale = "Large collections need user-defined visual classification and ordering without embedding filename policy in panel code."
+acceptance = ["Rules match names kinds sizes dates hidden state and permissions", "Marks and semantic roles remain visible without obscuring focus or selection", "Shift+F11 and the sort menu toggle rule-defined groups", "Priority inheritance and configuration provenance are inspectable"]
+verification = "test"
+planned_evidence = ["crates/near-search/src/lib.rs", "crates/near-ui/src/highlighting.rs", "crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "specs/highlighting.toml", "specs/theme.toml", "project/evidence/M3-highlighting.md"]
+design_refs = ["docs/farmanager-3-research.md", "docs/near-configuration.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-UI-001"
+title = "Composable surface protocol"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST expose behavior-rich composable surfaces for collections, trees, viewers, inspectors, terminals, tasks, menus, dialogs, and help without exposing Ratatui types publicly."
+capabilities = ["CAP-WORKSPACE", "CAP-RENDERING"]
+milestone = "M0"
+rationale = "Applications need reusable interaction structures while retaining rendering backend independence."
+acceptance = ["A custom application can compose surfaces without importing Ratatui", "Focus and command routing are owned by the shell", "Custom surfaces render through Near scene primitives"]
+verification = "demonstration"
+planned_evidence = ["apps/near-demo/Cargo.toml", "apps/near-demo/src/main.rs", "crates/near-ui/src/catalog_tests.rs", "crates/near-ui/src/scene.rs", "crates/near-ui/src/surface.rs", "crates/near-ui/src/shell.rs", "crates/near-ui/src/workspace.rs", "docs/near-surface-api.md", "project/evidence/M0-interaction-laboratory.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/decisions/0005-ratatui-as-private-substrate.md"]
+
+[[requirement]]
+id = "REQ-UI-002"
+title = "Focused and peer resource views"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST support a focused surface and optional peer surface so commands can derive source, destination, comparison, and inspection context without file-manager-specific assumptions."
+capabilities = ["CAP-WORKSPACE", "CAP-RESOURCE"]
+milestone = "M0"
+rationale = "This abstracts Far's active and passive panels into a reusable relationship."
+acceptance = ["Focus can move and peers can swap independently", "Single-surface applications do not require a peer", "Command context includes both locations when a peer exists"]
+verification = "test"
+planned_evidence = ["crates/near-ui/src/shell.rs", "crates/near-ui/src/collection.rs", "project/evidence/M0-interaction-laboratory.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-TERM-001"
+title = "Fail-safe terminal lifecycle"
+type = "quality"
+priority = "must"
+status = "verified"
+statement = "Near MUST restore terminal mode, cursor, screen, mouse, paste, and keyboard protocol state after normal exit, initialization failure, panic, common termination signals, and external-tool handoff."
+capabilities = ["CAP-FOUNDATION", "CAP-RENDERING", "CAP-QUALITY"]
+milestone = "M1"
+rationale = "Terminal corruption is a critical reliability failure."
+acceptance = ["Automated tests cover normal error and panic restoration", "External editor round trips restore identical workspace rendering", "Unsupported capabilities degrade without blocking startup"]
+verification = "test"
+planned_evidence = ["crates/near-terminal/src/session.rs", "crates/near-terminal/src/signal.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/tests/external_handoff.rs", "project/evidence/M1-terminal-and-external-tools.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/architecture/README.md"]
+
+[[requirement]]
+id = "REQ-TERM-002"
+title = "Enhanced and legacy keyboard input"
+type = "quality"
+priority = "should"
+status = "verified"
+statement = "Near SHOULD negotiate progressive keyboard enhancements when supported and MUST retain deterministic legacy terminal input behavior when they are unavailable."
+capabilities = ["CAP-INTERACTION", "CAP-PORTABILITY"]
+milestone = "M1"
+rationale = "Modern protocols solve ambiguity, but broad terminal support requires fallback."
+acceptance = ["Capability diagnostics report active keyboard mode", "Legacy fixtures cover Escape Alt and function keys", "Enhanced fixtures cover repeat release and disambiguated keys"]
+verification = "test"
+planned_evidence = ["crates/near-terminal/src/input.rs", "crates/near-terminal/src/session.rs", "apps/near-fm/tests/external_handoff.rs", "docs/near-terminal-runtime.md", "project/evidence/M1-keyboard-input.md", "project/evidence/M1-terminal-and-external-tools.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-TERM-003"
+title = "Provider-neutral mouse interaction"
+type = "functional"
+priority = "should"
+status = "verified"
+statement = "Near SHOULD normalize terminal mouse input and expose keyboard-equivalent panel, menu, wheel, key-bar, selection, and cross-peer drag workflows without making a mouse mandatory."
+capabilities = ["CAP-INTERACTION", "CAP-WORKSPACE", "CAP-OPERATIONS", "CAP-PORTABILITY"]
+milestone = "M1"
+rationale = "Far integrates mouse input deeply while retaining keyboard-first operation; the abstraction must preserve semantic commands rather than add widget-specific side channels."
+acceptance = ["Mouse capture is enabled and restored independently", "Clicks focus panels choose rows and activate menu or key-bar commands", "Right click follows the panel selection policy", "Wheel input routes by active surface", "Cross-peer drag previews copy and Shift-drag previews move"]
+verification = "test"
+planned_evidence = ["crates/near-terminal/src/input.rs", "crates/near-terminal/src/session.rs", "crates/near-ui/src/menu.rs", "crates/near-ui/src/workspace.rs", "docs/near-mouse-interaction.md", "project/evidence/M1-mouse-interaction.md"]
+design_refs = ["docs/farmanager-3-research.md", "docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-ARCHIVE-001"
+title = "Provider-backed archive workflows"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST browse supported archives as provider collections and MUST route extraction, creation, and update through immutable conflict-aware operation plans."
+capabilities = ["CAP-RESOURCE", "CAP-OPERATIONS", "CAP-EXTENSIONS", "CAP-SECURITY"]
+milestone = "M3"
+rationale = "Far treats archives as panels rather than opaque helper commands; the reusable abstraction must preserve ordinary navigation, viewing, copy, preview, conflict, cancellation, and audit semantics."
+acceptance = ["A recognized archive opens through a provider mount without filesystem-specific UI branching", "Parent navigation crosses safely between archive and source providers", "Copying out extracts through the normal operation preview and conflict resolver", "Copying in creates or updates only when the archive provider advertises capabilities", "Traversal symlinks oversized entries cancellation and partial replacement are handled safely"]
+verification = "test"
+planned_evidence = ["crates/near-core/src/provider.rs", "crates/near-archive/src/lib.rs", "crates/near-ops/src/lib.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "docs/near-archives.md", "project/evidence/M3-archive-workflows.md"]
+design_refs = ["docs/farmanager-3-research.md", "docs/near-platform-blueprint.md", "docs/near-operations.md"]
+
+[[requirement]]
+id = "REQ-RES-001"
+title = "Provider-neutral resource model"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST represent navigable domain objects as provider-neutral URI-like resources with portable metadata, extension metadata, stable identity where available, and explicit capability sets."
+capabilities = ["CAP-RESOURCE"]
+milestone = "M1"
+rationale = "Filesystem and non-filesystem applications need the same navigation and command model."
+acceptance = ["Local files search results processes and plugin items share ResourceRef", "Display paths are not used as stable identity", "Unsupported operations are absent from capability sets"]
+verification = "test"
+planned_evidence = ["crates/near-core/src/provider.rs", "crates/near-core/src/resource.rs", "crates/near-local-fs/src/lib.rs", "crates/near-reference-providers/src/lib.rs", "apps/near-demo/src/main.rs", "docs/near-reference-providers.md", "project/evidence/M1-local-filesystem.md", "project/evidence/M1-resource-identity.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/decisions/0002-semantic-command-resource-model.md"]
+
+[[requirement]]
+id = "REQ-RES-002"
+title = "Paged cancellable provider listing"
+type = "quality"
+priority = "must"
+status = "verified"
+statement = "Resource providers MUST support cancellable paged or streaming listings and Near MUST reject stale results using surface generation identifiers."
+capabilities = ["CAP-RESOURCE", "CAP-QUALITY"]
+milestone = "M1"
+rationale = "Large, slow, and remote collections must not freeze or overwrite newer navigation state."
+acceptance = ["First page can render before complete metadata hydration", "Cancelled generations cannot update a surface", "Partial provider failures remain visible and non-fatal"]
+verification = "test"
+planned_evidence = ["crates/near-core/src/provider.rs", "crates/near-runtime/src/lib.rs", "crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "project/evidence/M1-resource-runtime.md", "project/evidence/M1-local-filesystem.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-FS-001"
+title = "macOS path and metadata fidelity"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "The local filesystem provider MUST preserve non-Unicode path data and expose macOS-relevant links, permissions, ownership, timestamps, ACL summaries, extended attributes, Finder tags, and quarantine state without lossy conversion."
+capabilities = ["CAP-FILESYSTEM", "CAP-PORTABILITY"]
+milestone = "M1"
+rationale = "A macOS-first file workspace must not simplify away platform semantics."
+acceptance = ["Invalid-text paths remain addressable through reversible display escaping", "Symlink targets and package directories are distinguishable", "Metadata permission failures are reported per field or item"]
+verification = "test"
+planned_evidence = ["crates/near-local-fs/src/lib.rs", "project/evidence/M1-local-filesystem.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-FS-002"
+title = "Responsive large-directory navigation"
+type = "quality"
+priority = "must"
+status = "verified"
+statement = "The local filesystem provider MUST render an initial directory listing without waiting to stat every item and SHOULD support smooth navigation through at least 100000 virtualized entries."
+capabilities = ["CAP-FILESYSTEM", "CAP-QUALITY"]
+milestone = "M1"
+rationale = "Far-like immediacy requires avoiding eager metadata bottlenecks."
+acceptance = ["Initial names appear before full metadata completion", "Warm local key-to-render p95 is below 16 milliseconds", "Idle CPU approaches zero after hydration"]
+verification = "test"
+planned_evidence = ["crates/near-local-fs/src/lib.rs", "crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "project/evidence/M1-local-filesystem.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-OPS-001"
+title = "Plan before mutation"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Every mutating resource operation MUST produce an inspectable operation plan before execution containing resolved targets, conflict policy, metadata policy, recovery policy, safety class, and cross-device behavior."
+capabilities = ["CAP-OPERATIONS", "CAP-SECURITY"]
+milestone = "M1"
+rationale = "Separating planning from execution enables safe previews, automation, and deterministic tests."
+acceptance = ["Copy move rename link Trash delete and attribute changes use plans", "Single and selected-resource rename supports deterministic templates and rejects duplicate or unsafe targets before planning", "Hard symbolic and junction-equivalent links use explicit typed intents and reject unsupported source combinations before planning", "Portable read-only Unix mode ownership and timestamp updates support recursive itemized plans and exact partial failures", "Operation previews list exact source-to-target mappings conflicts recovery policy and when move becomes copy plus delete", "Execution consumes an immutable plan identifier"]
+verification = "test"
+planned_evidence = ["crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/operation_preview.rs", "crates/near-ui/src/workspace.rs", "project/evidence/M1-operations.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-OPS-002"
+title = "Cancellable auditable operations"
+type = "quality"
+priority = "must"
+status = "verified"
+statement = "Long-running operations MUST expose progress and cancellation, remain input-responsive, journal decisions and outcomes, and report exact completed, skipped, failed, and pending resources."
+capabilities = ["CAP-OPERATIONS", "CAP-QUALITY"]
+milestone = "M1"
+rationale = "File operations must be trustworthy under partial failure."
+acceptance = ["Cancellation leaves a precise outcome summary", "Conflict decisions can apply once or to remaining items", "The journal supports retry and post-operation inspection"]
+verification = "test"
+planned_evidence = ["crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-runtime/src/lib.rs", "crates/near-ui/src/workspace.rs", "project/evidence/M1-operations.md", "project/evidence/M1-async-runtime.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-SEC-001"
+title = "Destructive action safeguards"
+type = "security"
+priority = "must"
+status = "verified"
+statement = "Near MUST classify command safety and enforce configurable confirmation, Trash preference, stale-context rejection, and stronger safeguards for irreversible high-impact operations."
+capabilities = ["CAP-SECURITY", "CAP-OPERATIONS"]
+milestone = "M1"
+rationale = "Keyboard efficiency cannot bypass data-loss controls."
+acceptance = ["Default delete uses Trash when supported", "A command cannot execute against a context generation different from its preview", "Permanent recursive deletion requires explicit high-impact confirmation"]
+verification = "test"
+planned_evidence = ["crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/confirmation.rs", "crates/near-ui/src/operation_preview.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/confirmations.toml", "project/security/threat-model.toml", "project/evidence/M1-operations.md", "project/evidence/M1-confirmation-policy.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/architecture/README.md"]
+
+[[requirement]]
+id = "REQ-VIEW-001"
+title = "Streaming text and hex viewer"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST provide an embeddable viewer that supports streaming text and hex data, bidirectional text and byte search, wrapping, absolute relative percentage and line positioning, encodings, provider-scoped persistent bookmarks and navigation history, stream and rectangular selection, platform clipboard copy, and quick-view operation without loading complete large resources into memory."
+capabilities = ["CAP-VIEWING", "CAP-WORKSPACE"]
+milestone = "M1"
+rationale = "Immediate inspection is central to the intended workflow."
+acceptance = ["Text and hex modes share resource streams", "Large files open within a bounded memory budget", "Bookmarks positions and significant navigation history restore for the same provider resource", "Shift and Alt+Shift create stream and rectangular selections that copy through the platform clipboard contract", "Quick view cancels stale cursor-driven loads"]
+verification = "test"
+planned_evidence = ["crates/near-core/src/clipboard.rs", "crates/near-core/src/navigation.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/viewer.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "crates/near-runtime/src/lib.rs", "specs/keymap.toml", "project/evidence/M1-streaming-viewer.md", "project/evidence/M3-viewer-interaction.md", "project/evidence/M1-async-runtime.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-EDIT-001"
+title = "Provider-neutral internal editor baseline"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST provide a full-screen internal text editor that loads and saves writable resources through provider contracts and supports navigation text mutation undo redo literal and regex search stream and rectangular selection clipboard operations Save As explicit encoding BOM and EOL control lossy-save confirmation external-change recovery and guarded discard."
+capabilities = ["CAP-VIEWING", "CAP-WORKSPACE", "CAP-RESOURCE", "CAP-INTERACTION"]
+milestone = "M3"
+rationale = "Internal editing is a core keyboard-first workflow and must not depend on native filesystem paths or external applications."
+acceptance = ["F4 opens a writable provider resource in the internal editor", "Multiple documents remain live across panel and screen switching", "Provider-scoped cursor positions survive application restart", "Shift and Alt+Shift create stream and rectangular blocks with matching cut copy and paste semantics", "Persistent blocks are controlled by layered editor settings and a runtime command", "Literal and regex replacement support captures replace-all style preservation and navigable find-all results", "F2 saves the current format and Shift+F2 Save As selects provider location encoding BOM and EOL", "Lossy conversion requires explicit confirmation", "Provider version conflicts offer reload comparison and keep-local overwrite", "Saving replaces provider content only after a successful write request", "Undo redo search selection clipboard and dirty-close protection are covered by deterministic tests"]
+verification = "test"
+planned_evidence = ["crates/near-core/src/provider.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/editor.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-internal-editor.md", "project/evidence/M3-internal-editor.md", "project/evidence/M3-editor-save-as.md"]
+design_refs = ["docs/near-internal-editor.md", "docs/near-platform-blueprint.md", "project/decisions/0002-semantic-command-resource-model.md"]
+
+[[requirement]]
+id = "REQ-EXT-001"
+title = "Suspend and run interactive tools"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST support suspending its terminal session to run interactive external tools attached to the original terminal and then resume the unchanged workspace safely."
+capabilities = ["CAP-SHELL", "CAP-VIEWING"]
+milestone = "M1"
+rationale = "Vim Neovim SSH and specialist tools deliver immediate power without waiting for embedded PTY correctness."
+acceptance = ["Vim and Neovim round trips restore terminal state", "Child exit status is available to commands", "Workspace focus cursor selections and history survive the handoff"]
+verification = "test"
+planned_evidence = ["crates/near-core/src/external.rs", "crates/near-terminal/src/session.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/tests/external_handoff.rs", "project/evidence/M1-terminal-and-external-tools.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/decisions/0006-suspend-before-embedded-pty.md"]
+
+[[requirement]]
+id = "REQ-HANDLER-001"
+title = "Typed external handler rules"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST select internal or external handlers through resource predicates and MUST construct external invocations as structured argv unless shell evaluation is explicitly requested."
+capabilities = ["CAP-VIEWING", "CAP-SHELL", "CAP-CONFIG"]
+milestone = "M3"
+rationale = "Typed templates preserve filenames and avoid accidental shell injection."
+acceptance = ["Paths containing whitespace newlines and shell metacharacters remain single arguments", "Shell mode is visibly marked and opt-in", "Enter on an ordinary file resolves the Open action while F3 and F4 retain independent View and Edit policies", "Platform defaults use Launch Services xdg-open or Windows shell association instead of the internal viewer", "View edit and execute alternatives preserve configured order", "A named matching alternative can be selected safely", "Handler selection is explainable in diagnostics"]
+verification = "test"
+planned_evidence = ["crates/near-handlers/src/lib.rs", "crates/near-handlers/tests/fixtures/handlers-v1.toml", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "specs/handlers.toml", "specs/handlers-linux.toml", "specs/handlers-windows.toml", "tools/test_tmux_terminal_workflows.py", "project/evidence/M3-handlers.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-SEARCH-001"
+title = "Shared predicate model"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST use one typed predicate model for panel filters, recursive search, selection rules, and operation scopes, including composable name masks and regex, text regex and hex content, explicit encodings, kinds, attributes, sizes, and dates."
+capabilities = ["CAP-SEARCH", "CAP-OPERATIONS"]
+milestone = "M3"
+rationale = "Duplicated filter semantics create surprising mismatches and unsafe scopes."
+acceptance = ["A saved predicate yields the same resource set in panel and operation contexts", "Name content kind size date permission hidden and ignore criteria compose in one request", "Content supports text regex and hexadecimal matching with explicit automatic UTF-8 UTF-16LE UTF-16BE or Latin-1 decoding", "Invalid regex hex range date mode encoding and attribute inputs identify the responsible field", "Predicates serialize with a versioned schema"]
+verification = "test"
+planned_evidence = ["crates/near-search/src/lib.rs", "crates/near-search/tests/fixtures/predicate-v1.toml", "crates/near-ui/src/workspace.rs", "docs/near-search.md", "project/evidence/M3-search.md", "project/evidence/M3-search-advanced.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-SEARCH-002"
+title = "Streaming actionable search results"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Recursive and content searches MUST stream cancellable results into a provider-backed collection whose items retain source identity and normal resource commands."
+capabilities = ["CAP-SEARCH", "CAP-RESOURCE"]
+milestone = "M3"
+rationale = "Search results should become a working panel rather than a dead report."
+acceptance = ["Results can be viewed edited copied and revealed", "Cancelling search does not discard already received results", "Search progress does not starve input"]
+verification = "test"
+planned_evidence = ["crates/near-search/src/lib.rs", "crates/near-ui/src/workspace.rs", "project/workflows.toml", "project/evidence/M3-search.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-MACRO-001"
+title = "Semantic command macros"
+type = "functional"
+priority = "should"
+status = "verified"
+statement = "Near SHOULD record persist bind manage diagnose and replay macros as semantic command invocations with typed arguments and context conditions rather than raw terminal byte sequences."
+capabilities = ["CAP-INTERACTION", "CAP-CONFIG"]
+milestone = "M3"
+rationale = "Macros should survive key rebinding and terminal differences."
+acceptance = ["Rebinding ordinary command keys does not change recorded macro behavior", "Macro execution respects macro-level and step-level context conditions command availability trust and safety", "Users can list replay edit conditions and trust assign or remove canonical bindings diagnose and explicitly delete macros", "Catalog changes persist atomically to the configured macros document", "Schema version 1 records remain readable while version 2 adds bindings"]
+verification = "test"
+planned_evidence = ["crates/near-macros/src/lib.rs", "crates/near-macros/tests/fixtures/macros-v1.toml", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/macros.toml", "specs/keymap.toml", "docs/near-macros.md", "project/evidence/M3-macros.md"]
+design_refs = ["docs/near-platform-blueprint.md", "docs/farmanager-3-luamacro.md"]
+
+[[requirement]]
+id = "REQ-CONFIG-001"
+title = "Layered explainable configuration"
+type = "functional"
+priority = "must"
+status = "implemented"
+statement = "Near MUST load versioned configuration in documented precedence layers and retain the origin of every effective value for diagnostics."
+capabilities = ["CAP-CONFIG", "CAP-DELIVERY"]
+milestone = "M3"
+rationale = "A suite-wide platform needs predictable overrides and actionable errors."
+acceptance = ["Built-in platform plugin user workspace and CLI layers resolve deterministically", "Invalid hot reload preserves the last valid configuration", "Diagnostics report file line field and winning origin"]
+verification = "test"
+planned_evidence = ["crates/near-config/src/lib.rs", "crates/near-config/tests/fixtures/config-v0.toml", "apps/near-fm/src/config.rs", "crates/near-ui/src/workspace.rs", "project/evidence/M3-configuration.md"]
+design_refs = ["docs/near-platform-blueprint.md", "specs/keymap.toml", "specs/theme.toml"]
+
+[[requirement]]
+id = "REQ-PTY-001"
+title = "Optional shared embedded terminal"
+type = "functional"
+priority = "should"
+status = "implemented"
+statement = "Near SHOULD provide one optional persistent embedded PTY session shared by panel command entry and the user screen, supporting interactive shells and REPLs, resize, scrollback, alternate-screen children, paste, signals, OSC directory updates, and safe non-interactive fallback."
+capabilities = ["CAP-SHELL", "CAP-PORTABILITY"]
+milestone = "M3"
+rationale = "Embedded terminal access completes the workspace but must not compromise the reliable external-tool path."
+acceptance = ["Panel command submission and the user screen share one shell process transcript working directory and REPL state", "Ordinary shell output remains terminal output and never opens a viewer", "Interactive zsh and SSH work in the supported matrix", "Nested Vim or Neovim exits without corrupting Near", "Provider locations without a native shell directory fail explicitly", "Disabling embedded PTY leaves the non-interactive executor and suspend-and-run fully functional"]
+verification = "test"
+planned_evidence = ["crates/near-pty/src/lib.rs", "crates/near-ui/src/terminal_surface.rs", "crates/near-ui/src/workspace.rs", "project/evidence/M3-embedded-pty.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/decisions/0006-suspend-before-embedded-pty.md"]
+
+[[requirement]]
+id = "REQ-APP-001"
+title = "Standalone shared viewer"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST ship a standalone viewer application that reuses the platform runtime, theme, keymap, help, configuration, and viewer surface without depending on file-manager internals."
+capabilities = ["CAP-APPLICATIONS", "CAP-VIEWING"]
+milestone = "M2"
+rationale = "A second application proves surface extraction beyond near-fm."
+acceptance = ["The viewer accepts files stdin and provider URIs", "It shares effective bindings and theme files with near-fm", "Its dependency graph excludes near-fm"]
+verification = "demonstration"
+planned_evidence = ["crates/near-app/src/lib.rs", "crates/near-ui/src/application.rs", "apps/near-view/src/main.rs", "apps/near-view/tests/cli.rs", "apps/near-view/tests/pty.rs", "specs/keymap.toml", "specs/theme.toml", "project/evidence/M2-application-extraction.md"]
+design_refs = ["docs/near-platform-blueprint.md", "docs/near-application-authoring.md"]
+
+[[requirement]]
+id = "REQ-APP-002"
+title = "Non-filesystem reference application"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST implement at least one non-filesystem reference application using the same provider, resource, surface, command, keymap, theme, and task abstractions."
+capabilities = ["CAP-APPLICATIONS", "CAP-RESOURCE"]
+milestone = "M2"
+rationale = "The abstraction is not proven until it works outside file management."
+acceptance = ["The application contains no fake path or file assumptions", "It composes existing shell surfaces", "Its domain commands appear in normal help palette and keymaps"]
+verification = "demonstration"
+planned_evidence = ["crates/near-app/src/lib.rs", "crates/near-reference-providers/src/lib.rs", "apps/near-proc/src/main.rs", "apps/near-proc/tests/boundary.rs", "project/evidence/M2-application-extraction.md"]
+design_refs = ["docs/near-platform-blueprint.md", "docs/near-application-authoring.md"]
+
+[[requirement]]
+id = "REQ-API-001"
+title = "Backend-independent public API"
+type = "constraint"
+priority = "must"
+status = "verified"
+statement = "Published Near application and plugin APIs MUST NOT expose Ratatui, Crossterm, Tokio task handles, local filesystem paths, or mandatory dual-panel assumptions unless explicitly isolated in adapter crates."
+capabilities = ["CAP-FOUNDATION", "CAP-APPLICATIONS", "CAP-QUALITY"]
+milestone = "M2"
+rationale = "Leaking implementation dependencies would prevent long-term portability and API stability."
+acceptance = ["A compile test builds an application without direct Ratatui or Crossterm dependencies", "Provider APIs accept Location and ResourceRef rather than PathBuf", "Single-surface applications compile without peer configuration"]
+verification = "inspection"
+planned_evidence = ["crates/near-app/src/lib.rs", "crates/near-core/src/provider.rs", "crates/near-ui/src/application.rs", "apps/near-view/Cargo.toml", "apps/near-proc/Cargo.toml", "tools/check_public_api.py", "project/evidence/M2-application-extraction.md", "project/evidence/M2-api-compatibility.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/decisions/0005-ratatui-as-private-substrate.md"]
+
+[[requirement]]
+id = "REQ-API-002"
+title = "Rust API compatibility policy"
+type = "governance"
+priority = "must"
+status = "verified"
+statement = "Published Rust crates MUST document their stability level, minimum supported Rust version, feature semantics, deprecation policy, and SemVer compatibility commitments."
+capabilities = ["CAP-QUALITY", "CAP-DELIVERY"]
+milestone = "M2"
+rationale = "A reusable ecosystem needs explicit compatibility rather than accidental stability."
+acceptance = ["Public structs and enums are designed for evolution", "Cargo rust-version is declared", "CI checks public API changes before release"]
+verification = "inspection"
+planned_evidence = ["Cargo.toml", "docs/near-api-compatibility.md", "tools/check_public_api.py", ".github/workflows/ci.yml", ".github/workflows/release-api.yml", "project/evidence/M2-api-compatibility.md"]
+design_refs = ["docs/near-implementation-plan.md", "project/architecture/README.md"]
+
+[[requirement]]
+id = "REQ-PLUGIN-001"
+title = "Isolated extension execution"
+type = "security"
+priority = "must"
+status = "verified"
+statement = "Third-party extensions MUST execute out of process or as WebAssembly components and MUST NOT use native dynamic libraries as the stable public plugin ABI."
+capabilities = ["CAP-EXTENSIONS", "CAP-SECURITY"]
+milestone = "M4"
+rationale = "Isolation and versioned contracts reduce host crashes and supply-chain blast radius."
+acceptance = ["A plugin crash or trap does not terminate Near", "Plugin time and memory limits are enforceable", "Trusted first-party native crates remain compile-time integrations only"]
+verification = "test"
+planned_evidence = ["crates/near-plugins/src/lib.rs", "crates/near-plugins/src/process.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/plugins.rs", "specs/process-plugin-protocol.md", "project/evidence/M4-extension-host.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/decisions/0007-tiered-extension-model.md"]
+
+[[requirement]]
+id = "REQ-PLUGIN-002"
+title = "Explicit plugin capabilities"
+type = "security"
+priority = "must"
+status = "verified"
+statement = "The extension host MUST deny ambient filesystem, process, environment, and network access unless the user grants declared versioned capabilities."
+capabilities = ["CAP-EXTENSIONS", "CAP-SECURITY"]
+milestone = "M4"
+rationale = "Provider power must not imply unrestricted host access."
+acceptance = ["Undeclared host calls fail with a structured denial", "Capability grants are inspectable and revocable", "Workspace-local plugins require explicit trust"]
+verification = "test"
+planned_evidence = ["crates/near-plugins/src/lib.rs", "crates/near-plugins/src/process.rs", "apps/near-fm/src/plugins.rs", "specs/process-plugin-protocol.md", "project/evidence/M4-extension-host.md", "project/evidence/M4-threat-review.md"]
+design_refs = ["docs/near-platform-blueprint.md", "specs/plugin.wit", "project/decisions/0007-tiered-extension-model.md"]
+
+[[requirement]]
+id = "REQ-PLUGIN-003"
+title = "Versioned WIT contracts"
+type = "constraint"
+priority = "must"
+status = "verified"
+statement = "Wasm extension interfaces MUST use versioned WIT packages, semantic compatibility rules, and unstable or since gates before exposing new host capabilities."
+capabilities = ["CAP-EXTENSIONS", "CAP-CONFIG"]
+milestone = "M4"
+rationale = "WIT is a distribution contract and must evolve deliberately."
+acceptance = ["Every published WIT package includes a full SemVer version", "Incompatible interface changes require a major package version", "Experimental items are gated before stabilization"]
+verification = "inspection"
+planned_evidence = ["specs/plugin.wit", "specs/plugin-v0.1.0.wit", "specs/process-plugin-protocol.md", "specs/process-plugin-v0.1.0.md", "tools/check_wit.py", "tools/check_process_protocol.py", "project/evidence/M4-extension-host.md"]
+design_refs = ["specs/plugin.wit", "project/decisions/0007-tiered-extension-model.md"]
+
+[[requirement]]
+id = "REQ-SEC-002"
+title = "Continuous threat modeling"
+type = "security"
+priority = "must"
+status = "verified"
+statement = "Near MUST maintain a version-controlled threat model covering terminal control, filesystem mutation, external process execution, configuration trust, plugins, updates, and release artifacts."
+capabilities = ["CAP-SECURITY", "CAP-DELIVERY"]
+milestone = "M4"
+rationale = "The system crosses multiple trust boundaries and handles destructive capabilities."
+acceptance = ["Each trust boundary lists assets threats mitigations and verification", "Threat model review is required for new providers execution modes and plugin grants", "Accepted risks identify owner and review date"]
+verification = "inspection"
+planned_evidence = ["project/security/threat-model.toml", "project/evidence/M4-threat-review.md"]
+design_refs = ["project/architecture/README.md", "project/README.md"]
+
+[[requirement]]
+id = "REQ-FAR-001"
+title = "Far workflow parity governance"
+type = "quality"
+priority = "must"
+status = "accepted"
+statement = "Near MUST maintain and implement a build-matched Far Manager workflow parity specification that distinguishes complete workflows from partial primitives and demos."
+capabilities = ["CAP-INTERACTION", "CAP-WORKSPACE", "CAP-APPLICATIONS"]
+milestone = "continuous"
+rationale = "The reference application is the system-level acceptance test, and visual review exposed workflow gaps hidden by primitive-level requirements."
+acceptance = ["Every major Far user-facing topic family maps to a parity area and item", "Each item has measurable acceptance and authoritative evidence", "Missing and partial must-priority items drive the implementation roadmap until verified"]
+verification = "inspection"
+planned_evidence = ["project/far-parity.toml", "docs/far-parity-roadmap.md", "tools/validate_far_parity.py", "docs/farmanager-3-coverage-audit.md"]
+design_refs = ["docs/farmanager-3-research.md", "docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-PORT-001"
+title = "Linux portability"
+type = "functional"
+priority = "must"
+status = "verified"
+statement = "Near MUST support Linux through platform capability adapters while preserving shared command, keymap, theme, provider, workflow, and test contracts."
+capabilities = ["CAP-PORTABILITY"]
+milestone = "M5"
+rationale = "Universality must be proven on a second Unix platform."
+acceptance = ["Shared workflow suites pass with documented platform expectations", "Unavailable macOS metadata appears as capabilities not errors", "Linux packaging and Trash conventions are documented"]
+verification = "test"
+planned_evidence = [".github/workflows/ci.yml", "crates/near-local-fs/src/lib.rs", "crates/near-pty/src/lib.rs", "apps/near-fm/src/platform.rs", "docs/near-portability.md", "project/evidence/M5-portability-and-delivery.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-PORT-002"
+title = "Windows adaptation"
+type = "functional"
+priority = "should"
+status = "verified"
+statement = "Near SHOULD support Windows through ConPTY and platform services for drives, UNC paths, recycle bin, ACLs, reparse points, and alternate streams without changing the public resource abstraction."
+capabilities = ["CAP-PORTABILITY"]
+milestone = "M5"
+rationale = "The abstraction should eventually serve all major desktop terminal platforms."
+acceptance = ["Windows-specific roots map to provider locations", "Shared applications compile without conditional public APIs", "Platform metadata is represented through typed extensions"]
+verification = "test"
+planned_evidence = [".github/workflows/ci.yml", "crates/near-local-fs/src/lib.rs", "crates/near-pty/src/lib.rs", "apps/near-fm/src/platform.rs", "docs/near-portability.md", "project/evidence/M5-portability-and-delivery.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-PERF-001"
+title = "Interactive latency budget"
+type = "quality"
+priority = "must"
+status = "verified"
+statement = "Near MUST keep ordinary warm local navigation key-to-render latency below 16 milliseconds at p95 on the documented reference machine and MUST avoid idle busy loops."
+capabilities = ["CAP-QUALITY", "CAP-RENDERING"]
+milestone = "continuous"
+rationale = "The intended keyboard experience depends on immediate feedback."
+acceptance = ["A repeatable benchmark defines hardware terminal size and dataset", "Idle CPU remains near zero without tasks or animation", "Regression thresholds run in scheduled CI"]
+verification = "test"
+planned_evidence = ["crates/near-testkit/tests/performance.rs", "crates/near-terminal/src/lib.rs", ".github/workflows/performance.yml", "docs/near-performance.md", "project/evidence/continuous-quality.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-OBS-001"
+title = "Structured diagnostics"
+type = "quality"
+priority = "must"
+status = "verified"
+statement = "Near MUST emit structured diagnostics with correlation identifiers for commands, tasks, providers, operations, plugins, and terminal sessions while avoiding sensitive path or content disclosure by default."
+capabilities = ["CAP-QUALITY", "CAP-SECURITY"]
+milestone = "continuous"
+rationale = "Asynchronous failures require causal evidence without compromising user data."
+acceptance = ["A task can be traced from command invocation to final result", "Redaction policy is documented and tested", "Diagnostic export includes versions and capabilities"]
+verification = "test"
+planned_evidence = ["crates/near-core/src/diagnostic.rs", "crates/near-ui/src/workspace.rs", "docs/near-diagnostics.md", "project/evidence/continuous-quality.md"]
+design_refs = ["docs/near-platform-blueprint.md"]
+
+[[requirement]]
+id = "REQ-TEST-001"
+title = "Model and golden workflow verification"
+type = "quality"
+priority = "must"
+status = "verified"
+statement = "Near MUST support deterministic model tests, semantic render snapshots, fake providers, fake clocks, and scripted golden workflows without requiring a real interactive terminal."
+capabilities = ["CAP-QUALITY", "CAP-DELIVERY"]
+milestone = "M0"
+rationale = "The abstraction needs executable fidelity tests rather than subjective visual review."
+acceptance = ["Core workflows run headlessly", "Snapshots include cell content and semantic role IDs", "Async stale-result and cancellation paths are deterministic"]
+verification = "test"
+planned_evidence = ["crates/near-testkit/src/lib.rs", "crates/near-ui/src/semantic.rs", "crates/near-ui/src/workspace.rs", "project/evidence/M0-interaction-laboratory.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-ACCESS-001"
+title = "Accessible non-color interaction"
+type = "quality"
+priority = "must"
+status = "verified"
+statement = "Near MUST preserve focus, selection, safety, validation, and task state through text, glyph, layout, or labels rather than color alone."
+capabilities = ["CAP-QUALITY", "CAP-RENDERING"]
+milestone = "continuous"
+rationale = "Themes and terminal palettes vary, and color alone is insufficient for reliable operation."
+acceptance = ["Monochrome snapshots retain all critical state distinctions", "High-contrast theme passes documented contrast checks where terminal RGB is available", "Animations have a reduced-motion or static alternative"]
+verification = "inspection"
+planned_evidence = ["crates/near-ui/src/theme.rs", "crates/near-ui/src/dialog.rs", "crates/near-ui/src/operation_preview.rs", "crates/near-ui/src/task.rs", "specs/theme-high-contrast.toml", "docs/near-accessibility.md", "project/evidence/continuous-quality.md"]
+design_refs = ["docs/near-platform-blueprint.md", "specs/theme.toml"]
+
+[[requirement]]
+id = "REQ-REL-001"
+title = "Reproducible trustworthy releases"
+type = "security"
+priority = "must"
+status = "verified"
+statement = "Stable Near releases MUST publish signed source tags, checksums, an SBOM, dependency and license audit results, migration notes, and documented build provenance."
+capabilities = ["CAP-SECURITY", "CAP-DELIVERY"]
+milestone = "M5"
+rationale = "A platform that executes plugins and manipulates files requires a trustworthy supply chain."
+acceptance = ["Release artifacts are traceable to a reviewed commit", "Published checksums and SBOM match distributed binaries", "Known vulnerability exceptions are documented with expiry"]
+verification = "inspection"
+planned_evidence = [".github/workflows/release.yml", "tools/validate_release.py", "CHANGELOG.md", "docs/releases/README.md", "docs/security/vulnerability-exceptions.md", "project/evidence/M5-portability-and-delivery.md"]
+design_refs = ["docs/near-implementation-plan.md", "project/README.md"]
+
+[[requirement]]
+id = "REQ-GOV-001"
+title = "Docs-as-code traceability gate"
+type = "governance"
+priority = "must"
+status = "verified"
+statement = "Changes to accepted scope, architecture, public contracts, or milestone gates MUST update the corresponding requirements, ADRs, workflows, schemas, and traceability records in the same reviewed change."
+capabilities = ["CAP-DELIVERY"]
+milestone = "M5"
+rationale = "The project definition must remain synchronized with implementation rather than becoming archival prose."
+acceptance = ["CI rejects broken IDs references and uncovered capabilities", "Accepted requirement changes identify decision rationale", "Verified requirements link to existing evidence"]
+verification = "test"
+planned_evidence = ["tools/validate_project.py", ".github/workflows/ci.yml", ".github/CODEOWNERS", ".github/pull_request_template.md", "project/README.md", "project/evidence/M5-portability-and-delivery.md"]
+design_refs = ["project/README.md", "project/decisions/0001-docs-as-code-governance.md"]
+
+[[requirement]]
+id = "REQ-REMOTE-001"
+title = "Secure remote resource providers"
+type = "functional"
+priority = "should"
+status = "verified"
+statement = "Near SHOULD provide SSH/SFTP panel navigation and provider-backed transfers without storing credentials or weakening host verification."
+capabilities = ["CAP-RESOURCE", "CAP-OPERATIONS", "CAP-SECURITY", "CAP-CONFIG"]
+milestone = "M5"
+rationale = "Remote files must participate in the same resource and operation abstraction without introducing plaintext secrets, ambient trust, or separate transfer semantics."
+acceptance = ["Configured SFTP roots navigate as normal panels", "Local and remote copies and moves use immutable bounded operation plans", "Authentication uses the platform SSH agent and strict known_hosts verification", "Disconnect and retry preserve panel state"]
+verification = "test"
+planned_evidence = ["crates/near-sftp/src/lib.rs", "crates/near-core/src/provider.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/connections.toml", "docs/near-sftp.md", "project/evidence/FAR-EXT-005.md"]
+design_refs = ["docs/near-platform-blueprint.md", "project/workflows.toml", "project/security/threat-model.toml"]
+
+[[requirement]]
+id = "REQ-ELEVATION-001"
+title = "Auditable privileged operation retry"
+type = "security"
+priority = "should"
+status = "verified"
+statement = "Near SHOULD offer platform-native elevation for local permission failures while executing the exact recorded operation plan through an auditable broker."
+capabilities = ["CAP-OPERATIONS", "CAP-PORTABILITY", "CAP-SECURITY"]
+milestone = "M5"
+rationale = "Reconstructing a failed mutation after authorization could change its targets or policies, while direct privileged execution without a journal would be unsafe to review."
+acceptance = ["Permission failures expose an explicit elevation retry", "The serialized plan authorization and conflict decision are digest-verified and unchanged", "Elevated item outcomes are written to an append-only journal", "Archive and remote provider plans do not enter the local elevation helper"]
+verification = "test"
+planned_evidence = ["crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "docs/near-elevation.md", "project/evidence/FAR-PLAT-004.md"]
+design_refs = ["docs/near-operations.md", "docs/near-platform-blueprint.md", "project/workflows.toml", "project/security/threat-model.toml"]
+
+[[requirement]]
+id = "REQ-SETTINGS-001"
+title = "Typed transactional runtime settings"
+type = "functional"
+priority = "must"
+status = "accepted"
+statement = "Near MUST expose every user-facing settings category through typed controls or an explicit read-only platform report and MUST validate apply roll back persist reload reset and explain each effective value."
+capabilities = ["CAP-CONFIG", "CAP-INTERACTION", "CAP-WORKSPACE", "CAP-PORTABILITY"]
+milestone = "M5"
+rationale = "A searchable help catalog and a configuration merge engine do not constitute an operable settings system."
+acceptance = ["Every settings category is non-empty and identifies writable versus read-only values", "Edits target a selected layer and preserve unrelated TOML", "A complete candidate validates before atomic write and live apply", "Invalid or conflicting edits retain the last valid runtime state", "Reset reveals the next effective layer", "Live new-surface and restart-required effects are labeled and tested", "Changes survive restart with exact provenance"]
+verification = "demonstration"
+planned_evidence = ["crates/near-config/src/lib.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/config.rs", "docs/near-settings-input-terminal-development-plan.md"]
+design_refs = ["docs/near-configuration.md", "docs/near-interaction-settings-gap-audit.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-INPUT-001"
+title = "Capability-aware real terminal input"
+type = "functional"
+priority = "must"
+status = "accepted"
+statement = "Near MUST make Alt-based lookup and modifier-sensitive discoverability correct for both legacy and enhanced terminal protocols without claiming physical key state the terminal cannot report."
+capabilities = ["CAP-INTERACTION", "CAP-PORTABILITY", "CAP-QUALITY"]
+milestone = "M5"
+rationale = "Synthetic normalized key events do not prove that Terminal.app enhanced terminals or multiplexers deliver the required interaction."
+acceptance = ["Legacy Escape-prefixed Alt and enhanced Alt-character fixtures start the same filename lookup", "Lookup extension cycling acceptance cancellation Unicode and no-match behavior are deterministic", "Modifier-only press and release update the key bar when negotiated", "Focus loss and missing release events recover safely", "Legacy fallback is visible deterministic and binding-derived", "The macOS terminal matrix records the active keyboard capabilities"]
+verification = "demonstration"
+planned_evidence = ["crates/near-terminal/src/input.rs", "crates/near-terminal/src/session.rs", "crates/near-ui/src/workspace.rs", "docs/near-settings-input-terminal-development-plan.md"]
+design_refs = ["docs/near-interaction-settings-gap-audit.md", "specs/keymap.toml", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-SHELL-001"
+title = "Native configurable shell profiles"
+type = "functional"
+priority = "must"
+status = "accepted"
+statement = "Near MUST launch embedded shells through a typed cross-platform profile that defaults to the native macOS login-shell experience and exposes invocation startup environment integration and exit policy."
+capabilities = ["CAP-SHELL", "CAP-CONFIG", "CAP-PORTABILITY", "CAP-SECURITY"]
+milestone = "M5"
+rationale = "Starting an inherited SHELL executable in a PTY is insufficient to preserve the user's normal zsh configuration and platform expectations."
+acceptance = ["macOS resolves the account login shell and defaults to login-interactive invocation", "Normal zsh startup files load unless clean mode is explicitly selected", "Environment inheritance overrides working directory TERM integration and scrollback are configurable", "Startup and exit policies are visible and validated", "OSC directory title paste signal resize and nested TUI behavior pass the macOS matrix", "Linux and Windows implement the same profile contract through adapters"]
+verification = "demonstration"
+planned_evidence = ["crates/near-pty/src/lib.rs", "crates/near-ui/src/terminal_surface.rs", "apps/near-fm/src/main.rs", "docs/near-settings-input-terminal-development-plan.md"]
+design_refs = ["docs/near-embedded-pty.md", "docs/near-interaction-settings-gap-audit.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-VIEW-CONFIG-001"
+title = "Configurable viewer policy"
+type = "functional"
+priority = "must"
+status = "accepted"
+statement = "Near MUST provide versioned layered viewer defaults for handler choice display decoding detection navigation and state persistence while keeping global policy distinct from per-resource state."
+capabilities = ["CAP-VIEWING", "CAP-CONFIG", "CAP-PORTABILITY"]
+milestone = "M5"
+rationale = "Runtime viewer toggles and saved positions do not let users define how new files should open."
+acceptance = ["viewer.toml validates all supported defaults", "Internal external and association precedence are configurable", "Wrap mode binary detection encoding tab width line limits control glyphs and scroll indicators apply to new viewers", "Position bookmark encoding and mode persistence are independently configurable", "Quick view inheritance is explicit", "Settings persist and report provenance"]
+verification = "test"
+planned_evidence = ["specs/viewer.toml", "crates/near-ui/src/viewer.rs", "crates/near-ui/src/workspace.rs", "docs/near-settings-input-terminal-development-plan.md"]
+design_refs = ["docs/near-streaming-viewer.md", "docs/farmanager-3-settings.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-EDIT-CONFIG-001"
+title = "Configurable editor policy"
+type = "functional"
+priority = "must"
+status = "accepted"
+statement = "Near MUST provide versioned layered editor defaults for handler choice indentation display search persistence read-only safety external changes and save formats."
+capabilities = ["CAP-VIEWING", "CAP-CONFIG", "CAP-INTERACTION", "CAP-PORTABILITY"]
+milestone = "M5"
+rationale = "A single persistent-block setting does not cover the behavior users must control in a full internal editor."
+acceptance = ["editor.toml validates tab indentation display search and cursor policies", "Read-only external-change encoding BOM EOL and lossy-save policies are configurable", "Internal external and association precedence are configurable", "Each setting declares live new-editor or restart scope", "Open and newly opened editors receive the correct policy", "Settings persist reset and report provenance"]
+verification = "test"
+planned_evidence = ["specs/editor.toml", "crates/near-ui/src/editor.rs", "crates/near-ui/src/workspace.rs", "docs/near-settings-input-terminal-development-plan.md"]
+design_refs = ["docs/near-internal-editor.md", "docs/farmanager-3-settings.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-OPS-003"
+title = "Intent-preserving operation workflows"
+type = "functional"
+priority = "must"
+status = "accepted"
+statement = "Near MUST present and execute resource mutations according to the operator's domain intent rather than exposing irrelevant generic engine policies, and MUST reject protected platform resources before planning destructive actions."
+capabilities = ["CAP-OPERATIONS", "CAP-WORKSPACE", "CAP-PORTABILITY", "CAP-SECURITY"]
+milestone = "continuous"
+rationale = "A correct generic plan can still produce an unsafe or misleading product workflow when mounted volumes look deletable, Trash exposes replace decisions, or implementation details replace the user's intended action."
+acceptance = ["Trash previews use restore-oriented language and expose no replace skip or rename controls", "Name collisions in Trash preserve existing items and allocate a platform-correct unique destination without operator conflict resolution", "Filesystem roots mounted volume roots provider roots and other protected resources are rejected before a destructive plan is recorded", "Device removal is offered through an explicit capability-gated eject or unmount workflow rather than deletion", "Copy move rename archive extraction remote transfer Trash delete wipe and attributes each declare an intent-specific preview and decision contract", "Rendered source and target names preserve exact path identity while remaining readable"]
+verification = "test"
+planned_evidence = ["crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/operation_preview.rs", "crates/near-ui/src/workspace.rs", "docs/near-production-autonomy-development-plan.md", "project/workflows.toml"]
+design_refs = ["docs/near-operations.md", "docs/near-deletion.md", "docs/near-production-autonomy-development-plan.md", "project/workflows.toml", "project/security/threat-model.toml"]
+
+[[requirement]]
+id = "REQ-TEST-002"
+title = "Operator-level fault and boundary verification"
+type = "quality"
+priority = "must"
+status = "accepted"
+statement = "Near MUST verify complete operator workflows against realistic platform boundaries and injected faults in addition to testing internal engines and normalized models."
+capabilities = ["CAP-QUALITY", "CAP-OPERATIONS", "CAP-PORTABILITY", "CAP-INTERACTION"]
+milestone = "continuous"
+rationale = "Unit coverage of planning and execution did not detect that the visible delete workflow offered nonsensical conflict choices for a mounted device."
+acceptance = ["A workflow matrix covers ordinary files directories symlinks mounted roots provider roots Trash collisions cross-device movement permissions cancellation stale contexts and partial failure", "Interaction workflows assert key resolution semantic command model state rendered visibility semantic roles boundaries and resulting state together", "Panel workflows cover edge paging resize mouse and contiguous and non-contiguous selection with cursor and selection asserted independently", "Tests assert the visible title body decisions key hints selected action and resulting filesystem state", "Exact paths with spaces backslashes control bytes and non-UTF-8 names retain identity through listing preview execution refresh and journal inspection", "Every production fault adds a minimal regression and a systemic class regression", "Platform adapters publish unsupported and degraded cases instead of silently using generic behavior"]
+verification = "test"
+planned_evidence = ["crates/near-testkit/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "specs/interaction-conformance.toml", "tools/validate_interaction_conformance.py", "tests", "docs/near-production-autonomy-development-plan.md"]
+design_refs = ["docs/near-testkit.md", "docs/near-operations.md", "docs/near-production-workflow-testing-guide.md", "docs/near-production-autonomy-development-plan.md", "project/workflows.toml"]
+
+[[requirement]]
+id = "REQ-REL-002"
+title = "Autonomous production qualification"
+type = "quality"
+priority = "must"
+status = "accepted"
+statement = "Near MUST provide a deterministic autonomous qualification run that builds release artifacts and proves product workflows platform adapters TUI contracts safety properties and release evidence from a clean checkout."
+capabilities = ["CAP-DELIVERY", "CAP-QUALITY", "CAP-APPLICATIONS", "CAP-PORTABILITY", "CAP-SECURITY"]
+milestone = "M5"
+rationale = "Production readiness requires a repeatable evidence-producing run rather than an accumulation of passing component tests and parity claims."
+acceptance = ["One documented command runs formatting lint workspace tests workflow scenarios project and parity validators API audit release validation and platform-specific safety suites", "The run emits a machine-readable manifest with source revision toolchain platform capabilities test counts performance budgets known degradations and artifact digests", "Near FM Near View Near Proc and a non-filesystem reference application exercise the same public TUI contracts", "Critical and high safety failures block release while unsupported platform cases remain explicit", "A clean release build passes representative Far workflow journeys without developer intervention"]
+verification = "demonstration"
+planned_evidence = ["tools/validate_release.py", "tools/validate_project.py", "tools/validate_far_parity.py", "tools/check_public_api.py", "docs/near-production-autonomy-development-plan.md", "project/workflows.toml"]
+design_refs = ["docs/near-implementation-plan.md", "docs/far-parity-roadmap.md", "docs/near-production-autonomy-development-plan.md", "project/workflows.toml"]

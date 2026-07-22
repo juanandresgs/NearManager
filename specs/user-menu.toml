@@ -1,0 +1,32 @@
+schema = 1
+
+[[global]]
+id = "show-focused-uri"
+key = "U"
+label = "Show focused resource URI"
+description = "Print the focused resource URI using structured argv"
+[global.predicate]
+schema_version = 1
+hidden = "include"
+ignore = "none"
+[global.invocation]
+mode = "argv"
+program = "/usr/bin/printf"
+arguments = [
+  { value = "literal", literal = "%s\n" },
+  { value = "focused-uri" },
+]
+
+[[local]]
+id = "show-selection-list"
+key = "L"
+label = "Show selected resource list"
+description = "Print a temporary provider-neutral URI list"
+[local.predicate]
+schema_version = 1
+hidden = "include"
+ignore = "none"
+[local.invocation]
+mode = "argv"
+program = "/bin/cat"
+arguments = [{ value = "temporary-list" }]

@@ -1,0 +1,26 @@
+[package]
+name = "near-pty"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+vt100.workspace = true
+serde.workspace = true
+toml.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+portable-pty.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+conpty = "0.7.0"
+
+[lints]
+workspace = true

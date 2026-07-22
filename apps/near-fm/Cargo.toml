@@ -1,0 +1,34 @@
+[package]
+name = "near-fm"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+
+[features]
+default = ["plugins"]
+plugins = ["dep:near-plugins"]
+
+[dependencies]
+near-core = { path = "../../crates/near-core" }
+near-archive = { path = "../../crates/near-archive" }
+near-config = { path = "../../crates/near-config" }
+near-local-fs = { path = "../../crates/near-local-fs" }
+near-macros = { path = "../../crates/near-macros" }
+near-handlers = { path = "../../crates/near-handlers" }
+near-ops = { path = "../../crates/near-ops" }
+near-plugins = { path = "../../crates/near-plugins", optional = true }
+near-pty = { path = "../../crates/near-pty" }
+near-reference-providers = { path = "../../crates/near-reference-providers" }
+near-sftp = { path = "../../crates/near-sftp" }
+near-ui = { path = "../../crates/near-ui", features = ["embedded-pty"] }
+serde.workspace = true
+toml.workspace = true
+
+[lints]
+workspace = true

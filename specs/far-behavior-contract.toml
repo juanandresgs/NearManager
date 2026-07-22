@@ -1,0 +1,108 @@
+schema_version = 1
+reference_build = "Far Manager 3.0 build 6703 x64"
+
+[policy]
+statuses = ["operator-observed", "corpus-observed", "pending"]
+production_statuses = ["operator-observed", "corpus-observed"]
+deviation_kinds = ["none", "platform-native", "intentional-improvement"]
+
+[[behavior]]
+id = "FBC-PANEL-001"
+parity = "FAR-PANEL-001"
+title = "Vertical navigation clamps without changing explicit selection"
+source = "build-matched Far research corpus"
+status = "corpus-observed"
+deviation = "none"
+expected = ["Up and Down move exactly one item", "movement clamps at collection edges", "plain movement preserves marked items"]
+tests = ["far_edge_page_and_plain_navigation_preserve_explicit_selection", "panel_interaction_conformance_plain_arrows_preserve_selection_and_clamp"]
+
+[[behavior]]
+id = "FBC-PANEL-002"
+parity = "FAR-PANEL-001"
+title = "Left and Right navigate to top and bottom"
+source = "operator observation 2026-07-04"
+status = "operator-observed"
+deviation = "none"
+expected = ["Left and Home focus the first item", "Right and End focus the last item", "the focused edge remains visible"]
+tests = ["panel_interaction_conformance_edges_are_visible"]
+
+[[behavior]]
+id = "FBC-PANEL-003"
+parity = "FAR-PANEL-001"
+title = "Page navigation follows visible panel height"
+source = "operator observation 2026-07-04"
+status = "operator-observed"
+deviation = "none"
+expected = ["PageUp and PageDown move by visible rows", "page movement clamps", "resize changes the subsequent page distance"]
+tests = ["panel_interaction_conformance_paging_and_resize_follow_viewport"]
+
+[[behavior]]
+id = "FBC-SELECT-001"
+parity = "FAR-SELECT-001"
+title = "Shift navigation marks the visited item and advances"
+source = "operator observation 2026-07-04"
+status = "operator-observed"
+deviation = "none"
+expected = ["Shift Up or Down toggles the current selectable item", "the cursor advances one row", "a parent navigation item is never marked"]
+tests = ["panel_interaction_conformance_shift_and_insert_select_while_moving", "non_selectable_items_move_without_entering_selection"]
+
+[[behavior]]
+id = "FBC-SELECT-002"
+parity = "FAR-SELECT-001"
+title = "Plain navigation permits non-contiguous marked sets"
+source = "operator observation 2026-07-04"
+status = "operator-observed"
+deviation = "none"
+expected = ["plain arrows leave existing marks unchanged", "later Shift navigation marks the newly visited item", "unvisited gaps remain unmarked"]
+tests = ["shifted_navigation_toggles_each_visited_item_and_allows_gaps", "panel_interaction_conformance_non_contiguous_selection"]
+
+[[behavior]]
+id = "FBC-PRESENT-001"
+parity = "FAR-CUSTOM-002"
+title = "Directories use Far-compatible name and size presentation"
+source = "Far Manager 3.0 build 6703 panel rendering and default highlighting source"
+status = "corpus-observed"
+deviation = "none"
+expected = ["directory names have no synthetic slash prefix", "directory size cells render Folder and parent rows render Up", "directory semantic styling remains stable after executable metadata hydration"]
+tests = ["directory_kinds_use_far_name_and_size_presentation", "executable_directory_keeps_directory_highlighting", "tmux_resource_kind_workflows"]
+
+[[behavior]]
+id = "FBC-MENU-001"
+parity = "FAR-MENU-002"
+title = "Visible actions are applicable and never inert"
+source = "operator menu assessment 2026-07-04"
+status = "operator-observed"
+deviation = "intentional-improvement"
+deviation_reason = "Near exposes explicit denial instead of leaving an inapplicable action enabled."
+expected = ["enabled menu actions dispatch a handled command", "inapplicable actions are disabled or carry a denial", "shortcut menu and palette applicability agree"]
+tests = ["menu_catalog_is_publicly_inspectable", "static_menu_catalog_matches_the_versioned_action_manifest", "registered_menu_actions_are_assessed"]
+
+[[behavior]]
+id = "FBC-VIEW-001"
+parity = "FAR-VIEW-005"
+title = "Viewer and editor content remains visually integrated"
+source = "Far Manager 3.0 build 6703 far/palette.cpp viewer and editor defaults"
+status = "corpus-observed"
+deviation = "none"
+expected = ["viewer text uses light-cyan-on-blue Far palette roles", "quick view uses viewer roles instead of generic black terminal text", "editor content uses the corresponding editor palette roles"]
+tests = ["viewer_and_editor_roles_match_far_surface_palette", "quick_view_tracks_the_cursor_in_the_peer_panel"]
+
+[[behavior]]
+id = "FBC-LOOKUP-001"
+parity = "FAR-PANEL-007"
+title = "Held-Alt filename lookup accumulates one query"
+source = "operator comparison with Far Manager filename lookup on 2026-07-16"
+status = "operator-observed"
+deviation = "none"
+expected = ["Alt K then Alt E produces query ke rather than restarting at e", "an unbound Alt letter starts panel lookup even when the embedded shell dock contains a nonempty draft and cancelling restores that draft unchanged", "the lookup query replaces the ordinary status row and exposes only contextual lookup keys", "prefix matches exclusively win while an empty prefix tier falls back to explicitly labeled contains matches", "the original matching filename span is visibly highlighted without repainting the rest of its row", "Up or Down closes a zero-or-one-result lookup without leaving stale status text", "local panel footers use decoded native paths rather than file URIs"]
+tests = ["incremental_filename_lookup_filters_cycles_and_restores_cursor", "tmux_resource_kind_workflows"]
+
+[[behavior]]
+id = "FBC-TERMINAL-001"
+parity = "FAR-PLAT-001"
+title = "Idle and disconnected terminals consume no active core"
+source = "operator process observation 2026-07-04"
+status = "operator-observed"
+deviation = "none"
+expected = ["idle applications do not redraw continuously", "terminal hangup exits promptly", "qualification leaves no child process behind"]
+tests = ["rendering_occurs_initially_and_only_after_invalidation", "idle_cpu_external_gate"]

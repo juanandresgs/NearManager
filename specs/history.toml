@@ -1,0 +1,4 @@
+schema = 1
+command_max_unlocked = 200
+folder_max_unlocked = 200
+resource_max_unlocked = 100

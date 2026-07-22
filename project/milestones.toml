@@ -1,0 +1,52 @@
+schema = 1
+
+[[milestone]]
+id = "M0"
+name = "Interaction laboratory"
+goal = "Prove command, keymap, theme, rendering, and generic surface abstractions using fake data."
+exit_requirements = [
+  "REQ-CORE-001", "REQ-CMD-001", "REQ-KEY-001", "REQ-KEY-002",
+  "REQ-THEME-001", "REQ-UI-001", "REQ-UI-002", "REQ-TEST-001"
+]
+
+[[milestone]]
+id = "M1"
+name = "Usable local file workspace"
+goal = "Deliver safe daily local navigation, viewing, external editing, and core file operations on macOS."
+exit_requirements = [
+  "REQ-TERM-001", "REQ-RES-001", "REQ-FS-001", "REQ-FS-002",
+  "REQ-OPS-001", "REQ-OPS-002", "REQ-VIEW-001", "REQ-EXT-001"
+]
+
+[[milestone]]
+id = "M2"
+name = "Platform extraction"
+goal = "Prove the abstraction with standalone viewer and a non-filesystem application."
+exit_requirements = [
+  "REQ-APP-001", "REQ-APP-002", "REQ-API-001", "REQ-API-002"
+]
+
+[[milestone]]
+id = "M3"
+name = "Advanced workflows"
+goal = "Complete search, handlers, histories, macros, task history, and experimental embedded zsh."
+exit_requirements = [
+  "REQ-SEARCH-001", "REQ-SEARCH-002", "REQ-HANDLER-001", "REQ-MACRO-001",
+  "REQ-PTY-001", "REQ-CONFIG-001", "REQ-EDIT-001"
+]
+
+[[milestone]]
+id = "M4"
+name = "Extension platform"
+goal = "Support isolated process and Wasm extensions through stable capability-controlled contracts."
+exit_requirements = [
+  "REQ-PLUGIN-001", "REQ-PLUGIN-002", "REQ-PLUGIN-003", "REQ-SEC-002"
+]
+
+[[milestone]]
+id = "M5"
+name = "Ecosystem and portability"
+goal = "Support Linux and Windows, stable releases, migrations, packages, and third-party ecosystem growth."
+exit_requirements = [
+  "REQ-PORT-001", "REQ-PORT-002", "REQ-REL-001", "REQ-GOV-001"
+]

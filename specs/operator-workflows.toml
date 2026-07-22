@@ -1,0 +1,255 @@
+schema_version = 1
+
+[terminals]
+macos = ["Terminal.app", "iTerm2", "Ghostty", "Terminal.app+tmux", "iTerm2+tmux"]
+linux = ["GNOME Terminal", "Konsole", "tmux"]
+
+[[scenario]]
+id = "WF-TRASH-002"
+title = "Trash ordinary resources and reject protected roots before planning"
+requirements = ["REQ-OPS-003"]
+parity = []
+platforms = ["macos", "linux"]
+terminal_matrix = false
+steps = [
+  "Run the disposable mounted-volume fixture and preserve its generated JSON result.",
+  "Trash an ordinary file and directory, then use Files → Restore last Trash to verify collision-safe native names, exact original destinations, and explicit restore conflict decisions.",
+  "Attempt Trash, delete, and wipe on filesystem, mount, provider, and virtual roots; verify denial occurs before plan creation.",
+  "Verify removable resources expose only capability-gated disconnect or eject actions.",
+]
+artifacts = ["mount fixture JSON", "operation preview or semantic snapshot", "journal or task history", "final filesystem listing"]
+
+[[scenario]]
+id = "OP-INPUT-ALT-LOOKUP"
+title = "Incremental filename lookup, cycling, Unicode, no-match, accept, and restore"
+requirements = ["REQ-TEST-002"]
+parity = ["FAR-PANEL-007", "FAR-PLAT-001"]
+platforms = ["macos", "linux"]
+terminal_matrix = true
+steps = [
+  "Run near-input-probe in the target terminal and exercise Alt characters plus modified navigation before the Near workflow.",
+  "Use the generated lookup corpus and place the cursor away from all matching names.",
+  "Exercise legacy and enhanced Alt lookup, repeated cycling, Unicode input, and a no-match query.",
+  "Accept one lookup and cancel another; verify cancellation restores the original cursor and viewport.",
+]
+artifacts = ["near-input-probe JSON", "terminal recording or screenshots", "before and after semantic snapshots"]
+
+[[scenario]]
+id = "OP-INPUT-KEYBAR"
+title = "Enhanced modifier holds and honest legacy keybar fallback"
+requirements = ["REQ-TEST-002"]
+parity = ["FAR-MENU-002", "FAR-PLAT-001"]
+platforms = ["macos", "linux"]
+terminal_matrix = true
+steps = [
+  "Run near-input-probe and capture physical modifier press, repeat, and release events when the terminal supports them.",
+  "Hold and release Shift, Control, and Alt while observing the function-key bar.",
+  "Verify enhanced input follows physical modifier state and focus loss clears held state.",
+  "Verify legacy terminals label hold-only behavior as unavailable without hiding ordinary modifier chords.",
+]
+artifacts = ["near-input-probe JSON", "terminal recording", "modifier-layer screenshots"]
+
+[[scenario]]
+id = "OP-INPUT-RESTORATION"
+title = "Focus loss, paste, resize, external handoff, panic restoration, and nested PTY"
+requirements = ["REQ-TEST-002"]
+parity = ["FAR-PLAT-001"]
+platforms = ["macos", "linux"]
+terminal_matrix = true
+steps = [
+  "Run near-input-probe while changing focus, pasting, and resizing so normalized transport events are preserved.",
+  "Exercise focus loss and regain, bracketed paste, and terminal resize while Near is active.",
+  "Launch an external handler and a nested PTY application, then return to Near.",
+  "Invoke the reserved Ctrl+Alt+Q emergency quit from an active modal with a keymap that omits the binding; verify the host shell and terminal modes restore.",
+  "Trigger the safe panic-restoration fixture and verify terminal modes, cursor, and alternate screen restore.",
+]
+artifacts = ["near-input-probe JSON", "terminal recording", "terminal diagnostics export", "post-restoration shell transcript"]
+
+[[scenario]]
+id = "OP-PANEL-NAVIGATION-001"
+title = "Panel navigation, viewport following, contiguous and non-contiguous selection"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-PANEL-001", "FAR-SELECT-001"]
+platforms = ["macos", "linux"]
+terminal_matrix = true
+steps = [
+  "Run every IC-PANEL-NAV, IC-PANEL-SELECT, and IC-PANEL-LAYOUT case listed later in this checklist.",
+  "Use a collection larger than three viewports and include a long Unicode filename.",
+  "Verify plain navigation preserves non-contiguous selection and refresh preserves surviving focus, selection, and horizontal offset.",
+]
+artifacts = ["terminal recording", "semantic snapshots at boundaries", "refresh before and after listing"]
+
+[[scenario]]
+id = "OP-TEMP-PANEL-001"
+title = "Temporary-panel slots references removal and source reveal"
+requirements = ["REQ-SEARCH-002"]
+parity = ["FAR-EXT-004"]
+platforms = ["macos", "linux"]
+terminal_matrix = false
+steps = [
+  "Open two different temporary-panel slots and verify their contents remain isolated while switching.",
+  "Restart Near and verify populated slot counts and filename previews remain available through Alt+F1 and Alt+F2 on the requested side.",
+  "Select resources from different source directories and use F5 with the temporary panel passive; verify references appear without filesystem copies or operation plans.",
+  "Run view edit and a safe file operation from referenced rows and verify dispatch uses each original provider resource.",
+  "Use F7 on current selected and non-contiguous references; verify only panel references disappear and all source resources remain unchanged.",
+  "Use Shift+F7 and Ctrl+Shift+F7 to clear one or all slots, restart, and verify the cleared state persists while every source resource remains byte-identical.",
+  "Use Ctrl+PageUp on a referenced resource and verify Near leaves the temporary panel for the source parent.",
+  "Export a slot with Alt+Shift+F2, replace it from the saved UTF-8 list, and verify provider-qualified resource identity survives the round trip.",
+  "Open tmp:+safe and verify copy, removal, and source mutation are denied while navigation remains available.",
+  "Open tmp:+any +replace with arbitrary lines, press Enter, and verify the selected line is copied to the command line rather than dispatched to a provider.",
+  "Run tmp:+replace<pwd and verify command output is captured asynchronously, validated, and inserted without replacing the interactive terminal session.",
+  "Open a labeled list with tmp:+menu, verify separators and accelerators, then activate resource navigation and command-line fallback entries.",
+  "Toggle +full and -full and verify the focused slot uses the complete panel viewport before dual panes return with contents intact.",
+  "Remove or disconnect one referenced source, refresh the panel, and verify the row remains visible with explicit stale metadata.",
+]
+artifacts = ["terminal recording", "temporary-panel semantic snapshots", "exported and re-imported UTF-8 list", "command-output task history", "list-menu snapshot", "safe-mode denial", "stale-reference snapshot", "operation task history", "before and after source filesystem listing"]
+
+[[scenario]]
+id = "OP-OPERATION-TARGET-001"
+title = "Selection precedence, current-only modifiers, and partial-failure retention"
+requirements = ["REQ-OPS-003", "REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-SELECT-001"]
+platforms = ["macos", "linux"]
+terminal_matrix = true
+steps = [
+  "Select multiple resources while leaving the cursor on an unselected resource.",
+  "Compare F5/F6/F8 selection precedence with Shift+F5/Shift+F6/Shift+F8 current-only targeting.",
+  "Run the partial-failure fixture and verify the completed item disappears while the failed survivor remains selected.",
+]
+artifacts = ["operation previews", "task history", "operation journal", "final provider or filesystem state"]
+
+[[scenario]]
+id = "OP-MENU-001"
+title = "Far-compatible F9 hierarchy, category switching, ordering, and denials"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-MENU-001"]
+platforms = ["macos", "linux"]
+terminal_matrix = true
+steps = [
+  "Focus the left panel, press F9, and verify the five-category bar occupies the physical top row while the Left menu drops from the next row beneath its category.",
+  "Use Left and Right to traverse Left, Files, Commands, Options, and Right without closing the menu.",
+  "Use Tab and Shift+Tab to switch directly between the left and right panel menus.",
+  "Click each top-row category and verify the corresponding anchored submenu opens without a centered dialog.",
+  "Compare the visible item ordering in every category with docs/farmanager-3-research.md and verify Near-only entries follow the canonical Far groups.",
+  "Activate available entries and verify unavailable provider actions remain visible with explicit denial reasons.",
+]
+artifacts = ["terminal recording", "five category screenshots", "semantic menu snapshots", "denial screenshots"]
+
+[[scenario]]
+id = "OP-SURFACE-NAVIGATION-001"
+title = "Menus settings tasks histories help dialogs viewer and editor navigation"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-MENU-002", "FAR-VIEW-005", "FAR-EDIT-005"]
+platforms = ["macos", "linux"]
+terminal_matrix = true
+steps = [
+  "Run every menu, settings, task, help, and history navigation case listed later in this checklist.",
+  "Exercise viewer, editor, dialogs, command line, and overlay close paths at their boundaries.",
+  "Verify focus returns to the originating control and resize does not strand an off-screen current item.",
+]
+artifacts = ["terminal recording", "surface semantic snapshots", "focus restoration screenshots"]
+
+[[scenario]]
+id = "OP-SETTINGS-001"
+title = "Typed settings layers, provenance, validation, apply, rollback, reload, reset, and restart"
+requirements = ["REQ-CONFIG-001"]
+parity = ["FAR-CUSTOM-004"]
+platforms = ["macos", "linux"]
+terminal_matrix = false
+steps = [
+  "Inspect searchable normal and advanced descriptors across system, panel, tree, interface, dialog, menu, command-line, completion, confirmation, shell, viewer, and editor categories.",
+  "Verify every selected descriptor reports effective value, value type, platform availability, exact winning layer and source, advanced status, and live/new-surface/restart apply scope.",
+  "Exercise status-line and keybar visibility, tree indentation, menu boundary wrapping, dialog focus wrapping, and command-line completion from history and focused-panel names.",
+  "Apply valid live, new-surface, and restart-scoped candidates; reject an invalid candidate without changing the effective value.",
+  "Exercise atomic persistence, external valid reload, invalid reload rollback, reset, and restart restoration.",
+]
+artifacts = ["settings screenshots", "configuration diagnostics", "persisted documents before and after", "restart transcript"]
+
+[[scenario]]
+id = "OP-SHELL-001"
+title = "Shared panel command line, user screen, native shell lifecycle, and interactive REPL"
+requirements = ["REQ-TERM-001", "REQ-PTY-001"]
+parity = ["FAR-SHELL-001", "FAR-SHELL-005", "FAR-SHELL-006"]
+platforms = ["macos", "linux"]
+terminal_matrix = true
+steps = [
+  "Submit commands from the panel command line and verify output appears in the retained terminal rather than a viewer.",
+  "Change directory in one submission, hide the user screen, submit another command, and verify the same shell process and working directory remain active.",
+  "Start an interactive REPL from the panel command line and continue interacting after user-screen and panel toggles.",
+  "Verify platform-default resolves the native account shell and expected login or interactive lifecycle.",
+  "Compare startup marker behavior in default and clean profiles, then run the generated custom-command fixture.",
+  "Exercise working directory, environment policy, OSC 7 updates, interrupt, paste, resize, nested applications, and every exit policy.",
+]
+artifacts = ["terminal recording", "shared-session transcript", "shell profile diagnostics", "startup marker output", "exit-policy transcript"]
+
+[[scenario]]
+id = "OP-ASSOCIATION-001"
+title = "Enter default-application handoff remains distinct from F3 and F4"
+requirements = ["REQ-HANDLER-001", "REQ-EXT-001", "REQ-REL-002"]
+parity = ["FAR-AUTO-002"]
+platforms = ["macos", "linux"]
+terminal_matrix = true
+steps = [
+  "Configure representative text image PDF and platform-specific document associations.",
+  "Press Enter on each file and verify the native default application opens while Near suspends and restores without losing panel state.",
+  "Press F3 on the same files and verify the configured Viewer policy runs instead of the Open association.",
+  "Press F4 and verify the configured Editor policy remains independent.",
+  "Remove the Open handler for one fixture and verify Enter reports an explicit denial without opening the internal viewer.",
+]
+artifacts = ["terminal recording", "native application screenshots", "handler diagnostics", "restored panel-state screenshot"]
+
+[[scenario]]
+id = "OP-VIEWER-001"
+title = "Viewer defaults, external policy, encodings, binary, huge content, and persisted resource state"
+requirements = ["REQ-VIEW-001"]
+parity = ["FAR-VIEW-005"]
+platforms = ["macos", "linux"]
+terminal_matrix = false
+steps = [
+  "Open every generated viewer corpus entry: empty, Unicode, UTF-16, Latin-1, invalid UTF-8, binary, huge, mixed-EOL, tabs, read-only, and provider-backed.",
+  "Verify configured wrap, hex, encoding, internal/external/association policy, bounded streaming, and cancellation.",
+  "Verify global defaults, session state, and per-resource offsets or bookmarks remain distinct across reopen and restart.",
+]
+artifacts = ["viewer screenshots", "handler launch transcript", "resource-state document", "restart comparison"]
+
+[[scenario]]
+id = "OP-EDITOR-001"
+title = "Editor defaults, external policy, encodings, EOL, tabs, read-only, external changes, and provider resources"
+requirements = ["REQ-EDIT-001"]
+parity = ["FAR-EDIT-005"]
+platforms = ["macos", "linux"]
+terminal_matrix = false
+steps = [
+  "Open every generated editor corpus entry and verify persistent blocks, tab policy, encoding, BOM, EOL, and open policy.",
+  "Exercise undo/redo, stream and column blocks, read-only denial, lossy-save confirmation, and safe save.",
+  "Modify a file externally and verify compare, reload, and keep-local paths plus provider-scoped cursor restoration.",
+]
+artifacts = ["editor screenshots", "saved byte-level outputs", "external-change comparison", "restart comparison"]
+
+[[scenario]]
+id = "OP-FAR-PARITY-001"
+title = "Complete Far workflow parity and documented Near improvements walkthrough"
+requirements = ["REQ-REL-002"]
+parity = ["ALL"]
+platforms = ["macos", "linux"]
+terminal_matrix = false
+steps = [
+  "Walk every item in project/far-parity.toml through its operator-visible command path on Near and the referenced Far behavior.",
+  "Record keys, command IDs, visible decisions, final model or filesystem state, and documented platform-native differences.",
+  "Fail any item with a hidden command, impossible decision, stale refresh, lost identity, or unproved durability claim.",
+]
+artifacts = ["parity walkthrough matrix", "Near and Far screenshots or recordings", "final state exports", "review notes"]
+
+[[scenario]]
+id = "OP-TUI-PROOF-001"
+title = "NearTuiProof builds and runs from exact public Git revision without path dependencies"
+requirements = ["REQ-API-001", "REQ-REL-002"]
+parity = []
+platforms = ["macos", "linux"]
+terminal_matrix = false
+steps = [
+  "Use a separate NearTuiProof checkout pinned to the exact candidate Git revision with no path dependency.",
+  "Run the public-contract validator and locked tests; verify no Ratatui, Crossterm, Near internals, or dual-panel assumptions leak into application code.",
+  "Preserve the proof revision, dependency tree, Cargo.lock, test output, and representative semantic snapshots.",
+]
+artifacts = ["validator and test log", "Cargo.lock", "cargo tree", "proof revision and semantic snapshots"]

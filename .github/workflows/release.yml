@@ -1,0 +1,117 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Verify signed source tag
+        run: |
+          git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
+          git config gpg.ssh.allowedSignersFile "$GITHUB_WORKSPACE/project/security/release-signers"
+          git verify-tag "$GITHUB_REF_NAME"
+      - name: Require release and migration notes
+        run: test -f "docs/releases/${GITHUB_REF_NAME}.md"
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Validate release definition
+        run: python3 tools/validate_release.py
+      - name: Audit dependencies
+        run: |
+          cargo install cargo-audit --locked
+          mkdir -p audit
+          cargo audit --json > audit/dependency-audit.json
+      - name: Inventory dependency licenses
+        run: |
+          cargo install cargo-license --locked
+          cargo license --json > audit/licenses.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-audit
+          path: audit
+
+  build:
+    needs: preflight
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: linux-x86_64
+            archive: near-linux-x86_64.tar.gz
+          - os: macos-latest
+            artifact: macos-aarch64
+            archive: near-macos-aarch64.tar.gz
+          - os: macos-15-intel
+            artifact: macos-x86_64
+            archive: near-macos-x86_64.tar.gz
+          - os: windows-latest
+            artifact: windows-x86_64
+            archive: near-windows-x86_64.zip
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: cargo build --release --bins --locked
+      - name: Package and verify binaries with provenance
+        shell: bash
+        run: >-
+          python tools/package_release.py create
+          --skip-build
+          --output dist
+          --platform-id "${{ matrix.artifact }}"
+          --archive-name "${{ matrix.archive }}"
+          --source-revision "$GITHUB_SHA"
+      - name: Generate archive SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          file: dist/${{ matrix.archive }}
+          format: spdx-json
+          output-file: dist/${{ matrix.artifact }}.spdx.json
+          upload-artifact: false
+          upload-release-assets: false
+      - name: Attest archive and SBOM
+        uses: actions/attest@v4
+        with:
+          subject-path: dist/${{ matrix.archive }}
+          sbom-path: dist/${{ matrix.artifact }}.spdx.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: dist
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Generate checksums
+        run: cd dist && sha256sum * > SHA256SUMS
+      - name: Publish immutable release artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --notes-file "docs/releases/${GITHUB_REF_NAME}.md"

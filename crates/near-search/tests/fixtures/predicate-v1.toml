@@ -1,0 +1,13 @@
+schema_version = 1
+kinds = ["File"]
+minimum_size = 8
+hidden = "include"
+ignore = "version-control"
+
+[name]
+match = "glob"
+value = "*.rs"
+
+[content]
+text = "ResourceProvider"
+case_sensitive = true

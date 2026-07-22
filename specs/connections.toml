@@ -1,0 +1,5 @@
+# SFTP profiles intentionally contain no passwords or private-key material.
+# Authentication is delegated to the platform SSH agent and every profile
+# must name an OpenSSH known_hosts file for strict host verification.
+schema = 1
+connection = []

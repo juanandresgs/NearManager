@@ -1,0 +1,5 @@
+schema = 1
+mode = "platform-default"
+close_policy = "warn"
+inherit_environment = true
+arguments = []

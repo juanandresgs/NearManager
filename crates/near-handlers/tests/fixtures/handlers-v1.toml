@@ -1,0 +1,25 @@
+schema = 1
+
+[[handlers]]
+id = "near.handler.text-editor"
+actions = ["edit", "view"]
+
+[handlers.predicate]
+schema_version = 1
+kinds = ["File"]
+hidden = "include"
+ignore = "none"
+
+[handlers.predicate.name]
+match = "glob"
+value = "*.txt"
+
+[handlers.invocation]
+mode = "argv"
+program = "/usr/bin/open"
+arguments = [
+  { value = "literal", literal = "-W" },
+  { value = "literal", literal = "-t" },
+  { value = "native-path" },
+]
+current_directory = { value = "native-parent" }

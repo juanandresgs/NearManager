@@ -1,0 +1,37 @@
+schema = 1
+
+[[handlers]]
+id = "near.handler.macos-text"
+actions = ["view", "edit", "inspect"]
+
+[handlers.predicate]
+schema_version = 1
+hidden = "include"
+ignore = "none"
+
+[handlers.invocation]
+mode = "argv"
+program = "/usr/bin/open"
+arguments = [
+  { value = "literal", literal = "-W" },
+  { value = "literal", literal = "-t" },
+  { value = "native-path" },
+]
+current_directory = { value = "native-parent" }
+
+[[handlers]]
+id = "near.handler.macos-default"
+actions = ["open", "view", "edit"]
+
+[handlers.predicate]
+schema_version = 1
+hidden = "include"
+ignore = "none"
+
+[handlers.invocation]
+mode = "argv"
+program = "/usr/bin/open"
+arguments = [
+  { value = "native-path" },
+]
+current_directory = { value = "native-parent" }

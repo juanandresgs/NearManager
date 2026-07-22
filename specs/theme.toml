@@ -1,0 +1,194 @@
+schema = 1
+name = "far-classic"
+author = "Near project"
+
+[palette]
+black = "#000000"
+navy = "#000080"
+blue = "#0000aa"
+teal = "#008080"
+cyan = "#00aaaa"
+silver = "#c0c0c0"
+white = "#ffffff"
+yellow = "#ffff55"
+red = "#aa0000"
+
+[glyphs]
+border = "single"
+border_ascii = "+|-"
+selection_mark = "√"
+selection_mark_ascii = "*"
+tree_branch = "├"
+tree_last = "└"
+
+[density]
+dialog_padding_x = 1
+dialog_padding_y = 0
+menu_padding_x = 1
+status_rows = 1
+keybar_rows = 1
+
+[roles.text]
+fg = "silver"
+bg = "black"
+
+[roles."workspace.background"]
+fg = "silver"
+bg = "black"
+
+[roles."panel.background"]
+fg = "cyan"
+bg = "navy"
+
+[roles."panel.border"]
+fg = "cyan"
+bg = "navy"
+
+[roles."panel.title"]
+fg = "white"
+bg = "navy"
+modifiers = ["bold"]
+
+[roles."panel.item"]
+fg = "cyan"
+bg = "navy"
+
+[roles."panel.item.directory"]
+fg = "white"
+bg = "navy"
+modifiers = ["bold"]
+
+[roles."panel.item.selected"]
+fg = "yellow"
+bg = "navy"
+
+[roles."panel.item.focused"]
+fg = "black"
+bg = "cyan"
+
+[roles."panel.item.selected.focused"]
+fg = "yellow"
+bg = "teal"
+modifiers = ["bold"]
+
+[roles."dialog.background"]
+fg = "black"
+bg = "silver"
+
+[roles."dialog.border"]
+fg = "black"
+bg = "silver"
+
+[roles."viewer.background"]
+fg = "cyan"
+bg = "navy"
+fallback = "panel.background"
+
+[roles."viewer.border"]
+fg = "cyan"
+bg = "navy"
+fallback = "panel.border"
+
+[roles."viewer.text"]
+fg = "cyan"
+bg = "navy"
+fallback = "panel.item"
+
+[roles."viewer.selected"]
+fg = "black"
+bg = "cyan"
+fallback = "control.focused"
+
+[roles."viewer.status"]
+fg = "black"
+bg = "cyan"
+fallback = "status.normal"
+
+[roles."editor.background"]
+fg = "cyan"
+bg = "navy"
+fallback = "viewer.background"
+
+[roles."editor.border"]
+fallback = "viewer.border"
+
+[roles."editor.text"]
+fallback = "viewer.text"
+
+[roles."editor.selected"]
+fallback = "viewer.selected"
+
+[roles."editor.status"]
+fallback = "viewer.status"
+
+[roles."control.focused"]
+fg = "white"
+bg = "teal"
+modifiers = ["bold"]
+
+[roles."control.disabled"]
+fg = "teal"
+bg = "silver"
+
+[roles."status.normal"]
+fg = "black"
+bg = "cyan"
+
+[roles."status.warning"]
+fg = "yellow"
+bg = "red"
+modifiers = ["bold"]
+
+[roles."keybar.key"]
+fg = "black"
+bg = "silver"
+
+[roles."keybar.label"]
+fg = "silver"
+bg = "black"
+
+[roles."lookup.bar"]
+fg = "black"
+bg = "cyan"
+modifiers = ["bold"]
+fallback = "status.normal"
+
+[roles."lookup.match"]
+fg = "yellow"
+bg = "navy"
+modifiers = ["bold"]
+fallback = "panel.item"
+
+[roles."lookup.match.focused"]
+fg = "yellow"
+bg = "navy"
+modifiers = ["bold"]
+fallback = "panel.item.focused"
+
+[roles."selection.match"]
+fg = "yellow"
+bg = "navy"
+modifiers = ["underline"]
+
+
+[roles."highlight.directory"]
+fg = "#ffffff"
+modifiers = ["bold"]
+fallback = "panel.item.directory"
+
+[roles."highlight.executable"]
+fg = "#55ff55"
+fallback = "panel.item"
+
+[roles."highlight.archive"]
+fg = "#ff55ff"
+fallback = "panel.item"
+
+[roles."highlight.hidden"]
+fg = "#808080"
+fallback = "panel.item"
+
+[roles."highlight.readonly"]
+fg = "#ffff55"
+modifiers = ["underline"]
+fallback = "panel.item"

@@ -1,0 +1,1702 @@
+schema = 1
+
+[settings]
+sequence_timeout_ms = 700
+show_pending_sequence = true
+prefer_physical_keys = false
+
+[[context]]
+id = "global"
+
+[[context.bindings]]
+on = "F1"
+run = "near.help.context"
+description = "Help"
+hint = { group = "function", slot = 1 }
+
+[[context.bindings]]
+on = "Shift+F1"
+run = "near.help.contents"
+description = "Help contents"
+
+[[context.bindings]]
+on = "Shift+F2"
+run = "near.help.extensions"
+description = "Extension help"
+
+[[context.bindings]]
+on = "Ctrl+P"
+run = "near.command-palette.open"
+description = "Commands"
+
+[[context.bindings]]
+on = "Ctrl+."
+run = "near.macro.record-toggle"
+description = "Record macro"
+
+[[context.bindings]]
+on = "Ctrl+Shift+."
+run = "near.macro.play-last"
+description = "Replay macro"
+
+[[context.bindings]]
+on = "Ctrl+Alt+."
+run = "near.macro.manage"
+description = "Manage macros"
+
+[[context.bindings]]
+on = "F12"
+run = "near.screen.list"
+description = "Screens"
+hint = { group = "function", slot = 12 }
+
+[[context.bindings]]
+on = "F9"
+run = "near.menu.main"
+description = "Menu"
+hint = { group = "function", slot = 9 }
+
+[[context.bindings]]
+on = "F10"
+run = "near.app.quit"
+description = "Quit"
+hint = { group = "function", slot = 10 }
+
+[[context.bindings]]
+on = "Ctrl+Tab"
+run = "near.screen.next"
+description = "Next screen"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Tab"
+run = "near.screen.previous"
+description = "Previous screen"
+
+[[context.bindings]]
+on = "Ctrl+O"
+run = "near.terminal.open"
+description = "Toggle user screen"
+
+[[context.bindings]]
+on = "Ctrl+Alt+N"
+aliases = ["Ctrl+Shift+T"]
+run = "near.terminal.new"
+description = "New terminal tab"
+
+[[context.bindings]]
+on = "Ctrl+Alt+PageDown"
+aliases = ["Ctrl+Shift+PageDown"]
+run = "near.terminal.next"
+description = "Next terminal tab"
+
+[[context.bindings]]
+on = "Ctrl+Alt+PageUp"
+aliases = ["Ctrl+Shift+PageUp"]
+run = "near.terminal.previous"
+description = "Previous terminal tab"
+
+[[context.bindings]]
+on = "Ctrl+Alt+Q"
+run = "near.app.force-quit"
+description = "Emergency quit (discard unsaved changes)"
+
+[[context.bindings]]
+on = "Ctrl+Shift+F3"
+run = "near.history.viewed-show"
+description = "View history"
+
+[[context.bindings]]
+on = "Ctrl+Shift+F4"
+run = "near.history.edited-show"
+description = "Edit history"
+
+[[context.bindings]]
+on = "Alt+F11"
+run = "near.history.menu"
+description = "View/edit history"
+hint = { group = "function", slot = 11 }
+
+[[context]]
+id = "workspace.panel"
+inherits = ["global"]
+
+[[context.bindings]]
+on = "Tab"
+run = "near.workspace.focus-peer"
+description = "Switch panel"
+
+[[context.bindings]]
+on = "Ctrl+U"
+run = "near.workspace.swap-peers"
+description = "Swap panels"
+
+[[context.bindings]]
+on = "Ctrl+Q"
+run = "near.panel.toggle-quick-view"
+description = "Quick view"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Q"
+run = "near.panel.quick-view-control"
+description = "Control quick view"
+
+[[context.bindings]]
+on = "Ctrl+T"
+run = "near.panel.toggle-tree"
+description = "Tree panel"
+
+[[context.bindings]]
+on = "Ctrl+L"
+run = "near.panel.toggle-information"
+description = "Information panel"
+
+[[context.bindings]]
+on = "Ctrl+Z"
+run = "near.resource.description"
+description = "Describe"
+
+[[context.bindings]]
+on = "Ctrl+G"
+run = "near.operation.apply-command"
+description = "Apply command"
+
+[[context.bindings]]
+on = "Ctrl+A"
+run = "near.resource.attributes"
+description = "Attributes"
+
+[[context.bindings]]
+on = "F3"
+run = "near.resource.view"
+description = "View"
+hint = { group = "function", slot = 3 }
+
+[[context.bindings]]
+on = "F4"
+run = "near.resource.edit"
+description = "Edit"
+hint = { group = "function", slot = 4 }
+
+[[context.bindings]]
+on = "Alt+F4"
+run = "near.resource.edit-external"
+description = "External edit"
+hint = { group = "function", slot = 4 }
+
+[[context.bindings]]
+on = "F5"
+run = "near.resource.copy-to-peer"
+description = "Copy"
+when = "peer.exists && target.copyable"
+hint = { group = "function", slot = 5 }
+
+[[context.bindings]]
+on = "Shift+F5"
+run = "near.resource.copy-current-to-peer"
+description = "Copy current item only"
+hint = { group = "function", slot = 5 }
+
+[[context.bindings]]
+on = "F6"
+run = "near.resource.move-to-peer"
+description = "Move"
+when = "peer.exists && target.movable"
+hint = { group = "function", slot = 6 }
+
+[[context.bindings]]
+on = "Shift+F6"
+run = "near.resource.move-current-to-peer"
+description = "Move current item only"
+hint = { group = "function", slot = 6 }
+
+[[context.bindings]]
+on = "Alt+F6"
+run = "near.resource.link"
+description = "Create link"
+hint = { group = "function", slot = 6 }
+
+[[context.bindings]]
+on = "F7"
+run = "near.fs.create-directory"
+description = "New folder"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Alt+F7"
+run = "near.search.start"
+description = "Find files"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Ctrl+Alt+F7"
+run = "near.search.panels"
+description = "Saved search panels"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Alt+F7"
+run = "near.search.keep-panel"
+description = "Keep search panel"
+
+[[context.bindings]]
+on = "Alt+F8"
+run = "near.command-line.history-show"
+description = "Command history"
+hint = { group = "function", slot = 8 }
+
+[[context.bindings]]
+on = "F2"
+run = "near.user-menu.global"
+description = "User menu"
+hint = { group = "function", slot = 2 }
+
+[[context.bindings]]
+on = "Shift+F2"
+run = "near.user-menu.local"
+description = "Local menu"
+hint = { group = "function", slot = 2 }
+
+[[context.bindings]]
+on = "F8"
+run = "near.resource.trash"
+description = "Trash"
+when = "target.trashable"
+hint = { group = "function", slot = 8 }
+
+[[context.bindings]]
+on = "Shift+F8"
+run = "near.resource.trash-current"
+description = "Trash current item only"
+hint = { group = "function", slot = 8 }
+
+[[context.bindings]]
+on = "Shift+Delete"
+run = "near.resource.delete"
+description = "Delete permanently"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Delete"
+run = "near.resource.wipe"
+description = "Wipe files"
+
+[[context.bindings]]
+on = "F11"
+run = "near.extensions.show"
+description = "Extensions"
+hint = { group = "function", slot = 11 }
+
+[[context.bindings]]
+on = "Space"
+run = "near.collection.toggle-selection"
+description = "Select"
+
+[[context.bindings]]
+on = "Insert"
+run = { command = "near.collection.toggle-selection-move", args = { rows = 1 } }
+description = "Select and move down"
+
+[[context.bindings]]
+on = "Up"
+run = { command = "near.collection.move", args = { rows = -1 } }
+description = "Previous item"
+
+[[context.bindings]]
+on = "Down"
+run = { command = "near.collection.move", args = { rows = 1 } }
+description = "Next item"
+
+[[context.bindings]]
+on = "Shift+Up"
+run = { command = "near.collection.toggle-selection-move", args = { rows = -1 } }
+description = "Select and move up"
+
+[[context.bindings]]
+on = "Shift+Down"
+run = { command = "near.collection.toggle-selection-move", args = { rows = 1 } }
+description = "Select and move down"
+
+[[context.bindings]]
+on = "Left"
+run = "near.collection.first"
+description = "First item"
+
+[[context.bindings]]
+on = "Right"
+run = "near.collection.last"
+description = "Last item"
+
+[[context.bindings]]
+on = "Home"
+run = "near.collection.first"
+description = "First item"
+
+[[context.bindings]]
+on = "End"
+run = "near.collection.last"
+description = "Last item"
+
+[[context.bindings]]
+on = "PageUp"
+run = { command = "near.collection.page", args = { pages = -1 } }
+description = "Previous page"
+
+[[context.bindings]]
+on = "PageDown"
+run = { command = "near.collection.page", args = { pages = 1 } }
+description = "Next page"
+
+[[context.bindings]]
+on = "Alt+Left"
+run = { command = "near.collection.scroll-horizontal", args = { columns = -1 } }
+description = "Scroll panel text left"
+
+[[context.bindings]]
+on = "Alt+Right"
+run = { command = "near.collection.scroll-horizontal", args = { columns = 1 } }
+description = "Scroll panel text right"
+
+[[context.bindings]]
+on = "Ctrl+Alt+Left"
+run = { command = "near.collection.scroll-horizontal", args = { columns = -20 } }
+description = "Scroll panel text left by twenty columns"
+
+[[context.bindings]]
+on = "Ctrl+Alt+Right"
+run = { command = "near.collection.scroll-horizontal", args = { columns = 20 } }
+description = "Scroll panel text right by twenty columns"
+
+[[context.bindings]]
+on = "Alt+Home"
+run = "near.collection.horizontal-start"
+description = "Align panel text left"
+
+[[context.bindings]]
+on = "Alt+End"
+run = "near.collection.horizontal-end"
+description = "Align panel text right"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Left"
+run = { command = "near.workspace.resize-panels", args = { columns = -10 } }
+description = "Narrow left panel"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Right"
+run = { command = "near.workspace.resize-panels", args = { columns = 10 } }
+description = "Widen left panel"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Up"
+run = { command = "near.workspace.resize-panels", args = { rows = -5 } }
+description = "Shorten panels"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Down"
+run = { command = "near.workspace.resize-panels", args = { rows = 5 } }
+description = "Taller panels"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Home"
+run = "near.workspace.reset-panel-layout"
+description = "Reset panel layout"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.resource.open"
+description = "Open"
+
+[[context.bindings]]
+on = "Backspace"
+run = "near.location.parent"
+description = "Parent"
+
+[[context.bindings]]
+on = "Ctrl+R"
+run = "near.panel.refresh"
+description = "Refresh panels"
+
+[[context.bindings]]
+on = "Ctrl+E"
+run = "near.command-line.history-previous"
+description = "Previous command"
+
+[[context.bindings]]
+on = "Ctrl+X"
+run = "near.command-line.history-next"
+description = "Next command"
+
+[[context.bindings]]
+on = "Ctrl+Enter"
+run = "near.command-line.insert-current"
+description = "Insert current name"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Enter"
+run = "near.command-line.insert-peer"
+description = "Insert peer name"
+
+[[context.bindings]]
+on = "Ctrl+Alt+Enter"
+run = "near.command-line.insert-selected"
+description = "Insert selected names"
+
+[[context.bindings]]
+on = "Ctrl+["
+run = "near.command-line.insert-focused-path"
+description = "Insert focused panel path"
+
+[[context.bindings]]
+on = "Ctrl+]"
+run = "near.command-line.insert-peer-path"
+description = "Insert peer panel path"
+
+[[context.bindings]]
+on = "Ctrl+Shift+["
+run = "near.command-line.insert-current-path"
+description = "Insert current path"
+
+[[context.bindings]]
+on = "Ctrl+Shift+]"
+run = "near.command-line.insert-peer-current-path"
+description = "Insert peer current path"
+
+[[context.bindings]]
+on = "Ctrl+Shift+F"
+run = "near.filters.show"
+description = "Filters"
+
+[[context.bindings]]
+on = "Ctrl+Shift+S"
+run = "near.selection.menu"
+description = "Selection commands"
+
+[[context.bindings]]
+on = "Ctrl+Shift+C"
+run = "near.selection.compare-folders"
+description = "Compare folders"
+
+[[context.bindings]]
+on = "Alt+0"
+run = "near.panel.view-mode.menu"
+description = "Panel view modes"
+
+[[context.bindings]]
+on = "Alt+1"
+run = { command = "near.panel.view-mode.set", args = { id = "compact" } }
+description = "Compact panel mode"
+
+[[context.bindings]]
+on = "Alt+2"
+run = { command = "near.panel.view-mode.set", args = { id = "medium" } }
+description = "Medium panel mode"
+
+[[context.bindings]]
+on = "Alt+3"
+run = { command = "near.panel.view-mode.set", args = { id = "full" } }
+description = "Full panel mode"
+
+[[context.bindings]]
+on = "Alt+4"
+run = { command = "near.panel.view-mode.set", args = { id = "metadata" } }
+description = "Metadata panel mode"
+
+[[context.bindings]]
+on = "Ctrl+F3"
+run = "near.collection.sort.name"
+description = "Sort by name"
+hint = { group = "function", slot = 3 }
+
+[[context.bindings]]
+on = "Ctrl+F4"
+run = "near.collection.sort.extension"
+description = "Sort by extension"
+hint = { group = "function", slot = 4 }
+
+[[context.bindings]]
+on = "Ctrl+F5"
+run = "near.collection.sort.modified"
+description = "Sort by modified time"
+hint = { group = "function", slot = 5 }
+
+[[context.bindings]]
+on = "Ctrl+F6"
+run = "near.collection.sort.size"
+description = "Sort by size"
+hint = { group = "function", slot = 6 }
+
+[[context.bindings]]
+on = "Ctrl+F7"
+run = "near.collection.sort.unsorted"
+description = "Unsorted"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Ctrl+F8"
+run = "near.collection.sort.created"
+description = "Sort by creation time"
+hint = { group = "function", slot = 8 }
+
+[[context.bindings]]
+on = "Ctrl+F9"
+run = "near.collection.sort.accessed"
+description = "Sort by access time"
+hint = { group = "function", slot = 9 }
+
+[[context.bindings]]
+on = "Ctrl+F10"
+run = "near.collection.sort.kind"
+description = "Sort by metadata kind"
+hint = { group = "function", slot = 10 }
+
+[[context.bindings]]
+on = "Ctrl+F11"
+run = "near.collection.sort.owner"
+description = "Sort by owner"
+hint = { group = "function", slot = 11 }
+
+[[context.bindings]]
+on = "Ctrl+F12"
+run = "near.collection.sort.menu"
+description = "Sort modes"
+hint = { group = "function", slot = 12 }
+
+[[context.bindings]]
+on = "Alt+F12"
+run = "near.location.history-show"
+description = "Folder history"
+hint = { group = "function", slot = 12 }
+
+[[context.bindings]]
+on = "Ctrl+0"
+run = { command = "near.location.shortcut-open", args = { slot = 0 } }
+description = "Folder shortcut 0"
+
+[[context.bindings]]
+on = "Ctrl+1"
+run = { command = "near.location.shortcut-open", args = { slot = 1 } }
+description = "Folder shortcut 1"
+
+[[context.bindings]]
+on = "Ctrl+2"
+run = { command = "near.location.shortcut-open", args = { slot = 2 } }
+description = "Folder shortcut 2"
+
+[[context.bindings]]
+on = "Ctrl+3"
+run = { command = "near.location.shortcut-open", args = { slot = 3 } }
+description = "Folder shortcut 3"
+
+[[context.bindings]]
+on = "Ctrl+4"
+run = { command = "near.location.shortcut-open", args = { slot = 4 } }
+description = "Folder shortcut 4"
+
+[[context.bindings]]
+on = "Ctrl+5"
+run = { command = "near.location.shortcut-open", args = { slot = 5 } }
+description = "Folder shortcut 5"
+
+[[context.bindings]]
+on = "Ctrl+6"
+run = { command = "near.location.shortcut-open", args = { slot = 6 } }
+description = "Folder shortcut 6"
+
+[[context.bindings]]
+on = "Ctrl+7"
+run = { command = "near.location.shortcut-open", args = { slot = 7 } }
+description = "Folder shortcut 7"
+
+[[context.bindings]]
+on = "Ctrl+8"
+run = { command = "near.location.shortcut-open", args = { slot = 8 } }
+description = "Folder shortcut 8"
+
+[[context.bindings]]
+on = "Ctrl+9"
+run = { command = "near.location.shortcut-open", args = { slot = 9 } }
+description = "Folder shortcut 9"
+
+[[context.bindings]]
+on = "Ctrl+Shift+0"
+run = { command = "near.location.shortcut-assign", args = { slot = 0 } }
+description = "Assign folder shortcut 0"
+
+[[context.bindings]]
+on = "Ctrl+Shift+1"
+run = { command = "near.location.shortcut-assign", args = { slot = 1 } }
+description = "Assign folder shortcut 1"
+
+[[context.bindings]]
+on = "Ctrl+Shift+2"
+run = { command = "near.location.shortcut-assign", args = { slot = 2 } }
+description = "Assign folder shortcut 2"
+
+[[context.bindings]]
+on = "Ctrl+Shift+3"
+run = { command = "near.location.shortcut-assign", args = { slot = 3 } }
+description = "Assign folder shortcut 3"
+
+[[context.bindings]]
+on = "Ctrl+Shift+4"
+run = { command = "near.location.shortcut-assign", args = { slot = 4 } }
+description = "Assign folder shortcut 4"
+
+[[context.bindings]]
+on = "Ctrl+Shift+5"
+run = { command = "near.location.shortcut-assign", args = { slot = 5 } }
+description = "Assign folder shortcut 5"
+
+[[context.bindings]]
+on = "Ctrl+Shift+6"
+run = { command = "near.location.shortcut-assign", args = { slot = 6 } }
+description = "Assign folder shortcut 6"
+
+[[context.bindings]]
+on = "Ctrl+Shift+7"
+run = { command = "near.location.shortcut-assign", args = { slot = 7 } }
+description = "Assign folder shortcut 7"
+
+[[context.bindings]]
+on = "Ctrl+Shift+8"
+run = { command = "near.location.shortcut-assign", args = { slot = 8 } }
+description = "Assign folder shortcut 8"
+
+[[context.bindings]]
+on = "Ctrl+Shift+9"
+run = { command = "near.location.shortcut-assign", args = { slot = 9 } }
+description = "Assign folder shortcut 9"
+
+[[context.bindings]]
+on = "Shift+F11"
+run = "near.collection.sort.toggle-groups"
+description = "Sort groups"
+hint = { group = "function", slot = 11 }
+
+[[context.bindings]]
+on = "Shift+F12"
+run = "near.collection.sort.toggle-selected-first"
+description = "Selected first"
+hint = { group = "function", slot = 12 }
+
+[[context.bindings]]
+on = "Alt+F1"
+run = { command = "near.provider.choose", args = { target = "left" } }
+description = "Choose left/provider"
+hint = { group = "function", slot = 1 }
+
+[[context.bindings]]
+on = "Alt+F2"
+run = { command = "near.provider.choose", args = { target = "right" } }
+description = "Choose right/provider"
+hint = { group = "function", slot = 2 }
+
+[[context.bindings]]
+on = "Alt+Shift+F12"
+run = "near.temp-panel.list"
+description = "Temporary panels"
+
+[[context.bindings]]
+on = "Alt+Shift+0"
+run = { command = "near.temp-panel.open", args = { slot = 0 } }
+description = "Temporary panel 0"
+
+[[context.bindings]]
+on = "Alt+Shift+1"
+run = { command = "near.temp-panel.open", args = { slot = 1 } }
+description = "Temporary panel 1"
+
+[[context.bindings]]
+on = "Alt+Shift+2"
+run = { command = "near.temp-panel.open", args = { slot = 2 } }
+description = "Temporary panel 2"
+
+[[context.bindings]]
+on = "Alt+Shift+3"
+run = { command = "near.temp-panel.open", args = { slot = 3 } }
+description = "Temporary panel 3"
+
+[[context.bindings]]
+on = "Alt+Shift+4"
+run = { command = "near.temp-panel.open", args = { slot = 4 } }
+description = "Temporary panel 4"
+
+[[context.bindings]]
+on = "Alt+Shift+5"
+run = { command = "near.temp-panel.open", args = { slot = 5 } }
+description = "Temporary panel 5"
+
+[[context.bindings]]
+on = "Alt+Shift+6"
+run = { command = "near.temp-panel.open", args = { slot = 6 } }
+description = "Temporary panel 6"
+
+[[context.bindings]]
+on = "Alt+Shift+7"
+run = { command = "near.temp-panel.open", args = { slot = 7 } }
+description = "Temporary panel 7"
+
+[[context.bindings]]
+on = "Alt+Shift+8"
+run = { command = "near.temp-panel.open", args = { slot = 8 } }
+description = "Temporary panel 8"
+
+[[context.bindings]]
+on = "Alt+Shift+9"
+run = { command = "near.temp-panel.open", args = { slot = 9 } }
+description = "Temporary panel 9"
+
+[[context]]
+id = "workspace.temporary-panel"
+inherits = ["workspace.panel"]
+
+[[context.bindings]]
+on = "F7"
+run = "near.temp-panel.remove"
+description = "Remove reference"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Shift+F7"
+run = "near.temp-panel.clear"
+description = "Clear panel references"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Ctrl+Shift+F7"
+run = "near.temp-panel.clear-all"
+description = "Clear all panel references"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Alt+Shift+F2"
+run = "near.temp-panel.export"
+description = "Save reference list"
+
+[[context.bindings]]
+on = "Ctrl+PageUp"
+run = "near.temp-panel.reveal"
+description = "Reveal source resource"
+
+[[context]]
+id = "overlay.confirm"
+inherits = ["global"]
+
+[[context.bindings]]
+on = "Enter"
+aliases = ["y"]
+run = "near.overlay.accept"
+description = "Confirm"
+
+[[context.bindings]]
+on = "Esc"
+aliases = ["n"]
+run = "near.overlay.cancel"
+description = "Cancel"
+
+[[context]]
+id = "overlay.menu"
+inherits = ["global"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.menu.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.menu.down"
+
+[[context.bindings]]
+on = "Left"
+run = "near.menu.previous-category"
+
+[[context.bindings]]
+on = "Right"
+run = "near.menu.next-category"
+
+[[context.bindings]]
+on = "Tab"
+run = "near.menu.switch-panel"
+
+[[context.bindings]]
+on = "Shift+Tab"
+run = "near.menu.switch-panel"
+
+[[context.bindings]]
+on = "Home"
+run = "near.menu.first"
+
+[[context.bindings]]
+on = "End"
+run = "near.menu.last"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.menu.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.menu.page-down"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.menu.activate"
+
+[[context.bindings]]
+on = "Esc"
+run = "near.overlay.cancel"
+
+[[context]]
+id = "surface.menu"
+inherits = ["overlay.menu"]
+
+[[context]]
+id = "overlay.viewer"
+inherits = ["global"]
+
+[[context.bindings]]
+on = "Esc"
+run = "near.overlay.cancel"
+
+[[context]]
+id = "surface.command-history"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.command-history.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.command-history.down"
+
+[[context.bindings]]
+on = "Home"
+run = "near.command-history.first"
+
+[[context.bindings]]
+on = "End"
+run = "near.command-history.last"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.command-history.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.command-history.page-down"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.command-history.use"
+
+[[context.bindings]]
+on = "Space"
+run = "near.command-history.toggle-lock"
+
+[[context.bindings]]
+on = "Delete"
+run = "near.command-history.clear-unlocked"
+
+[[context]]
+id = "surface.folder-history"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.folder-history.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.folder-history.down"
+
+[[context.bindings]]
+on = "Home"
+run = "near.folder-history.first"
+
+[[context.bindings]]
+on = "End"
+run = "near.folder-history.last"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.folder-history.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.folder-history.page-down"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.folder-history.activate"
+
+[[context.bindings]]
+on = "Space"
+run = "near.folder-history.toggle-lock"
+
+[[context.bindings]]
+on = "Delete"
+run = "near.folder-history.clear"
+
+[[context]]
+id = "surface.resource-history"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.resource-history.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.resource-history.down"
+
+[[context.bindings]]
+on = "Home"
+run = "near.resource-history.first"
+
+[[context.bindings]]
+on = "End"
+run = "near.resource-history.last"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.resource-history.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.resource-history.page-down"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.resource-history.open"
+
+[[context.bindings]]
+on = "Space"
+run = "near.resource-history.toggle-lock"
+
+[[context.bindings]]
+on = "Delete"
+run = "near.resource-history.clear-unlocked"
+
+[[context]]
+id = "surface.viewer"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Ctrl+Shift+Q"
+run = "near.panel.quick-view-control"
+description = "Return to file panel"
+
+[[context.bindings]]
+on = "Up"
+run = "near.viewer.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.viewer.down"
+
+[[context.bindings]]
+on = "Left"
+run = "near.viewer.left"
+
+[[context.bindings]]
+on = "Right"
+run = "near.viewer.right"
+
+[[context.bindings]]
+on = "Shift+Up"
+run = "near.viewer.select-up"
+
+[[context.bindings]]
+on = "Shift+Down"
+run = "near.viewer.select-down"
+
+[[context.bindings]]
+on = "Shift+Left"
+run = "near.viewer.select-left"
+
+[[context.bindings]]
+on = "Shift+Right"
+run = "near.viewer.select-right"
+
+[[context.bindings]]
+on = "Alt+Shift+Up"
+run = "near.viewer.column-select-up"
+
+[[context.bindings]]
+on = "Alt+Shift+Down"
+run = "near.viewer.column-select-down"
+
+[[context.bindings]]
+on = "Alt+Shift+Left"
+run = "near.viewer.column-select-left"
+
+[[context.bindings]]
+on = "Alt+Shift+Right"
+run = "near.viewer.column-select-right"
+
+[[context.bindings]]
+on = "Ctrl+C"
+run = "near.viewer.copy"
+
+[[context.bindings]]
+on = "Ctrl+Insert"
+run = "near.viewer.copy"
+
+[[context.bindings]]
+on = "Ctrl+U"
+run = "near.viewer.selection-clear"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.viewer.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.viewer.page-down"
+
+[[context.bindings]]
+on = "Home"
+run = "near.viewer.home"
+
+[[context.bindings]]
+on = "End"
+run = "near.viewer.end"
+
+[[context.bindings]]
+on = "F2"
+run = "near.viewer.toggle-wrap"
+
+[[context.bindings]]
+on = "F4"
+run = "near.viewer.toggle-hex"
+
+[[context.bindings]]
+on = "F7"
+run = "near.viewer.search-start"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.viewer.search-confirm"
+
+[[context.bindings]]
+on = "Shift+F7"
+run = "near.viewer.search-next"
+description = "Next match"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Alt+F7"
+run = "near.viewer.search-previous"
+description = "Previous match"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "F8"
+run = "near.viewer.cycle-encoding"
+
+[[context.bindings]]
+on = "Alt+F8"
+run = "near.viewer.goto-start"
+description = "Go to position"
+hint = { group = "function", slot = 8 }
+
+[[context.bindings]]
+on = "Alt+Left"
+run = "near.viewer.history-back"
+
+[[context.bindings]]
+on = "Alt+Right"
+run = "near.viewer.history-forward"
+
+[[context.bindings]]
+on = "Alt+1"
+run = { command = "near.viewer.bookmark-set", args = { slot = 1 } }
+
+[[context.bindings]]
+on = "Ctrl+1"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 1 } }
+
+[[context.bindings]]
+on = "Alt+2"
+run = { command = "near.viewer.bookmark-set", args = { slot = 2 } }
+
+[[context.bindings]]
+on = "Ctrl+2"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 2 } }
+
+[[context.bindings]]
+on = "Alt+3"
+run = { command = "near.viewer.bookmark-set", args = { slot = 3 } }
+
+[[context.bindings]]
+on = "Ctrl+3"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 3 } }
+
+[[context.bindings]]
+on = "Alt+4"
+run = { command = "near.viewer.bookmark-set", args = { slot = 4 } }
+
+[[context.bindings]]
+on = "Ctrl+4"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 4 } }
+
+[[context.bindings]]
+on = "Alt+5"
+run = { command = "near.viewer.bookmark-set", args = { slot = 5 } }
+
+[[context.bindings]]
+on = "Ctrl+5"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 5 } }
+
+[[context.bindings]]
+on = "Alt+6"
+run = { command = "near.viewer.bookmark-set", args = { slot = 6 } }
+
+[[context.bindings]]
+on = "Ctrl+6"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 6 } }
+
+[[context.bindings]]
+on = "Alt+7"
+run = { command = "near.viewer.bookmark-set", args = { slot = 7 } }
+
+[[context.bindings]]
+on = "Ctrl+7"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 7 } }
+
+[[context.bindings]]
+on = "Alt+8"
+run = { command = "near.viewer.bookmark-set", args = { slot = 8 } }
+
+[[context.bindings]]
+on = "Ctrl+8"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 8 } }
+
+[[context.bindings]]
+on = "Alt+9"
+run = { command = "near.viewer.bookmark-set", args = { slot = 9 } }
+
+[[context.bindings]]
+on = "Ctrl+9"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 9 } }
+
+[[context.bindings]]
+on = "Alt+0"
+run = { command = "near.viewer.bookmark-set", args = { slot = 0 } }
+
+[[context.bindings]]
+on = "Ctrl+0"
+run = { command = "near.viewer.bookmark-jump", args = { slot = 0 } }
+
+[[context]]
+id = "surface.editor"
+inherits = ["global"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.editor.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.editor.down"
+
+[[context.bindings]]
+on = "Left"
+run = "near.editor.left"
+
+[[context.bindings]]
+on = "Right"
+run = "near.editor.right"
+
+[[context.bindings]]
+on = "Shift+Up"
+run = "near.editor.select-up"
+
+[[context.bindings]]
+on = "Shift+Down"
+run = "near.editor.select-down"
+
+[[context.bindings]]
+on = "Shift+Left"
+run = "near.editor.select-left"
+
+[[context.bindings]]
+on = "Shift+Right"
+run = "near.editor.select-right"
+
+[[context.bindings]]
+on = "Alt+Shift+Up"
+run = "near.editor.column-select-up"
+
+[[context.bindings]]
+on = "Alt+Shift+Down"
+run = "near.editor.column-select-down"
+
+[[context.bindings]]
+on = "Alt+Shift+Left"
+run = "near.editor.column-select-left"
+
+[[context.bindings]]
+on = "Alt+Shift+Right"
+run = "near.editor.column-select-right"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.editor.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.editor.page-down"
+
+[[context.bindings]]
+on = "Home"
+run = "near.editor.home"
+
+[[context.bindings]]
+on = "End"
+run = "near.editor.end"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.editor.newline"
+
+[[context.bindings]]
+on = "Tab"
+run = "near.editor.insert-tab"
+
+[[context.bindings]]
+on = "Delete"
+run = "near.editor.delete"
+
+[[context.bindings]]
+on = "Ctrl+S"
+run = "near.editor.save"
+description = "Save"
+hint = { group = "function", slot = 2 }
+
+[[context.bindings]]
+on = "F2"
+run = "near.editor.save"
+description = "Save"
+hint = { group = "function", slot = 2 }
+
+[[context.bindings]]
+on = "Shift+F2"
+run = "near.editor.save-as"
+description = "Save As"
+hint = { group = "function", slot = 2 }
+
+[[context.bindings]]
+on = "Ctrl+Shift+S"
+run = "near.editor.save-as"
+description = "Save As"
+
+[[context.bindings]]
+on = "Ctrl+Z"
+run = "near.editor.undo"
+description = "Undo"
+
+[[context.bindings]]
+on = "Ctrl+Y"
+run = "near.editor.redo"
+description = "Redo"
+
+[[context.bindings]]
+on = "Ctrl+B"
+run = "near.editor.selection-toggle"
+description = "Mark block"
+
+[[context.bindings]]
+on = "Ctrl+U"
+run = "near.editor.selection-clear"
+description = "Clear block"
+
+[[context.bindings]]
+on = "Ctrl+Shift+B"
+run = "near.editor.toggle-persistent-blocks"
+description = "Persistent blocks"
+
+[[context.bindings]]
+on = "Ctrl+A"
+run = "near.editor.select-all"
+description = "Select all"
+
+[[context.bindings]]
+on = "Ctrl+C"
+run = "near.editor.copy"
+description = "Copy"
+
+[[context.bindings]]
+on = "Ctrl+X"
+run = "near.editor.cut"
+description = "Cut"
+
+[[context.bindings]]
+on = "Ctrl+V"
+run = "near.editor.paste"
+description = "Paste"
+
+[[context.bindings]]
+on = "F7"
+run = "near.editor.search-start"
+description = "Search"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Shift+F7"
+run = "near.editor.search-next"
+description = "Next match"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Ctrl+F7"
+run = "near.editor.replace-start"
+description = "Replace"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Ctrl+Shift+F7"
+run = "near.editor.replace-all"
+description = "Replace all"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Ctrl+Alt+F7"
+run = "near.editor.find-all"
+description = "Find all"
+hint = { group = "function", slot = 7 }
+
+[[context.bindings]]
+on = "Alt+R"
+run = "near.editor.toggle-regex"
+description = "Regex"
+
+[[context.bindings]]
+on = "Alt+P"
+run = "near.editor.toggle-preserve-style"
+description = "Preserve style"
+
+[[context.bindings]]
+on = "Esc"
+run = "near.editor.close"
+description = "Close"
+hint = { group = "function", slot = 10 }
+
+[[context]]
+id = "surface.help"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.help.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.help.down"
+
+[[context.bindings]]
+on = "Home"
+run = "near.help.home"
+
+[[context.bindings]]
+on = "End"
+run = "near.help.end"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.help.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.help.page-down"
+
+[[context.bindings]]
+on = "Tab"
+run = "near.help.next-link"
+
+[[context.bindings]]
+on = "Shift+Tab"
+run = "near.help.previous-link"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.help.activate"
+
+[[context.bindings]]
+on = "F7"
+run = "near.help.search"
+
+[[context.bindings]]
+on = "Alt+F1"
+run = "near.help.back"
+
+[[context.bindings]]
+on = "Backspace"
+run = "near.help.back"
+
+[[context.bindings]]
+on = "Ctrl+Enter"
+run = "near.help.search-next"
+
+[[context]]
+id = "surface.tree"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.tree.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.tree.down"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.tree.toggle"
+
+[[context]]
+id = "surface.inspector"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.inspector.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.inspector.down"
+
+[[context.bindings]]
+on = "Home"
+run = "near.inspector.home"
+
+[[context.bindings]]
+on = "End"
+run = "near.inspector.end"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.inspector.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.inspector.page-down"
+
+[[context]]
+id = "surface.settings"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.settings.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.settings.down"
+
+[[context.bindings]]
+on = "Home"
+run = "near.settings.first"
+
+[[context.bindings]]
+on = "End"
+run = "near.settings.last"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.settings.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.settings.page-down"
+
+[[context.bindings]]
+on = "Delete"
+run = "near.settings.reset"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.settings.toggle"
+
+[[context.bindings]]
+on = "F4"
+run = "near.settings.edit"
+
+[[context.bindings]]
+on = "F5"
+run = "near.settings.reload"
+
+[[context.bindings]]
+on = "F6"
+run = "near.settings.toggle-advanced"
+
+[[context]]
+id = "surface.tasks"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Up"
+run = "near.tasks.up"
+
+[[context.bindings]]
+on = "Down"
+run = "near.tasks.down"
+
+[[context.bindings]]
+on = "Home"
+run = "near.tasks.first"
+
+[[context.bindings]]
+on = "End"
+run = "near.tasks.last"
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.tasks.page-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.tasks.page-down"
+
+[[context.bindings]]
+on = "Delete"
+run = "near.tasks.cancel"
+
+[[context.bindings]]
+on = "r"
+run = "near.tasks.retry"
+
+[[context]]
+id = "surface.terminal"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "PageUp"
+run = "near.terminal.scroll-up"
+
+[[context.bindings]]
+on = "PageDown"
+run = "near.terminal.scroll-down"
+
+[[context.bindings]]
+on = "Ctrl+Shift+C"
+run = "near.terminal.copy-mode"
+
+[[context.bindings]]
+on = "Ctrl+Shift+Q"
+run = "near.terminal.close"
+description = "Close terminal"
+
+[[context.bindings]]
+on = "Ctrl+Alt+P"
+aliases = ["Ctrl+Alt+Tab"]
+run = "near.workspace.focus-peer"
+description = "Focus peer pane"
+
+[[context.bindings]]
+on = "Enter"
+run = { command = "near.terminal.send-key", args = { key = "enter" } }
+
+[[context.bindings]]
+on = "Tab"
+run = { command = "near.terminal.send-key", args = { key = "tab" } }
+
+[[context.bindings]]
+on = "Esc"
+run = { command = "near.terminal.send-key", args = { key = "escape" } }
+
+[[context.bindings]]
+on = "Up"
+run = { command = "near.terminal.send-key", args = { key = "up" } }
+
+[[context.bindings]]
+on = "Down"
+run = { command = "near.terminal.send-key", args = { key = "down" } }
+
+[[context.bindings]]
+on = "Left"
+run = { command = "near.terminal.send-key", args = { key = "left" } }
+
+[[context.bindings]]
+on = "Right"
+run = { command = "near.terminal.send-key", args = { key = "right" } }
+
+[[context.bindings]]
+on = "Home"
+run = { command = "near.terminal.send-key", args = { key = "home" } }
+
+[[context.bindings]]
+on = "End"
+run = { command = "near.terminal.send-key", args = { key = "end" } }
+
+[[context.bindings]]
+on = "Delete"
+run = { command = "near.terminal.send-key", args = { key = "delete" } }
+
+[[context.bindings]]
+on = "Ctrl+C"
+run = "near.terminal.interrupt"
+
+[[context.bindings]]
+on = "Ctrl+D"
+run = "near.terminal.eof"
+
+[[context.bindings]]
+on = "Ctrl+L"
+run = "near.terminal.clear"
+
+[[context]]
+id = "surface.dialog"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Tab"
+run = "near.dialog.next"
+
+[[context.bindings]]
+on = "BackTab"
+run = "near.dialog.previous"
+
+[[context.bindings]]
+on = "Enter"
+run = "near.dialog.accept"
+
+[[context]]
+id = "surface.operation-preview"
+inherits = ["overlay.viewer"]
+
+[[context.bindings]]
+on = "Enter"
+run = "near.operation.execute"
+
+[[context.bindings]]
+on = "s"
+run = "near.operation.conflict.skip"
+
+[[context.bindings]]
+on = "r"
+run = "near.operation.conflict.replace"
+
+[[context.bindings]]
+on = "n"
+run = "near.operation.conflict.rename"
+
+[[context]]
+id = "workspace.panel.vim-navigation"
+inherits = ["workspace.panel"]
+optional = true
+
+[[context.bindings]]
+on = "j"
+run = { command = "near.collection.move", args = { rows = 1 } }
+
+[[context.bindings]]
+on = "k"
+run = { command = "near.collection.move", args = { rows = -1 } }
+
+[[context.bindings]]
+on = "h"
+run = "near.location.parent"
+
+[[context.bindings]]
+on = "l"
+run = "near.resource.open"

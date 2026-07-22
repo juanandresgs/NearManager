@@ -1,0 +1,124 @@
+schema = 1
+method = "OWASP four-question framework with STRIDE-oriented review"
+review_on = ["new provider", "new execution mode", "new plugin capability", "architecture boundary change", "security incident", "stable release"]
+
+[[asset]]
+id = "AST-USER-DATA"
+name = "User files and metadata"
+classification = "critical"
+
+[[asset]]
+id = "AST-TERMINAL"
+name = "Terminal session integrity"
+classification = "high"
+
+[[asset]]
+id = "AST-CONFIG"
+name = "Configuration keymaps handlers and trust grants"
+classification = "high"
+
+[[asset]]
+id = "AST-CREDENTIALS"
+name = "Environment credentials SSH agents and tokens"
+classification = "critical"
+
+[[asset]]
+id = "AST-RELEASE"
+name = "Distributed binaries plugins and update metadata"
+classification = "critical"
+
+[[boundary]]
+id = "TRUST-TERMINAL"
+name = "Terminal emulator to Near"
+description = "Untrusted or ambiguous input events capabilities paste content and control-sequence behavior."
+
+[[boundary]]
+id = "TRUST-OS"
+name = "Near to operating system resources"
+description = "Filesystem process clipboard Trash metadata and PTY APIs with user authority."
+
+[[boundary]]
+id = "TRUST-TOOL"
+name = "Near to external tools"
+description = "Argument templates environment inheritance terminal handoff and child output."
+
+[[boundary]]
+id = "TRUST-PLUGIN"
+name = "Near to extension"
+description = "Process or Wasm plugin inputs outputs capabilities and resource limits."
+
+[[boundary]]
+id = "TRUST-CONFIG"
+name = "Installed or workspace configuration to runtime"
+description = "Commands handlers plugins keymaps and themes may originate outside the application binary."
+
+[[threat]]
+id = "THR-001"
+title = "Terminal escape or paste injection"
+category = "spoofing/tampering"
+boundaries = ["TRUST-TERMINAL"]
+assets = ["AST-TERMINAL", "AST-USER-DATA"]
+requirements = ["REQ-TERM-001", "REQ-TERM-002", "REQ-SEC-001"]
+mitigations = ["Normalize input events", "Use bracketed paste state", "Never interpret pasted text as commands outside text-entry surfaces", "Restore protocol state on every exit path"]
+status = "mitigated-by-design"
+
+[[threat]]
+id = "THR-002"
+title = "Shell or argument injection through resource names"
+category = "tampering/elevation"
+boundaries = ["TRUST-TOOL"]
+assets = ["AST-USER-DATA", "AST-CREDENTIALS"]
+requirements = ["REQ-HANDLER-001", "REQ-EXT-001"]
+mitigations = ["Structured argv by default", "Explicit shell mode", "Typed template variables", "Property tests using hostile filenames"]
+status = "mitigated-by-design"
+
+[[threat]]
+id = "THR-003"
+title = "Stale or changed operation target"
+category = "tampering"
+boundaries = ["TRUST-OS"]
+assets = ["AST-USER-DATA"]
+requirements = ["REQ-OPS-001", "REQ-OPS-002", "REQ-SEC-001"]
+mitigations = ["Immutable operation plans", "Stable identities where available", "Generation and context checks", "Explicit symlink policy", "Exact journal outcomes"]
+status = "mitigated-by-design"
+
+[[threat]]
+id = "THR-004"
+title = "Extension exceeds granted authority"
+category = "elevation/information-disclosure"
+boundaries = ["TRUST-PLUGIN"]
+assets = ["AST-USER-DATA", "AST-CREDENTIALS", "AST-CONFIG"]
+requirements = ["REQ-PLUGIN-001", "REQ-PLUGIN-002", "REQ-SEC-002"]
+mitigations = ["No ambient authority", "Capability grants", "Process or Wasm isolation", "Resource limits", "Revocation and diagnostics"]
+status = "mitigated-by-design"
+
+[[threat]]
+id = "THR-005"
+title = "Untrusted workspace configuration execution"
+category = "elevation"
+boundaries = ["TRUST-CONFIG", "TRUST-TOOL", "TRUST-PLUGIN"]
+assets = ["AST-USER-DATA", "AST-CREDENTIALS", "AST-CONFIG"]
+requirements = ["REQ-CONFIG-001", "REQ-PLUGIN-002", "REQ-HANDLER-001"]
+mitigations = ["Workspace trust prompt", "Origin diagnostics", "No automatic shell execution", "Revocable plugin grants"]
+status = "mitigated-by-design"
+
+[[threat]]
+id = "THR-006"
+title = "Compromised release or dependency"
+category = "tampering"
+boundaries = ["TRUST-CONFIG"]
+assets = ["AST-RELEASE", "AST-USER-DATA", "AST-CREDENTIALS"]
+requirements = ["REQ-REL-001", "REQ-GOV-001"]
+mitigations = ["Signed tags", "Checksums", "SBOM", "Dependency audit", "Build provenance", "Reviewed exceptions"]
+status = "planned"
+
+[[threat]]
+id = "THR-007"
+title = "Sensitive information in diagnostics or journal"
+category = "information-disclosure"
+boundaries = ["TRUST-OS", "TRUST-PLUGIN"]
+assets = ["AST-USER-DATA", "AST-CREDENTIALS"]
+requirements = ["REQ-OBS-001", "REQ-OPS-002"]
+mitigations = ["Redaction by default", "No file content in traces", "User-controlled diagnostic export", "Plugin-private logs"]
+status = "mitigated-by-design"
+

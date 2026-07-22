@@ -1,0 +1,15 @@
+[[requirement]]
+id = "REQ-AREA-NNN"
+title = "Short noun phrase"
+type = "functional" # functional | quality | constraint | security | governance
+priority = "must" # must | should | may
+status = "draft"
+statement = "Near MUST provide one atomic and independently verifiable outcome."
+capabilities = ["CAP-AREA"]
+milestone = "M0" # M0..M5 or continuous
+rationale = "Why this requirement exists and which stakeholder need it serves."
+acceptance = ["Specific measurable criterion", "Second observable criterion"]
+verification = "test" # test | analysis | inspection | demonstration
+planned_evidence = ["tests/path_or_report"]
+design_refs = ["docs/design.md", "project/decisions/NNNN-decision.md"]
+

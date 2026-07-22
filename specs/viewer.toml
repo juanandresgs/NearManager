@@ -1,0 +1,11 @@
+schema = 1
+wrap = false
+hex = false
+detect_binary = true
+encoding = "auto"
+open_policy = "internal"
+remember_per_resource = true
+remember_position = true
+remember_bookmarks = true
+remember_encoding = true
+remember_view_mode = true

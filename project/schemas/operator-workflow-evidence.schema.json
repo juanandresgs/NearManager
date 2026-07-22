@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://near.invalid/schemas/operator-workflow-evidence.schema.json",
+  "title": "Near operator workflow evidence",
+  "type": "object",
+  "required": ["schema_version", "revision", "platform", "operator", "entries"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "revision": { "type": "string", "minLength": 7 },
+    "platform": { "enum": ["macos", "linux"] },
+    "operator": { "type": "string", "minLength": 1 },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scenario", "terminal", "status", "artifacts", "notes"],
+        "properties": {
+          "scenario": { "type": "string" },
+          "terminal": { "type": "string" },
+          "status": { "enum": ["pending", "passed", "failed"] },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["path", "sha256"],
+              "properties": {
+                "path": { "type": "string" },
+                "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+              }
+            }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

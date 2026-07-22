@@ -1,0 +1,95 @@
+package near:plugin@0.1.0;
+
+@since(version = 0.1.0)
+interface types {
+  record command-id {
+    value: string,
+  }
+
+  record resource-ref {
+    uri: string,
+    provider: string,
+  }
+
+  record command-context {
+    focused-location: option<string>,
+    peer-location: option<string>,
+    current: option<resource-ref>,
+    selected: list<resource-ref>,
+    capabilities: list<string>,
+  }
+
+  record command-descriptor {
+    id: command-id,
+    title: string,
+    description: string,
+    category: list<string>,
+    safety: string,
+  }
+
+  variant command-result {
+    message(string),
+    navigate(string),
+    open(list<resource-ref>),
+    task(string),
+  }
+
+  record resource-item {
+    reference: resource-ref,
+    name: string,
+    kind: string,
+    size: option<u64>,
+    modified-unix-ms: option<s64>,
+    capabilities: list<string>,
+  }
+}
+
+@since(version = 0.1.0)
+interface host {
+  use types.{resource-ref};
+
+  @since(version = 0.1.0)
+  log: func(level: string, message: string) -> result<_, string>;
+  @since(version = 0.1.0)
+  read: func(target: resource-ref, offset: u64, length: u32) -> result<list<u8>, string>;
+  @since(version = 0.1.0)
+  notify: func(severity: string, message: string) -> result<_, string>;
+}
+
+@since(version = 0.1.0)
+interface commands {
+  use types.{command-context, command-descriptor, command-id, command-result};
+
+  @since(version = 0.1.0)
+  list-commands: func() -> list<command-descriptor>;
+  @since(version = 0.1.0)
+  available: func(id: command-id, context: command-context) -> bool;
+  @since(version = 0.1.0)
+  invoke: func(id: command-id, context: command-context, arguments-json: string)
+    -> result<command-result, string>;
+}
+
+@since(version = 0.1.0)
+interface provider {
+  use types.{resource-item};
+
+  @since(version = 0.1.0)
+  id: func() -> string;
+  @since(version = 0.1.0)
+  schemes: func() -> list<string>;
+  @since(version = 0.1.0)
+  list-resources: func(location: string, cursor: option<string>, limit: u32)
+    -> result<tuple<list<resource-item>, option<string>>, string>;
+}
+
+@unstable(feature = provider-mutations)
+interface experimental-provider-mutations {
+  apply-json: func(request-json: string) -> result<string, string>;
+}
+
+@since(version = 0.1.0)
+world extension {
+  import host;
+  export commands;
+  export provider;
+}

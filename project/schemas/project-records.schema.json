@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://near.example/schemas/project-records.schema.json",
+  "title": "Near project record conventions",
+  "description": "Reference shape used by the repository validator for TOML project records.",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]+(?:-[A-Z0-9]+)+$"
+    },
+    "requirement": {
+      "type": "object",
+      "required": ["id", "title", "type", "priority", "status", "statement", "capabilities", "milestone", "acceptance", "verification", "design_refs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 3 },
+        "type": { "enum": ["functional", "quality", "constraint", "security", "governance"] },
+        "priority": { "enum": ["must", "should", "may"] },
+        "status": { "enum": ["draft", "accepted", "implemented", "verified", "deprecated"] },
+        "statement": { "type": "string", "minLength": 10 },
+        "capabilities": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+        "milestone": { "type": "string" },
+        "acceptance": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 5 } },
+        "verification": { "enum": ["test", "analysis", "inspection", "demonstration"] },
+        "planned_evidence": { "type": "array", "items": { "type": "string" } },
+        "design_refs": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}
+

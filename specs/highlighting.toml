@@ -1,0 +1,73 @@
+schema = 1
+
+[[rules]]
+id = "directories"
+priority = 20
+role = "highlight.directory"
+sort_group = 30
+[rules.predicate]
+schema_version = 1
+kinds = ["Directory", "Package"]
+hidden = "include"
+ignore = "none"
+
+[[rules]]
+id = "executables"
+priority = 30
+role = "highlight.executable"
+mark = "*"
+sort_group = 20
+[rules.predicate]
+schema_version = 1
+kinds = ["File"]
+executable = true
+hidden = "include"
+ignore = "none"
+
+[[rules]]
+id = "archives"
+priority = 40
+role = "highlight.archive"
+mark = "A"
+sort_group = 10
+[rules.predicate]
+schema_version = 1
+name = { match = "glob", value = "*.zip" }
+hidden = "include"
+ignore = "none"
+
+[[rules]]
+id = "hidden"
+priority = 50
+role = "highlight.hidden"
+mark = "."
+sort_group = -10
+[rules.predicate]
+schema_version = 1
+hidden = "only"
+ignore = "none"
+
+[[rules]]
+id = "readonly"
+priority = 60
+role = "highlight.readonly"
+mark = "R"
+sort_group = -20
+[rules.predicate]
+schema_version = 1
+readonly = true
+hidden = "include"
+ignore = "none"
+
+[[rules]]
+id = "readonly-executable"
+parent = "executables"
+priority = 70
+role = "highlight.readonly"
+mark = "!"
+sort_group = -30
+[rules.predicate]
+schema_version = 1
+readonly = true
+hidden = "include"
+ignore = "none"

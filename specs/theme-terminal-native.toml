@@ -1,0 +1,151 @@
+schema = 1
+name = "terminal-native"
+author = "Near project"
+
+[glyphs]
+border = "single"
+border_ascii = "+|-"
+selection_mark = "√"
+selection_mark_ascii = "*"
+tree_branch = "├"
+tree_last = "└"
+
+[density]
+dialog_padding_x = 1
+dialog_padding_y = 0
+menu_padding_x = 1
+status_rows = 1
+keybar_rows = 1
+
+[roles.text]
+fg = "terminal"
+bg = "terminal"
+
+[roles."workspace.background"]
+fallback = "text"
+
+[roles."panel.background"]
+fallback = "text"
+
+[roles."panel.border"]
+fallback = "text"
+
+[roles."panel.title"]
+fallback = "panel.border"
+modifiers = ["bold"]
+
+[roles."panel.item"]
+fallback = "panel.background"
+
+[roles."panel.item.directory"]
+fallback = "panel.item"
+modifiers = ["bold"]
+
+[roles."panel.item.selected"]
+fallback = "panel.item"
+modifiers = ["bold"]
+
+[roles."panel.item.focused"]
+fallback = "panel.item"
+modifiers = ["reverse"]
+
+[roles."panel.item.selected.focused"]
+fallback = "panel.item.focused"
+modifiers = ["bold", "underline"]
+
+[roles."dialog.background"]
+fallback = "text"
+modifiers = ["reverse"]
+
+[roles."dialog.border"]
+fallback = "dialog.background"
+modifiers = ["bold"]
+
+[roles."viewer.background"]
+fallback = "panel.background"
+
+[roles."viewer.border"]
+fallback = "panel.border"
+
+[roles."viewer.text"]
+fallback = "panel.item"
+
+[roles."viewer.selected"]
+fallback = "panel.item.focused"
+
+[roles."viewer.status"]
+fallback = "status.normal"
+
+[roles."editor.background"]
+fallback = "viewer.background"
+
+[roles."editor.border"]
+fallback = "viewer.border"
+
+[roles."editor.text"]
+fallback = "viewer.text"
+
+[roles."editor.selected"]
+fallback = "viewer.selected"
+
+[roles."editor.status"]
+fallback = "viewer.status"
+
+[roles."control.focused"]
+fallback = "dialog.background"
+modifiers = ["bold", "underline"]
+
+[roles."control.disabled"]
+fallback = "dialog.background"
+modifiers = ["dim"]
+
+[roles."status.normal"]
+fallback = "text"
+modifiers = ["reverse"]
+
+[roles."status.warning"]
+fallback = "status.normal"
+modifiers = ["bold", "underline"]
+
+[roles."keybar.key"]
+fallback = "text"
+modifiers = ["reverse", "bold"]
+
+[roles."keybar.label"]
+fallback = "text"
+
+[roles."lookup.bar"]
+fallback = "status.normal"
+
+[roles."lookup.match"]
+fallback = "panel.item.selected"
+
+[roles."lookup.match.focused"]
+fallback = "panel.item.focused"
+modifiers = ["bold"]
+
+[roles."selection.match"]
+fallback = "text"
+modifiers = ["bold", "underline"]
+
+[roles."highlight.directory"]
+fg = "#ffffff"
+modifiers = ["bold"]
+fallback = "panel.item.directory"
+
+[roles."highlight.executable"]
+fg = "#55ff55"
+fallback = "panel.item"
+
+[roles."highlight.archive"]
+fg = "#ff55ff"
+fallback = "panel.item"
+
+[roles."highlight.hidden"]
+fg = "#808080"
+fallback = "panel.item"
+
+[roles."highlight.readonly"]
+fg = "#ffff55"
+modifiers = ["underline"]
+fallback = "panel.item"

@@ -1,0 +1,20 @@
+[package]
+name = "near-testkit"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+
+[dependencies]
+near-app = { path = "../near-app" }
+near-core = { path = "../near-core" }
+near-terminal = { path = "../near-terminal" }
+near-ui = { path = "../near-ui" }
+
+[lints]
+workspace = true

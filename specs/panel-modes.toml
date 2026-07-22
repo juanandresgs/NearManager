@@ -1,0 +1,28 @@
+schema = 1
+
+[defaults]
+left = "medium"
+right = "medium"
+
+[[modes]]
+id = "wide"
+label = "Wide Details"
+
+[[modes.columns]]
+kind = "name"
+alignment = "left"
+
+[[modes.columns]]
+kind = "description"
+width = 18
+alignment = "left"
+
+[[modes.columns]]
+kind = "size"
+width = 10
+alignment = "right"
+
+[[modes.columns]]
+kind = "modified"
+width = 14
+alignment = "right"

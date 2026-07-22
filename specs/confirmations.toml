@@ -1,0 +1,8 @@
+schema = 1
+
+[confirmations]
+reversible = "preview"
+confirmable = "preview"
+destructive = "preview"
+privileged = "preview"
+high_impact = "preview"

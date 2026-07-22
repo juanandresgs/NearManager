@@ -1,0 +1,31 @@
+name: Release API Compatibility
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  semver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Select previous release baseline
+        id: baseline
+        shell: bash
+        run: |
+          baseline=$(git tag --sort=-version:refname --merged "$GITHUB_SHA" | grep -Fvx "$GITHUB_REF_NAME" | head -n 1 || true)
+          echo "tag=$baseline" >> "$GITHUB_OUTPUT"
+      - name: Establish first release baseline
+        if: steps.baseline.outputs.tag == ''
+        run: python3 tools/check_public_api.py
+      - name: Check published Rust APIs
+        if: steps.baseline.outputs.tag != ''
+        uses: obi1kenobi/cargo-semver-checks-action@v2
+        with:
+          package: near-core, near-runtime, near-terminal, near-ui, near-app, near-search, near-handlers, near-config, near-macros, near-pty, near-plugins, near-reference-providers
+          feature-group: all-features
+          baseline-rev: ${{ steps.baseline.outputs.tag }}

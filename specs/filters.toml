@@ -1,0 +1,60 @@
+schema = 1
+
+[[mask_groups]]
+id = "source"
+label = "Source and project files"
+masks = ["*.rs", "*.toml", "*.md"]
+
+[[mask_groups]]
+id = "archives"
+label = "Archives"
+masks = ["*.zip", "*.tar", "*.tgz", "*.gz", "*.7z"]
+
+[[filters]]
+id = "source"
+label = "Source and project files"
+mode = "include"
+mask_group = "source"
+
+[[filters]]
+id = "hide-hidden"
+label = "Hide hidden resources"
+mode = "exclude"
+
+[filters.predicate]
+schema_version = 1
+hidden = "only"
+ignore = "none"
+
+[[filters]]
+id = "large"
+label = "Files at least 1 MiB"
+mode = "include"
+
+[filters.predicate]
+schema_version = 1
+minimum_size = 1048576
+hidden = "include"
+ignore = "none"
+
+[[filters]]
+id = "modified-since-2025"
+label = "Modified since January 1, 2025"
+mode = "include"
+
+[filters.predicate]
+schema_version = 1
+modified_after_unix_ms = 1735689600000
+hidden = "include"
+ignore = "none"
+
+[[filters]]
+id = "readonly"
+label = "Read-only resources"
+mode = "exclude"
+
+[filters.predicate]
+schema_version = 1
+readonly = true
+hidden = "include"
+ignore = "none"

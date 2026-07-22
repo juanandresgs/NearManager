@@ -1,0 +1,6 @@
+schema = 1
+description_files = ["descript.ion", "files.bbs"]
+folder_description_files = ["README.md", "README.txt", "files.bbs"]
+encoding = "utf8"
+update_policy = "always"
+show_description_files = false

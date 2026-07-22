@@ -1,0 +1,87 @@
+schema = 1
+
+[[capability]]
+id = "CAP-FOUNDATION"
+name = "Platform foundation"
+description = "Stable IDs, values, errors, capabilities, event model, and application lifecycle."
+
+[[capability]]
+id = "CAP-INTERACTION"
+name = "Commands and keyboard interaction"
+description = "Semantic commands, contexts, keymaps, menus, hints, help, palette, histories, and macros."
+
+[[capability]]
+id = "CAP-RENDERING"
+name = "Semantic terminal rendering"
+description = "Scenes, focus, semantic roles, themes, responsive layouts, Unicode, and terminal degradation."
+
+[[capability]]
+id = "CAP-WORKSPACE"
+name = "Application shell and surfaces"
+description = "Workspaces, peer surfaces, overlays, dialogs, collections, trees, inspectors, and tasks."
+
+[[capability]]
+id = "CAP-RESOURCE"
+name = "Resource and provider model"
+description = "Provider-neutral locations, resources, metadata, capabilities, pagination, and routing."
+
+[[capability]]
+id = "CAP-FILESYSTEM"
+name = "Local filesystem"
+description = "macOS-first listing, metadata, links, permissions, xattrs, watching, and path fidelity."
+
+[[capability]]
+id = "CAP-OPERATIONS"
+name = "Safe operations"
+description = "Planning, copy, move, rename, links, Trash/delete, conflicts, progress, cancellation, and journal."
+
+[[capability]]
+id = "CAP-VIEWING"
+name = "Viewing and editing integration"
+description = "Text and hex viewing, quick view, handlers, internal editing baseline, and external editors."
+
+[[capability]]
+id = "CAP-SEARCH"
+name = "Search, filters, and selection"
+description = "Shared predicate model, recursive and content search, fuzzy matching, and result providers."
+
+[[capability]]
+id = "CAP-SHELL"
+name = "Shell and process integration"
+description = "Safe argv execution, suspend-and-run, zsh compatibility, embedded PTY, and process surfaces."
+
+[[capability]]
+id = "CAP-CONFIG"
+name = "Configuration and contracts"
+description = "Layered config, schema versions, diagnostics, migrations, themes, handlers, and workspace trust."
+
+[[capability]]
+id = "CAP-EXTENSIONS"
+name = "Extension platform"
+description = "Process extensions, WIT/Wasm components, capability grants, lifecycle, packaging, and recovery."
+
+[[capability]]
+id = "CAP-APPLICATIONS"
+name = "Cohesive application suite"
+description = "File manager, viewer, process browser, picker, and reusable third-party application facade."
+
+[[capability]]
+id = "CAP-PORTABILITY"
+name = "Platform portability"
+description = "macOS completeness, Linux support, Windows adaptation, and terminal compatibility matrix."
+
+[[capability]]
+id = "CAP-QUALITY"
+name = "Quality and verification"
+description = "Performance, reliability, accessibility, operability, testability, observability, and API stability."
+
+[[capability]]
+id = "CAP-SECURITY"
+name = "Security and supply chain"
+description = "Threat modeling, least privilege, destructive-action safety, dependency controls, and release provenance."
+
+[[capability]]
+id = "CAP-DELIVERY"
+name = "Project delivery and governance"
+description = "Milestones, compatibility policy, ownership, CI, release channels, documentation, and migrations."
+

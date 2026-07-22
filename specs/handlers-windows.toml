@@ -1,0 +1,31 @@
+schema = 1
+
+[[handlers]]
+id = "near.handler.windows-notepad"
+actions = ["view", "edit", "inspect"]
+
+[handlers.predicate]
+schema_version = 1
+hidden = "include"
+ignore = "none"
+
+[handlers.invocation]
+mode = "argv"
+program = "notepad.exe"
+arguments = [{ value = "native-path" }]
+current_directory = { value = "native-parent" }
+
+[[handlers]]
+id = "near.handler.windows-default"
+actions = ["open"]
+
+[handlers.predicate]
+schema_version = 1
+hidden = "include"
+ignore = "none"
+
+[handlers.invocation]
+mode = "argv"
+program = "explorer.exe"
+arguments = [{ value = "native-path" }]
+current_directory = { value = "native-parent" }

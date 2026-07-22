@@ -1,0 +1,5 @@
+schema = 1
+persistent_blocks = false
+open_policy = "internal"
+tab_size = 4
+expand_tabs = false

@@ -1,0 +1,430 @@
+schema_version = 1
+
+[[gates]]
+id = "format"
+profiles = ["developer", "wave", "production"]
+command = ["cargo", "fmt", "--all", "--", "--check"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "d0-local-trash"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["cargo", "test", "-p", "near-local-fs", "--lib", "trash"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "critical"
+deterministic = true
+requirement = "WF-TRASH-002"
+
+[[gates]]
+id = "d0-operation-presentation"
+profiles = ["developer", "wave", "production"]
+dependencies = ["d0-local-trash"]
+command = ["cargo", "test", "-p", "near-ui", "--lib", "operation_preview"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "critical"
+deterministic = true
+
+[[gates]]
+id = "d0-macos-mounted-volume"
+profiles = ["production"]
+dependencies = ["d0-local-trash"]
+command = ["python3", "tools/test_macos_mount_safety.py"]
+timeout_seconds = 600
+platforms = ["macos"]
+severity = "critical"
+deterministic = false
+artifacts = [".near/qualification/macos-mount-safety.json"]
+
+[[gates]]
+id = "d0-linux-mounted-volume"
+profiles = ["production"]
+dependencies = ["d0-local-trash"]
+command = ["python3", "tools/test_linux_mount_safety.py"]
+timeout_seconds = 600
+platforms = ["linux"]
+severity = "critical"
+deterministic = false
+artifacts = [".near/qualification/linux-mount-safety.json"]
+requirement = "WF-TRASH-002"
+
+[[gates]]
+id = "project-records"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["python3", "tools/validate_project.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "github-actions-policy"
+profiles = ["developer", "wave", "production"]
+dependencies = ["project-records"]
+command = ["python3", "tools/validate_github_actions_policy.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "qualification-status-contract"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["python3", "tools/test_qualification_status.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "critical"
+deterministic = true
+
+[[gates]]
+id = "abstraction-policy"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["python3", "tools/validate_abstraction_policy.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "architecture-budgets"
+profiles = ["developer", "wave", "production"]
+dependencies = ["abstraction-policy"]
+command = ["python3", "tools/check_architecture_budgets.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+artifacts = [".near/qualification/architecture-baseline.json"]
+
+[[gates]]
+id = "capability-artifacts"
+profiles = ["wave", "production"]
+dependencies = ["architecture-budgets"]
+command = ["python3", "tools/measure_capability_artifacts.py"]
+timeout_seconds = 1800
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = false
+artifacts = [".near/qualification/capability-artifacts.json"]
+
+[[gates]]
+id = "large-data-performance"
+profiles = ["developer", "wave", "production"]
+dependencies = ["architecture-budgets"]
+command = ["cargo", "test", "--release", "-p", "near-testkit", "--test", "performance"]
+timeout_seconds = 600
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = false
+
+[[gates]]
+id = "terminal-fidelity"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["cargo", "test", "-p", "near-ui", "--lib", "keyboard"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "filename-lookup"
+profiles = ["developer", "wave", "production"]
+dependencies = ["terminal-fidelity"]
+command = ["cargo", "test", "-p", "near-ui", "--lib", "--test", "keymap", "filename_lookup"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "interaction-conformance"
+profiles = ["developer", "wave", "production"]
+dependencies = ["terminal-fidelity"]
+command = ["python3", "tools/validate_interaction_conformance.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "far-behavior-contract"
+profiles = ["developer", "wave", "production"]
+dependencies = ["interaction-conformance"]
+command = ["python3", "tools/validate_far_behavior_contract.py", "--require-complete"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "interaction-workflows"
+profiles = ["developer", "wave", "production"]
+dependencies = ["far-behavior-contract"]
+command = ["cargo", "test", "-p", "near-ui", "--lib", "panel_interaction_conformance"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "menu-actions"
+profiles = ["developer", "wave", "production"]
+dependencies = ["interaction-conformance"]
+command = ["python3", "tools/validate_menu_actions.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "terminal-pty-workflows"
+profiles = ["wave", "production"]
+dependencies = ["menu-actions", "terminal-fidelity"]
+command = ["python3", "tools/test_tmux_terminal_workflows.py"]
+timeout_seconds = 600
+platforms = ["macos", "linux"]
+severity = "high"
+deterministic = false
+artifacts = [".near/qualification/tmux-terminal-workflows.json"]
+
+[[gates]]
+id = "idle-cpu"
+profiles = ["developer", "wave", "production"]
+dependencies = ["terminal-fidelity"]
+command = ["python3", "tools/test_idle_cpu.py"]
+timeout_seconds = 600
+platforms = ["macos", "linux"]
+severity = "high"
+deterministic = false
+
+[[gates]]
+id = "typed-settings"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["cargo", "test", "-p", "near-config", "--lib", "settings"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "typed-settings-surface"
+profiles = ["developer", "wave", "production"]
+dependencies = ["typed-settings"]
+command = ["cargo", "test", "-p", "near-ui", "--lib", "--test", "settings_provenance", "typed_settings"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "interface-settings"
+profiles = ["developer", "wave", "production"]
+dependencies = ["typed-settings-surface"]
+command = ["cargo", "test", "-p", "near-ui", "--test", "interface_settings"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "settings-persistence"
+profiles = ["developer", "wave", "production"]
+dependencies = ["interface-settings"]
+command = ["cargo", "test", "-p", "near-fm", "--bin", "near-fm", "config::tests::atomic_settings_store"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "shell-profiles"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["cargo", "test", "-p", "near-pty", "--lib", "profile_tests"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "viewer-editor-policy"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["cargo", "test", "-p", "near-ui", "--lib", "settings_are"]
+timeout_seconds = 300
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "workflow-prechecks"
+profiles = ["wave", "production"]
+dependencies = ["typed-settings-surface", "shell-profiles", "viewer-editor-policy", "terminal-fidelity"]
+command = ["python3", "tools/run_workflow_prechecks.py"]
+timeout_seconds = 1800
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+artifacts = [".near/qualification/workflow-prechecks.json"]
+
+[[gates]]
+id = "operator-session-pack"
+profiles = ["wave", "production"]
+dependencies = ["format"]
+command = ["python3", "tools/operator_session.py", "prepare", "--output", ".near/qualification/operator-session"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+artifacts = [".near/qualification/operator-session/operator-session.json"]
+
+[[gates]]
+id = "far-parity"
+profiles = ["wave", "production"]
+dependencies = ["project-records"]
+command = ["python3", "tools/validate_far_parity.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "public-api"
+profiles = ["wave", "production"]
+dependencies = ["format"]
+command = ["python3", "tools/check_public_api.py"]
+timeout_seconds = 180
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "workspace-tests"
+profiles = ["wave", "production"]
+dependencies = ["d0-operation-presentation"]
+command = ["cargo", "test", "--workspace", "--locked"]
+timeout_seconds = 1800
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "workspace-clippy"
+profiles = ["wave", "production"]
+dependencies = ["workspace-tests"]
+command = ["cargo", "clippy", "--workspace", "--all-targets", "--locked", "--", "-D", "warnings"]
+timeout_seconds = 1800
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
+id = "clean-source"
+profiles = ["production"]
+builtin = "clean-tree"
+timeout_seconds = 10
+platforms = ["macos", "linux"]
+severity = "critical"
+deterministic = false
+
+[[gates]]
+id = "parity-complete"
+profiles = ["production"]
+dependencies = ["far-parity"]
+builtin = "all-parity-verified"
+timeout_seconds = 10
+platforms = ["macos", "linux"]
+severity = "critical"
+deterministic = true
+
+[[gates]]
+id = "interaction-complete"
+profiles = ["production"]
+dependencies = ["interaction-workflows"]
+command = ["python3", "tools/validate_interaction_conformance.py", "--require-complete"]
+timeout_seconds = 120
+platforms = ["macos", "linux"]
+severity = "critical"
+deterministic = true
+
+[[gates]]
+id = "operator-evidence"
+profiles = ["production"]
+dependencies = ["clean-source", "workspace-tests", "operator-session-pack"]
+builtin = "operator-evidence"
+timeout_seconds = 120
+platforms = ["macos", "linux"]
+severity = "critical"
+deterministic = true
+
+[[gates]]
+id = "tui-proof"
+profiles = ["production"]
+dependencies = ["clean-source", "public-api"]
+builtin = "tui-proof"
+timeout_seconds = 1800
+platforms = ["macos", "linux"]
+severity = "critical"
+deterministic = true
+
+[[gates]]
+id = "release-package-contract"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["python3", "tools/test_release_packaging.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux"]
+severity = "critical"
+deterministic = true
+
+[[gates]]
+id = "release-sbom-contract"
+profiles = ["developer", "wave", "production"]
+dependencies = ["format"]
+command = ["python3", "tools/test_sbom.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "critical"
+deterministic = true
+
+[[gates]]
+id = "release-build"
+profiles = ["production"]
+dependencies = ["clean-source", "workspace-clippy", "parity-complete", "interaction-complete", "operator-evidence", "tui-proof", "public-api", "release-package-contract"]
+command = ["cargo", "build", "--release", "--bins", "--locked"]
+timeout_seconds = 2400
+platforms = ["macos", "linux"]
+severity = "critical"
+deterministic = true
+artifacts = ["target/release/near-fm", "target/release/near-view", "target/release/near-proc", "target/release/near-demo"]
+
+[[gates]]
+id = "release-package"
+profiles = ["production"]
+dependencies = ["release-build"]
+builtin = "release-package"
+timeout_seconds = 600
+platforms = ["macos", "linux"]
+severity = "critical"
+deterministic = true
+
+[[gates]]
+id = "release-sbom"
+profiles = ["production"]
+dependencies = ["release-package", "release-sbom-contract"]
+command = ["python3", "tools/generate_sbom.py", "--output", "dist/near.spdx.json", "--revision", "{revision}"]
+timeout_seconds = 300
+platforms = ["macos", "linux"]
+severity = "critical"
+deterministic = true
+artifacts = ["dist/near.spdx.json"]

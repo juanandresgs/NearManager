@@ -1,0 +1,8 @@
+schema = 1
+show_status_line = true
+show_keybar = true
+tree_indent_width = 2
+menu_wrap_navigation = false
+dialog_wrap_focus = true
+command_line_completion = true
+startup_panel = "left"

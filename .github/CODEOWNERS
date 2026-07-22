@@ -1,0 +1,6 @@
+/project/ @project-maintainers
+/specs/ @project-maintainers
+/docs/near-platform-blueprint.md @project-maintainers
+/.github/workflows/ @release-maintainers @security-maintainers
+/tools/validate_project.py @project-maintainers
+/tools/validate_release.py @release-maintainers @security-maintainers

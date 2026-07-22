@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://near.invalid/schemas/qualification-result.schema.json",
+  "title": "Near qualification result",
+  "type": "object",
+  "required": ["schema_version", "profile", "revision", "dirty", "platform", "toolchain", "lockfile_digest", "gates", "artifact_hashes", "far_parity", "final_status"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "enum": ["developer", "wave", "production"] },
+    "revision": { "type": "string" },
+    "dirty": { "type": "boolean" },
+    "platform": { "type": "object" },
+    "toolchain": { "type": "string" },
+    "lockfile_digest": { "type": "string" },
+    "gates": { "type": "array", "items": { "type": "object" } },
+    "test_counts": { "type": "object" },
+    "performance_results": { "type": "object" },
+    "known_degradations": { "type": "array" },
+    "artifact_hashes": { "type": "object" },
+    "far_parity": { "type": "object" },
+    "final_status": { "enum": ["passed", "failed"] }
+  },
+  "additionalProperties": true
+}

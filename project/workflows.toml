@@ -1,0 +1,241 @@
+schema = 1
+
+[[workflow]]
+id = "WF-NAV-001"
+name = "Navigate peer collections entirely by keyboard"
+requirements = ["REQ-CMD-001", "REQ-KEY-001", "REQ-UI-001", "REQ-UI-002"]
+given = ["Two collection surfaces are visible", "The left surface is focused"]
+when = ["Move the cursor", "Open a child location", "Press Tab", "Swap peer surfaces"]
+then = ["Focus and cursor are unambiguous", "The key bar reflects effective bindings", "No mouse is required"]
+
+[[workflow]]
+id = "WF-FILE-001"
+name = "Copy selected resources to the peer location"
+requirements = ["REQ-OPS-001", "REQ-OPS-002", "REQ-RES-001"]
+given = ["Source and destination locations are visible", "Multiple files are selected"]
+when = ["Invoke near.resource.copy-to-peer", "Review the resolved operation plan", "Confirm execution"]
+then = ["Progress remains cancellable", "Completed and failed items are reported", "Destination refreshes"]
+
+[[workflow]]
+id = "WF-SAFE-001"
+name = "Recover from a partially failed destructive operation"
+requirements = ["REQ-OPS-002", "REQ-SEC-001", "REQ-OBS-001"]
+given = ["An operation contains writable and unwritable resources"]
+when = ["The operation encounters a permission failure"]
+then = ["The UI remains responsive", "Exact completed and incomplete resources are shown", "The journal records the outcome"]
+
+[[workflow]]
+id = "WF-EDIT-001"
+name = "Edit a file with Neovim and return"
+requirements = ["REQ-EXT-001", "REQ-TERM-001", "REQ-HANDLER-001"]
+given = ["A file resource is current", "Neovim is configured as an edit handler"]
+when = ["Open File Associations", "Choose an ordered edit or execute alternative", "Near suspends", "Exit the external tool"]
+then = ["The selected stable handler and invocation mode are visible", "The terminal is restored", "Near resumes at the same workspace state", "The resource metadata refreshes"]
+
+[[workflow]]
+id = "WF-HELP-001"
+name = "Navigate and search runtime help"
+requirements = ["REQ-HELP-001", "REQ-CMD-001", "REQ-KEY-002"]
+given = ["The running application has an active context", "An extension contributes a command and command-line prefix"]
+when = ["Press F1 and Shift+F1", "Follow a contents link", "Search topics with F7", "Open Shift+F2 extension help", "Navigate backward"]
+then = ["Context help shows effective bindings", "Contents and search open the matching topics", "Extension commands and prefixes are discoverable", "Topic history restores the previous page"]
+
+[[workflow]]
+id = "WF-EDIT-002"
+name = "Edit and save a provider resource internally"
+requirements = ["REQ-EDIT-001", "REQ-RES-001", "REQ-CMD-001", "REQ-KEY-001"]
+given = ["A writable text resource is current", "Its provider implements bounded reads and replacement writes"]
+when = ["Press F4 on multiple files", "Switch through F12 and Ctrl+Tab", "Edit search select and undo text", "Press Ctrl+S", "Restart Near and reopen a document"]
+then = ["Each editor retains independent state", "Panels and documents are selectable screens", "The provider contains the exact saved UTF-8 bytes", "Cursor positions restore by provider location", "Unsaved discard requires a second explicit close"]
+
+[[workflow]]
+id = "WF-SEARCH-001"
+name = "Search recursively and operate on results"
+requirements = ["REQ-SEARCH-001", "REQ-SEARCH-002", "REQ-RES-001"]
+given = ["A local location is focused"]
+when = ["Run a recursive content search", "Cancel or allow streaming results", "Open results as a collection"]
+then = ["Input remains responsive", "Results retain source identity", "View edit and copy commands work on results"]
+
+[[workflow]]
+id = "WF-REBIND-001"
+name = "Rebind a command without changing application code"
+requirements = ["REQ-KEY-001", "REQ-KEY-002", "REQ-CMD-001", "REQ-CONFIG-001"]
+given = ["Copy is bound to F5"]
+when = ["User configuration rebinds copy to Ctrl+C"]
+then = ["Ctrl+C invokes copy", "F5 no longer invokes copy", "Key bar and help show the effective binding"]
+
+[[workflow]]
+id = "WF-PLUGIN-001"
+name = "Load a capability-limited provider extension"
+requirements = ["REQ-PLUGIN-001", "REQ-PLUGIN-002", "REQ-SEC-002"]
+given = ["A plugin declares a provider and read-only filesystem capability"]
+when = ["The user grants the capability", "The provider is opened", "The plugin traps"]
+then = ["Resources appear as native collections", "Undeclared access is denied", "The host remains operational"]
+
+[[workflow]]
+id = "WF-APP-001"
+name = "Build a non-filesystem application on Near"
+requirements = ["REQ-API-001", "REQ-API-002", "REQ-APP-002"]
+given = ["A process provider and process commands exist"]
+when = ["The application composes collection and inspector surfaces"]
+then = ["It shares keymaps themes help and task UI", "It imports neither Ratatui nor Crossterm", "No file-manager model is required"]
+
+[[workflow]]
+id = "WF-THEME-001"
+name = "Apply one semantic theme across applications"
+requirements = ["REQ-THEME-001", "REQ-ACCESS-001"]
+given = ["near-fm and near-view render the same core roles", "The terminal is limited to 16 colors"]
+when = ["Load far-classic", "Switch to high-contrast", "Switch to monochrome test mode"]
+then = ["Both applications update consistently", "Focus selection warning and disabled states remain distinct", "Application-specific roles fall back safely"]
+
+[[workflow]]
+id = "WF-FS-001"
+name = "Inspect difficult macOS filesystem resources"
+requirements = ["REQ-FS-001", "REQ-VIEW-001"]
+given = ["A directory contains symlinks xattrs Finder tags packages and a non-Unicode path"]
+when = ["Navigate the directory", "Open metadata inspection", "Quick-view text and binary resources"]
+then = ["Every resource remains addressable", "Metadata failures are localized", "Viewer memory remains bounded"]
+
+[[workflow]]
+id = "WF-MACRO-001"
+name = "Record manage bind diagnose and replay a semantic macro"
+requirements = ["REQ-MACRO-001", "REQ-CMD-001", "REQ-KEY-001"]
+given = ["A user records navigation and view commands"]
+when = ["The user changes the keys for those commands", "The macro is edited and assigned a canonical binding", "Diagnostics are inspected", "The binding replays the macro", "The macro is deleted"]
+then = ["The same semantic actions execute", "Conditions safety availability and authorization are explained before replay", "Catalog edits persist atomically", "Deletion removes the binding and stored record", "No raw key bytes are stored"]
+
+[[workflow]]
+id = "WF-PTY-001"
+name = "Run zsh and nested TUI in an embedded terminal"
+requirements = ["REQ-PTY-001", "REQ-TERM-001", "REQ-TERM-002"]
+given = ["Embedded PTY is enabled and zsh is available"]
+when = ["Start zsh", "Resize the surface", "Run and exit Neovim", "Change directory through the shell"]
+then = ["PTY dimensions stay synchronized", "Nested alternate screen restores", "OSC directory state updates", "Suspend-and-run remains available"]
+
+[[workflow]]
+id = "WF-VIEW-001"
+name = "Use the standalone shared viewer"
+requirements = ["REQ-APP-001", "REQ-VIEW-001", "REQ-API-001"]
+given = ["A file path stdin stream and provider URI are available"]
+when = ["Open each input with near-view", "Search and switch text or hex mode"]
+then = ["The same viewer commands and theme apply", "No near-fm dependency is loaded", "Non-terminal stdout remains free of control sequences"]
+
+[[workflow]]
+id = "WF-PORT-001"
+name = "Run shared workflows across supported operating systems"
+requirements = ["REQ-PORT-001", "REQ-PORT-002", "REQ-API-001"]
+given = ["The shared workflow suite is available on macOS Linux and Windows CI"]
+when = ["Run navigation viewing configuration and safe-operation workflows"]
+then = ["Shared semantics remain unchanged", "Platform differences appear as capabilities", "No conditional public application model is required"]
+
+[[workflow]]
+id = "WF-HISTORY-001"
+name = "Recall durable commands locations and resources"
+requirements = ["REQ-HISTORY-001", "REQ-CMD-001", "REQ-CONFIG-001", "REQ-RES-001"]
+given = ["Commands folders viewed files and edited files have been used", "One provider is temporarily unavailable"]
+when = ["Open Alt+F8 Alt+F11 and Alt+F12 histories", "Filter lock and clear unlocked entries", "Restart with custom history retention limits"]
+then = ["All four history families restore", "Locked entries survive clearing and retention", "Unavailable resources remain visible with diagnostics", "Selected available entries reopen through their provider"]
+
+[[workflow]]
+id = "WF-HIGHLIGHT-001"
+name = "Classify and group a mixed collection"
+requirements = ["REQ-HIGHLIGHT-001", "REQ-THEME-001", "REQ-CONFIG-001", "REQ-SEARCH-001"]
+given = ["A collection contains directories archives executables hidden files and read-only files", "Layered highlighting rules define roles marks priorities inheritance and sort groups"]
+when = ["Render both panels", "Focus and select decorated entries", "Press Shift+F11", "Open the highlighting report"]
+then = ["Matching rows show semantic colors and marks", "Focus and selection remain unambiguous", "Sort groups reorder resources while preserving the current resource", "Effective priority and inherited predicate counts are inspectable"]
+
+[[workflow]]
+id = "WF-MOUSE-001"
+name = "Operate panels menus and transfers with the mouse"
+requirements = ["REQ-TERM-003", "REQ-UI-002", "REQ-OPS-001", "REQ-KEY-002"]
+given = ["Two peer collections and the resolved key bar are visible", "A copy or move operation service is available"]
+when = ["Click rows in both panels", "Right-click a resource", "Scroll panels and a full-screen surface", "Click a menu row and key-bar action", "Drag a resource to the peer panel with and without Shift"]
+then = ["Focus cursor and selection follow the documented policy", "Wheel input routes to the area under the pointer or active full-screen surface", "Controls invoke the same semantic commands as the keyboard", "Copy and move open the normal operation preview before execution"]
+
+[[workflow]]
+id = "WF-ARCHIVE-001"
+name = "Browse extract create and update an archive"
+requirements = ["REQ-ARCHIVE-001", "REQ-RES-001", "REQ-OPS-001", "REQ-OPS-002"]
+given = ["A ZIP resource is current", "A local peer folder and selected local resources are available"]
+when = ["Open the ZIP as a panel", "Navigate nested entries and return through parent navigation", "Copy an entry to the local peer with a name conflict", "Create a new ZIP from selected resources", "Copy a changed resource into an existing ZIP"]
+then = ["Archive rows retain provider identity metadata and bounded reads", "Extraction and update show immutable operation previews", "Skip replace and rename decisions use the shared conflict resolver", "The archive is replaced through a temporary file with platform recovery and unsafe paths or symlinks never escape the destination", "The operation journal records exact outcomes"]
+
+[[workflow]]
+id = "WF-REMOTE-001"
+name = "Navigate transfer disconnect and retry an SFTP panel"
+requirements = ["REQ-REMOTE-001", "REQ-RES-001", "REQ-OPS-001", "REQ-OPS-002", "REQ-CONFIG-001"]
+given = ["An SFTP profile references a verified known_hosts file", "The platform SSH agent holds an authorized identity", "Local and remote peer panels are available"]
+when = ["Open the SFTP profile and navigate folders", "Copy and move files in both directions", "Disconnect the provider", "Retry the retained panel"]
+then = ["Remote entries retain provider identity", "Transfers use bounded immutable operation plans and the normal conflict preview", "No credential material enters Near configuration or diagnostics", "The panel location and rows survive disconnect and refresh after retry", "The operation journal records exact transfer outcomes"]
+
+[[workflow]]
+id = "WF-ELEVATION-001"
+name = "Retry a permission-failed local operation with elevation"
+requirements = ["REQ-ELEVATION-001", "REQ-OPS-001", "REQ-OPS-002"]
+given = ["A recorded local operation plan fails with a permission error", "A platform authorization broker is available"]
+when = ["Invoke near.operation.retry-elevated", "Approve the native authorization prompt"]
+then = ["The original plan ID authorization and conflict decision are retained", "The helper rejects a modified request digest", "The elevated journal records the elevation event and itemized summary", "The workspace refreshes and reports the final result"]
+
+[[workflow]]
+id = "WF-SETTINGS-002"
+name = "Edit persist reload and reset runtime settings"
+requirements = ["REQ-SETTINGS-001", "REQ-CONFIG-001"]
+given = ["Built-in platform user and trusted workspace layers define overlapping settings", "The runtime settings registry is open"]
+when = ["Edit values in each category", "Apply a valid candidate", "Attempt an invalid external edit", "Reset the user override", "Restart Near"]
+then = ["Typed controls show effective values and provenance", "The valid candidate applies atomically at its declared scope", "The invalid candidate preserves the last valid state with diagnostics", "Reset reveals the next layer", "Persisted values survive restart"]
+
+[[workflow]]
+id = "WF-INPUT-002"
+name = "Use lookup and modifier key bars across terminal protocols"
+requirements = ["REQ-INPUT-001", "REQ-KEY-001", "REQ-KEY-002"]
+given = ["Recorded Terminal.app legacy input and enhanced keyboard input fixtures are available", "Alternate function-key bindings exist"]
+when = ["Start and extend Alt filename lookup", "Cycle accept and cancel matches", "Hold and release supported modifier combinations", "Lose focus during a held modifier"]
+then = ["Both protocols drive the same lookup state machine", "Escape restores the original cursor", "Enhanced holds show exact binding-derived key bars", "Legacy fallback remains honest and usable", "Focus loss clears stale modifier state"]
+
+[[workflow]]
+id = "WF-SHELL-002"
+name = "Run the native macOS zsh profile"
+requirements = ["REQ-SHELL-001", "REQ-PTY-001"]
+given = ["The account login shell is zsh with profile and rc fixtures", "A macOS terminal host is available"]
+when = ["Open the default embedded shell", "Inspect startup environment and working directory", "Run Vim SSH and a nested alternate-screen program", "Exit under each close policy"]
+then = ["Login and interactive startup files load in native order", "PATH locale SSH agent and configured overrides are preserved", "OSC directory resize paste signals and screen restoration work", "Exit and child-process warnings follow the selected profile"]
+
+[[workflow]]
+id = "WF-VIEW-CONFIG-001"
+name = "Apply global and resource-specific viewer policy"
+requirements = ["REQ-VIEW-CONFIG-001", "REQ-VIEW-001"]
+given = ["Layered viewer defaults and existing per-resource state are available", "Text binary huge-line and encoded fixtures exist"]
+when = ["Open each fixture in full viewer and quick view", "Change session state", "Reopen the resource", "Reset its saved state"]
+then = ["New viewers use global detection display and handler policy", "Only enabled fields persist per resource", "Quick view inheritance is explicit", "Reset returns to global defaults without changing them"]
+
+[[workflow]]
+id = "WF-EDIT-CONFIG-001"
+name = "Apply editor behavior and safety policy"
+requirements = ["REQ-EDIT-CONFIG-001", "REQ-EDIT-001"]
+given = ["Layered editor defaults and writable read-only and externally changed fixtures exist"]
+when = ["Open existing and new files", "Edit tabs selections search and line endings", "Change a live and a new-editor setting", "Trigger read-only and external-change handling", "Restart Near"]
+then = ["Each editor receives policy at its declared scope", "Display indentation search and save behavior match the effective settings", "Safety prompts and conflict policy remain explicit", "Persisted values and provenance survive restart"]
+
+[[workflow]]
+id = "WF-TRASH-002"
+name = "Trash ordinary resources without exposing engine conflicts"
+requirements = ["REQ-OPS-003", "REQ-TEST-002", "REQ-SEC-001", "REQ-PORT-001", "REQ-PORT-002"]
+given = ["Ordinary files directories symlinks duplicate Trash names mounted volume roots and provider roots are available", "A real macOS mounted-volume fixture reproduces the original delete attempt", "The platform Trash adapter and removable-device service report their capabilities"]
+when = ["Invoke the normal delete command for each resource class", "Review the visible confirmation", "Confirm ordinary resources", "Attempt the same command on protected roots", "Invoke every conflict command even when it is not rendered", "Inspect refreshed panels Trash metadata journal and operation history"]
+then = ["Ordinary resources show a concise Move to Trash confirmation with no replace skip or rename controls", "Trash collisions preserve both resources through platform-correct unique naming", "Mounted filesystem and provider roots are rejected before planning with eject unmount or unsupported guidance", "Protected resources never open an operation preview or enter the operation planner", "Hidden conflict commands cannot alter a Trash decision", "Exact resource identity survives preview execution refresh restore metadata and audit records", "No generic operation policy is presented unless the operator must actually choose it"]
+
+[[workflow]]
+id = "WF-QUALIFY-001"
+name = "Run autonomous production qualification from a clean checkout"
+requirements = ["REQ-REL-002", "REQ-TEST-002", "REQ-FAR-001", "REQ-API-001", "REQ-SEC-001"]
+given = ["A clean checkout pinned toolchain supported platform adapters and representative filesystem terminal provider and fault fixtures are available"]
+when = ["Run the documented autonomous qualification command without interactive developer repair", "Build release artifacts", "Execute component model render PTY filesystem safety application and Far workflow suites", "Collect the qualification manifest"]
+then = ["All mandatory gates pass or the release is blocked", "The manifest identifies the exact revision platform capabilities degradations test and workflow counts performance results and artifact digests", "All reference applications prove the public TUI abstraction", "Failures identify the violated operator contract and retain reproducible evidence"]
+
+[[workflow]]
+id = "WF-INPUT-003"
+name = "Navigate and select files with cursor and selection independence"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+given = ["A file panel contains more entries than the visible viewport", "Ordinary files and a navigation-only parent entry are available", "The semantic render harness records focused and selected roles"]
+when = ["Navigate with arrows Left Right Home End PageUp and PageDown", "Resize the terminal while scrolled", "Select contiguous files with Shift arrows", "Move with plain arrows and select separated files with Insert or Space", "Click visible rows after scrolling"]
+then = ["Every navigation command keeps the focused entry visible and clamps at boundaries", "Paging follows the current viewport height", "Plain navigation never changes the selected set", "Non-contiguous selections retain every selected resource", "Focused selected focused unselected and selected non-focused entries have distinct semantic output", "Mouse input targets the visible scrolled slice", "The parent entry never becomes selected"]

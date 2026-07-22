@@ -1,0 +1,9 @@
+/target/
+/dist/
+/.near/qualification/
+/nvim.log
+.DS_Store
+*.swp
+*.tmp
+__pycache__/
+/Far*.7z

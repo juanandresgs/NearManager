@@ -1,0 +1,603 @@
+schema = 1
+far_build = "3.0.6703.0 x64"
+research_commit = "28443e51d9f7b4b9e5976d1db8246532ccc40205"
+
+[[area]]
+id = "shell"
+title = "Workspace shell and command execution"
+source_topics = ["Product model", "Command execution and syntax", "History", "ScrSwitch"]
+
+[[area]]
+id = "panels"
+title = "Panels, navigation, and locations"
+source_topics = ["Panels", "DriveDlg", "FolderShortcuts", "HistoryFolders"]
+
+[[area]]
+id = "selection"
+title = "Selection, masks, filters, and comparison"
+source_topics = ["SelectFiles", "FileMasks", "Filter", "CompFolders"]
+
+[[area]]
+id = "operations"
+title = "File operations and safety"
+source_topics = ["CopyFiles", "CopyAskOverwrite", "HardSymLink", "FileAttrDlg", "ApplyCmd"]
+
+[[area]]
+id = "search"
+title = "Search and result workflows"
+source_topics = ["FindFile", "FindFileAdvanced", "FindFileResult", "FindFolder"]
+
+[[area]]
+id = "viewer"
+title = "Internal viewer and quick view"
+source_topics = ["Viewer", "ViewerMode", "ViewerGotoPos", "ViewerSearch"]
+
+[[area]]
+id = "editor"
+title = "Internal editor"
+source_topics = ["Editor", "EditorSearch", "FindAllMenu", "FileSaveAs", "EditorReload"]
+
+[[area]]
+id = "menus"
+title = "Menus, help, and discoverability"
+source_topics = ["Menus", "FilesMenu", "CmdMenu", "OptMenu", "Help"]
+
+[[area]]
+id = "customization"
+title = "Panel modes, themes, highlighting, and settings"
+source_topics = ["PanelViewModes", "Highlight", "SortGroups", "ColorThemes", "FarConfig"]
+
+[[area]]
+id = "automation"
+title = "User menus, associations, histories, and macros"
+source_topics = ["UserMenu", "FileAssoc", "MetaSymbols", "KeyMacro", "HistoryViews"]
+
+[[area]]
+id = "extensions"
+title = "Plugins, archives, and virtual panels"
+source_topics = ["Plugins", "PluginCommands", "ArcLite", "TempPanel", "Network"]
+
+[[area]]
+id = "platform"
+title = "Terminal, mouse, profiles, and platform integration"
+source_topics = ["Mouse", "Profiles", "ElevationDlg", "TaskList", "HotPlugList"]
+
+[[item]]
+id = "FAR-SHELL-001"
+area = "shell"
+title = "Live editable command line"
+priority = "must"
+status = "partial"
+acceptance = ["Text typed while panels are active edits a visible command buffer", "Enter writes a non-empty buffer to the persistent shell in the focused native location", "Output and REPL state remain in the shared terminal rather than a viewer", "Empty Enter continues to open the focused resource"]
+evidence = ["crates/near-core/src/command_line.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/command_line.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-SHELL-002"
+area = "shell"
+title = "Command history with locking and navigation"
+priority = "must"
+status = "verified"
+acceptance = ["Executed commands enter persistent history", "Keyboard navigation and a searchable history menu are available", "Entries can be locked against trimming"]
+evidence = ["crates/near-core/src/command_line.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/command_history.rs", "crates/near-ui/src/command_line.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-SHELL-003"
+area = "shell"
+title = "Path and filename insertion shortcuts"
+priority = "must"
+status = "verified"
+acceptance = ["Focused and peer paths can be inserted", "Current and selected names can be inserted with correct quoting", "Provider locations without native paths fail visibly"]
+evidence = ["crates/near-core/src/command_line.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-SHELL-004"
+area = "shell"
+title = "Command prefixes, associations, and user commands"
+priority = "should"
+status = "verified"
+acceptance = ["Registered prefixes route commands to providers or extensions", "Associations select actions by masks and context", "User-menu commands expand typed metasymbols safely"]
+evidence = ["crates/near-core/src/command_line.rs", "crates/near-core/src/provider.rs", "crates/near-core/src/extension.rs", "crates/near-local-fs/src/lib.rs", "crates/near-handlers/src/lib.rs", "crates/near-plugins/src/lib.rs", "crates/near-plugins/src/process.rs", "crates/near-ui/src/workspace.rs", "specs/user-menu.toml", "docs/near-command-prefixes.md", "docs/near-user-menus.md", "project/evidence/M3-command-prefixes.md", "project/evidence/M3-user-menus.md"]
+
+[[item]]
+id = "FAR-SHELL-005"
+area = "shell"
+title = "Panel and console screen switching"
+priority = "must"
+status = "partial"
+acceptance = ["Ctrl+O toggles between panels and the same terminal used by panel command submission", "Viewer and editor instances participate in screen switching", "Shell process state and output survive redraw hiding and external-tool suspension"]
+evidence = ["crates/near-ui/src/terminal_surface.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-embedded-pty.md", "project/evidence/M3-embedded-pty.md"]
+
+[[item]]
+id = "FAR-PANEL-001"
+area = "panels"
+title = "Dual independent file panels"
+priority = "must"
+status = "partial"
+acceptance = ["Panels navigate independently", "Tab changes active panel", "Ctrl+U swaps panel positions", "Arrow edge and page navigation keep the focused entry visible", "Paging follows the current viewport after resize", "Mouse rows target the visible scrolled collection slice"]
+evidence = ["crates/near-ui/src/workspace.rs", "crates/near-ui/src/collection.rs", "crates/near-ui/src/shell.rs", "specs/keymap.toml", "specs/interaction-conformance.toml", "specs/operator-workflows.toml"]
+
+[[item]]
+id = "FAR-PANEL-002"
+area = "panels"
+title = "Parent directory entry and direct parent navigation"
+priority = "must"
+status = "verified"
+acceptance = ["Every non-root collection begins with a navigation-only parent entry", "Enter and Backspace navigate upward", "The parent entry cannot become an operation target"]
+evidence = ["crates/near-ui/src/workspace.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-PANEL-003"
+area = "panels"
+title = "File, tree, information, and quick-view panel types"
+priority = "must"
+status = "verified"
+acceptance = ["Each panel can switch type without opening a demo overlay", "Tree and information panels reflect the active location", "Quick view tracks the peer cursor"]
+evidence = ["crates/near-ui/src/tree.rs", "crates/near-ui/src/inspector.rs", "crates/near-ui/src/workspace.rs"]
+
+[[item]]
+id = "FAR-PANEL-004"
+area = "panels"
+title = "Drive, volume, provider, and plugin location menu"
+priority = "must"
+status = "partial"
+acceptance = ["Alt+F1 and Alt+F2 open actionable location menus", "Native volumes provider roots and application virtual panels show metadata", "Temporary Panels expose numbered persisted previews and open on the requested side", "Selecting an entry navigates the requested panel"]
+evidence = ["crates/near-core/src/provider.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-PANEL-005"
+area = "panels"
+title = "Folder shortcuts and folder history"
+priority = "must"
+status = "verified"
+acceptance = ["Ten assignable folder shortcuts are supported", "Folder history is searchable and persistent", "Invalid or unavailable destinations remain inspectable"]
+evidence = ["crates/near-core/src/navigation.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/folder_history.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-PANEL-006"
+area = "panels"
+title = "Sorting modes and ordering modifiers"
+priority = "must"
+status = "verified"
+acceptance = ["Name extension time size and metadata sorting are available", "Reverse numeric selected-first and directories-first modes compose", "The active sort mode is visible"]
+evidence = ["crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-PANEL-007"
+area = "panels"
+title = "Incremental filename lookup"
+priority = "must"
+status = "partial"
+acceptance = ["Typing the lookup chord opens an incremental panel search", "Repeated input cycles matches", "Escape restores the previous cursor"]
+evidence = ["crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "specs/operator-workflows.toml", "docs/near-production-workflow-testing-guide.md", "project/evidence/production-gap-closure.md"]
+
+[[item]]
+id = "FAR-SELECT-001"
+area = "selection"
+title = "Direct multi-selection"
+priority = "must"
+status = "partial"
+acceptance = ["Space toggles selection", "Shift+Up Shift+Down and Insert toggle while moving", "Plain navigation preserves the selected set so non-contiguous selection is possible", "Focused selected focused unselected and selected non-focused entries remain visually distinct", "Operations use selection or cursor fallback", "Selection is preserved across paging edge navigation and safe redraws"]
+evidence = ["crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "specs/interaction-conformance.toml", "specs/operator-workflows.toml"]
+
+[[item]]
+id = "FAR-SELECT-002"
+area = "selection"
+title = "Mask, extension, name, invert, and saved selection"
+priority = "must"
+status = "verified"
+acceptance = ["Selection by include and exclude masks is available", "Same-name same-extension and inversion commands work", "Selections can be saved and restored"]
+evidence = ["crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-SELECT-003"
+area = "selection"
+title = "Reusable filters and named mask groups"
+priority = "must"
+status = "verified"
+acceptance = ["Masks attributes sizes and dates compose into filters", "Filters can be named reused and toggled per panel", "Filter state is visible in the panel"]
+evidence = ["crates/near-ui/src/filter.rs", "crates/near-ui/src/workspace.rs", "specs/filters.toml", "docs/near-filters.md", "project/evidence/M3-filters.md"]
+
+[[item]]
+id = "FAR-SELECT-004"
+area = "selection"
+title = "Two-panel folder comparison"
+priority = "should"
+status = "verified"
+acceptance = ["Panels compare names sizes and timestamps", "Differences become selections without mutating files", "Comparison policy is configurable"]
+evidence = ["crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-OPS-001"
+area = "operations"
+title = "Copy and move with preview, progress, and cancellation"
+priority = "must"
+status = "verified"
+acceptance = ["F5 and F6 build inspectable plans", "Conflicts are resolved explicitly", "Execution reports progress and supports cancellation"]
+evidence = ["crates/near-ops/src/lib.rs", "crates/near-ui/src/operation_preview.rs", "crates/near-local-fs/src/lib.rs"]
+
+[[item]]
+id = "FAR-OPS-002"
+area = "operations"
+title = "Rename in place and multi-rename"
+priority = "must"
+status = "verified"
+acceptance = ["A single item can be renamed without using the peer panel", "Batch rename supports masks or templates", "Conflicts and rollback are explicit"]
+evidence = ["crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-operations.md", "project/evidence/M1-operations.md"]
+
+[[item]]
+id = "FAR-OPS-003"
+area = "operations"
+title = "Trash, permanent delete, and wipe"
+priority = "must"
+status = "verified"
+acceptance = ["Reversible trash uses the native platform service", "Permanent deletion requires elevated confirmation", "Wipe policy and limitations are explicit"]
+evidence = ["crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "specs/confirmations.toml", "docs/near-deletion.md", "project/evidence/M3-deletion.md"]
+
+[[item]]
+id = "FAR-OPS-004"
+area = "operations"
+title = "Create hard links, symbolic links, and junction equivalents"
+priority = "must"
+status = "verified"
+acceptance = ["Link type is chosen explicitly", "Unsupported combinations fail before execution", "Created links display target metadata"]
+evidence = ["crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-operations.md", "project/evidence/M1-operations.md"]
+
+[[item]]
+id = "FAR-OPS-005"
+area = "operations"
+title = "Attributes, permissions, ownership, and timestamps dialog"
+priority = "must"
+status = "verified"
+acceptance = ["Portable and platform-specific metadata can be edited", "Recursive application is previewed", "Partial failures remain inspectable"]
+evidence = ["crates/near-core/src/resource.rs", "crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-operations.md", "project/evidence/M1-operations.md"]
+
+[[item]]
+id = "FAR-OPS-006"
+area = "operations"
+title = "Apply command to selected resources"
+priority = "must"
+status = "verified"
+acceptance = ["A command template expands selected resources with structured quoting", "Execution can be sequential or batched", "Failures identify the source item"]
+evidence = ["crates/near-core/src/apply_command.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-OPS-007"
+area = "operations"
+title = "Descriptions and folder description files"
+priority = "should"
+status = "verified"
+acceptance = ["Descriptions can be displayed edited and copied with files", "Description files are configurable", "Encoding behavior is explicit"]
+evidence = ["crates/near-core/src/provider.rs", "crates/near-core/src/resource.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/descriptions.toml", "docs/near-descriptions.md", "project/evidence/M3-descriptions.md"]
+
+[[item]]
+id = "FAR-SEARCH-001"
+area = "search"
+title = "Recursive name and content search"
+priority = "must"
+status = "verified"
+acceptance = ["Name and content predicates stream results", "Input remains responsive", "Results preserve source resource identity"]
+evidence = ["crates/near-search/src/lib.rs", "crates/near-ui/src/workspace.rs"]
+
+[[item]]
+id = "FAR-SEARCH-002"
+area = "search"
+title = "Advanced masks, regex, hex, encodings, attributes, sizes, and dates"
+priority = "must"
+status = "verified"
+acceptance = ["All criteria compose in one search request", "Text and hex search support explicit encodings", "Invalid predicates produce field diagnostics"]
+evidence = ["crates/near-search/src/lib.rs", "crates/near-ui/src/workspace.rs", "docs/near-search.md", "project/evidence/M3-search-advanced.md"]
+
+[[item]]
+id = "FAR-SEARCH-003"
+area = "search"
+title = "Search scopes, archives, links, and streams"
+priority = "should"
+acceptance = ["Search scope can target current roots selected roots providers or archives", "Symlink and alternate-stream policies are explicit", "Unsupported provider capabilities are visible"]
+status = "verified"
+evidence = ["crates/near-core/src/provider.rs", "crates/near-search/src/lib.rs", "crates/near-ui/src/workspace.rs", "docs/near-search.md", "project/evidence/FAR-SEARCH-003.md"]
+
+[[item]]
+id = "FAR-SEARCH-004"
+area = "search"
+title = "Result actions and temporary result panels"
+priority = "must"
+acceptance = ["Results can be viewed edited and revealed", "Results can be retained as generated panels without losing source identity", "Repeated search can refine or append results"]
+status = "verified"
+evidence = ["crates/near-search/src/lib.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-search.md", "project/evidence/M3-search-panels.md"]
+
+[[item]]
+id = "FAR-VIEW-001"
+area = "viewer"
+title = "Full-screen text and hex viewer"
+priority = "must"
+status = "verified"
+acceptance = ["F3 replaces the workspace with a full-screen viewer", "Text and hex modes share a bounded stream", "Escape restores the workspace"]
+evidence = ["crates/near-ui/src/viewer.rs", "crates/near-ui/src/workspace.rs"]
+
+[[item]]
+id = "FAR-VIEW-002"
+area = "viewer"
+title = "Wrap, code pages, dump mode, and go-to-position"
+priority = "must"
+status = "verified"
+acceptance = ["Wrap and hex modes are toggleable", "Code page selection is explicit", "Absolute relative percentage and line positions are supported"]
+evidence = ["crates/near-ui/src/viewer.rs", "specs/keymap.toml", "docs/near-streaming-viewer.md"]
+
+[[item]]
+id = "FAR-VIEW-003"
+area = "viewer"
+title = "Viewer search, bookmarks, history, and copy"
+priority = "must"
+status = "verified"
+acceptance = ["Text and hex search support next and previous", "Bookmarks and navigation history persist per resource", "Stream and rectangular selections copy to the platform clipboard"]
+evidence = ["crates/near-core/src/clipboard.rs", "crates/near-core/src/navigation.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/viewer.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/keymap.toml", "docs/near-streaming-viewer.md", "project/evidence/M3-viewer-interaction.md"]
+
+[[item]]
+id = "FAR-VIEW-004"
+area = "viewer"
+title = "Quick view parity"
+priority = "must"
+status = "verified"
+acceptance = ["Quick view exposes viewer navigation and search", "Directories show summaries or plugin previews", "Stale loads cannot replace current content"]
+evidence = ["crates/near-ui/src/viewer.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-streaming-viewer.md", "project/evidence/M3-quick-view.md"]
+
+[[item]]
+id = "FAR-EDIT-001"
+area = "editor"
+title = "Multi-file internal editor"
+priority = "must"
+status = "verified"
+acceptance = ["F4 opens an internal editor by default", "Multiple editor instances support screen switching", "Undo redo and persistent positions are available"]
+evidence = ["crates/near-ui/src/editor.rs", "crates/near-ui/src/workspace.rs", "crates/near-core/src/navigation.rs", "crates/near-core/src/provider.rs", "crates/near-local-fs/src/lib.rs", "apps/near-fm/src/main.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-EDIT-002"
+area = "editor"
+title = "Editor selections and clipboard"
+priority = "must"
+status = "verified"
+acceptance = ["Stream and column selections are supported", "Cut copy paste preserve selection semantics", "Persistent blocks are configurable"]
+evidence = ["crates/near-ui/src/editor.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/config.rs", "apps/near-fm/src/main.rs", "specs/editor.toml", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-EDIT-003"
+area = "editor"
+title = "Search, replace, regex, and find-all"
+priority = "must"
+status = "verified"
+acceptance = ["Search and replace support regex and replacement groups", "Find-all creates a navigable result list", "Replacement can preserve match style"]
+evidence = ["crates/near-ui/src/editor.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-EDIT-004"
+area = "editor"
+title = "Save As, encodings, BOM, EOL, and external-change handling"
+priority = "must"
+status = "verified"
+acceptance = ["Save As chooses encoding BOM and EOL", "Lossy saves require confirmation", "External changes support reload compare or keep-local choices"]
+evidence = ["crates/near-core/src/provider.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/editor.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-internal-editor.md", "project/evidence/M3-editor-save-as.md"]
+
+[[item]]
+id = "FAR-MENU-001"
+area = "menus"
+title = "Complete F9 top-menu hierarchy"
+priority = "must"
+status = "partial"
+acceptance = ["F9 opens the active panel side menu from the physical top-row Left Files Commands Options Right bar", "The submenu is anchored beneath its category rather than centered", "Left and Right traverse top-level categories and Tab switches the controlled panel side", "Pointer category selection shares the rendered geometry", "Each category preserves Far ordering before Near-specific extensions", "Entries reflect command availability", "Keyboard accelerators are unique and nested submenus work"]
+evidence = ["crates/near-ui/src/menu.rs", "crates/near-ui/src/workspace.rs", "docs/near-menu-hierarchy.md", "project/evidence/M3-menu-hierarchy.md"]
+
+[[item]]
+id = "FAR-MENU-002"
+area = "menus"
+title = "Context-sensitive function-key layers"
+priority = "must"
+status = "partial"
+acceptance = ["The keybar follows the active context", "Held modifiers display exact alternate F-key bindings", "Legacy terminals degrade without inventing bindings"]
+evidence = ["crates/near-ui/src/keymap.rs", "crates/near-terminal/src/input.rs", "crates/near-ui/src/workspace.rs", "specs/operator-workflows.toml", "docs/near-production-workflow-testing-guide.md", "project/evidence/production-gap-closure.md"]
+
+[[item]]
+id = "FAR-MENU-003"
+area = "menus"
+title = "Version-matched hypertext help"
+priority = "must"
+status = "verified"
+acceptance = ["F1 opens context help", "Contents search links and back navigation work", "Plugin and extension help is discoverable"]
+evidence = ["crates/near-ui/src/help.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-help.md", "project/evidence/M3-hypertext-help.md"]
+
+[[item]]
+id = "FAR-MENU-004"
+area = "menus"
+title = "Command palette and diagnostics"
+priority = "should"
+status = "verified"
+acceptance = ["Commands are searchable and availability-aware", "Effective shortcuts are displayed", "Configuration and handler origins are inspectable"]
+evidence = ["crates/near-ui/src/workspace.rs", "docs/near-configuration.md"]
+
+[[item]]
+id = "FAR-CUSTOM-001"
+area = "customization"
+title = "Panel view modes and custom column layouts"
+priority = "must"
+status = "verified"
+acceptance = ["Built-in compact medium full and metadata modes exist", "Users can define columns widths and alignment", "Modes can be assigned per panel"]
+evidence = ["crates/near-ui/src/panel_mode.rs", "crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "specs/panel-modes.toml", "specs/keymap.toml"]
+
+[[item]]
+id = "FAR-CUSTOM-002"
+area = "customization"
+title = "Highlighting, sort groups, and file decorations"
+priority = "must"
+status = "verified"
+acceptance = ["Rules combine masks metadata and attributes", "Rules control colors marks and sort groups", "Priority and inheritance are editable"]
+evidence = ["crates/near-search/src/lib.rs", "crates/near-ui/src/highlighting.rs", "crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "specs/highlighting.toml", "specs/keymap.toml", "specs/theme.toml", "project/evidence/M3-highlighting.md"]
+
+[[item]]
+id = "FAR-CUSTOM-003"
+area = "customization"
+title = "Themes and semantic color editing"
+priority = "must"
+status = "verified"
+acceptance = ["Theme presets can be selected live", "Semantic roles can be edited with terminal-aware color pickers", "Changes preview and roll back atomically"]
+evidence = ["crates/near-ui/src/theme.rs", "crates/near-ui/src/workspace.rs", "specs/theme.toml", "specs/theme-terminal-native.toml", "specs/theme-high-contrast.toml", "docs/near-themes.md"]
+
+[[item]]
+id = "FAR-CUSTOM-004"
+area = "customization"
+title = "Complete settings dialogs and advanced configuration"
+priority = "must"
+status = "partial"
+acceptance = ["System panel tree interface dialog menu command-line completion confirmation viewer and editor settings are exposed", "Every setting reports provenance", "Hidden advanced settings remain searchable and documented"]
+evidence = ["crates/near-config/src/lib.rs", "crates/near-config/src/settings.rs", "crates/near-app/src/lib.rs", "crates/near-ui/src/workspace.rs", "docs/near-configuration.md", "docs/near-settings-catalog.md", "specs/operator-workflows.toml", "project/evidence/production-gap-closure.md"]
+
+[[item]]
+id = "FAR-AUTO-001"
+area = "automation"
+title = "Viewed, edited, command, and folder histories"
+priority = "must"
+status = "verified"
+acceptance = ["Each history is persistent searchable and clearable", "Unavailable entries remain visible", "History retention and locking are configurable"]
+evidence = ["crates/near-core/src/navigation.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/command_history.rs", "crates/near-ui/src/folder_history.rs", "crates/near-ui/src/resource_history.rs", "crates/near-ui/src/workspace.rs", "specs/history.toml", "specs/keymap.toml", "project/evidence/M3-histories.md"]
+
+[[item]]
+id = "FAR-AUTO-002"
+area = "automation"
+title = "File associations"
+priority = "must"
+status = "partial"
+acceptance = ["Enter navigates containers but resolves Open associations for ordinary files", "F3 and F4 remain independent View and Edit policies", "Mask-based actions support open view edit execute and alternatives", "Structured argv is the default", "macOS Linux and Windows use their native default-application launchers", "Matching diagnostics and ordering are visible"]
+evidence = ["crates/near-core/src/external.rs", "crates/near-handlers/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "specs/handlers.toml", "specs/handlers-linux.toml", "specs/handlers-windows.toml", "tools/test_tmux_terminal_workflows.py", "docs/near-handlers.md", "project/evidence/M3-handlers.md"]
+
+[[item]]
+id = "FAR-AUTO-003"
+area = "automation"
+title = "User menus and metasymbol expansion"
+priority = "must"
+status = "verified"
+acceptance = ["Global and local user menus are supported", "Templates expand focused peer selected and temporary-list values", "Shell expansion is explicitly marked"]
+evidence = ["crates/near-core/src/external.rs", "crates/near-handlers/src/lib.rs", "crates/near-terminal/src/session.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/user-menu.toml", "docs/near-user-menus.md", "project/evidence/M3-user-menus.md"]
+
+[[item]]
+id = "FAR-AUTO-004"
+area = "automation"
+title = "Macro recording, playback, conditions, and management"
+priority = "must"
+status = "verified"
+acceptance = ["Semantic recording and playback work", "Macros declare contexts and execution conditions", "Users can list edit bind delete and diagnose macros"]
+evidence = ["crates/near-macros/src/lib.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/macros.toml", "specs/keymap.toml", "docs/near-macros.md", "project/evidence/M3-macros.md"]
+
+[[item]]
+id = "FAR-EXT-001"
+area = "extensions"
+title = "Capability-controlled extension host"
+priority = "must"
+status = "verified"
+acceptance = ["Process and WebAssembly extensions are isolated", "Grants are explicit and revocable", "Crashes and timeouts do not terminate the host"]
+evidence = ["crates/near-plugins/src/lib.rs", "docs/near-plugins.md"]
+
+[[item]]
+id = "FAR-EXT-002"
+area = "extensions"
+title = "Plugin menu, configuration, commands, and help"
+priority = "must"
+status = "verified"
+acceptance = ["F11 exposes installed extension actions", "Extensions contribute menus settings prefixes and help", "Unavailable or denied actions explain why"]
+evidence = ["crates/near-core/src/extension.rs", "crates/near-ui/src/workspace.rs", "specs/keymap.toml", "docs/near-plugins.md"]
+
+[[item]]
+id = "FAR-EXT-003"
+area = "extensions"
+title = "Archive browsing and extraction"
+priority = "must"
+status = "verified"
+acceptance = ["Archives open as provider-backed panels", "Copying out extracts with conflict policy", "Creating and updating archives is capability-driven"]
+evidence = ["crates/near-core/src/provider.rs", "crates/near-archive/src/lib.rs", "crates/near-ops/src/lib.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "docs/near-archives.md"]
+
+[[item]]
+id = "FAR-EXT-004"
+area = "extensions"
+title = "Temporary and generated panels"
+priority = "must"
+acceptance = ["Ten mutable temporary-panel slots retain arbitrary provider-backed references across restarts", "Alt+F1 and Alt+F2 expose numbered previews and target the requested side", "Copying into a temporary panel adds references while F7 and explicit clear commands remove references without changing source resources", "Ctrl+PageUp reveals the source and list import export safe mode and stale-resource behavior are explicit", "Search and extension generated panels remain distinct and retain source identity"]
+status = "partial"
+evidence = ["crates/near-ui/src/collection.rs", "crates/near-ui/src/workspace.rs", "crates/near-app/src/lib.rs", "specs/keymap.toml", "specs/operator-workflows.toml", "docs/near-temporary-panels.md", "docs/near-generated-panels.md"]
+
+[[item]]
+id = "FAR-EXT-005"
+area = "extensions"
+title = "Remote and network providers"
+priority = "should"
+acceptance = ["At least one SSH or SFTP provider supports panel navigation and transfer", "Credentials use platform-secure storage", "Disconnect and retry preserve panel state"]
+status = "verified"
+evidence = ["crates/near-sftp/src/lib.rs", "crates/near-core/src/provider.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/connections.toml", "docs/near-sftp.md", "project/evidence/FAR-EXT-005.md"]
+
+[[item]]
+id = "FAR-PLAT-001"
+area = "platform"
+title = "Keyboard and terminal compatibility"
+priority = "must"
+status = "partial"
+acceptance = ["Legacy and enhanced keyboard modes are detected", "Press repeat release and modifier-only events normalize", "Terminal state restores after failure panic or external handoff"]
+evidence = ["crates/near-terminal/src/input.rs", "crates/near-terminal/src/session.rs", "crates/near-ui/src/workspace.rs", "specs/operator-workflows.toml", "docs/near-production-workflow-testing-guide.md", "project/evidence/production-gap-closure.md"]
+
+[[item]]
+id = "FAR-PLAT-002"
+area = "platform"
+title = "Mouse selection, menus, wheel, and drag transfer"
+priority = "should"
+status = "verified"
+acceptance = ["Clicks focus panels and activate controls", "Right click follows selection policy", "Drag between panels previews copy or move"]
+evidence = ["crates/near-terminal/src/input.rs", "crates/near-terminal/src/session.rs", "crates/near-ui/src/menu.rs", "crates/near-ui/src/workspace.rs", "docs/near-mouse-interaction.md"]
+
+[[item]]
+id = "FAR-PLAT-003"
+area = "platform"
+title = "Profiles, portable mode, import, and export"
+priority = "must"
+status = "verified"
+acceptance = ["Roaming and local state roots can be redirected", "Portable profiles are supported", "Configuration and histories can be exported and imported"]
+evidence = ["apps/near-fm/src/platform.rs", "apps/near-fm/src/config.rs", "docs/near-profiles.md"]
+
+[[item]]
+id = "FAR-PLAT-004"
+area = "platform"
+title = "Elevation and privileged operation retry"
+priority = "should"
+status = "verified"
+acceptance = ["Permission failures offer a platform-native elevation path", "The exact operation plan is preserved", "Elevated execution remains auditable"]
+evidence = ["crates/near-ops/src/lib.rs", "crates/near-local-fs/src/lib.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "docs/near-elevation.md", "project/evidence/FAR-PLAT-004.md"]
+
+[[item]]
+id = "FAR-PLAT-005"
+area = "platform"
+title = "Process, task, and removable-device panels"
+priority = "should"
+acceptance = ["Process browsing is a provider-backed application or panel", "Task actions are capability-gated", "Removable devices can be listed and safely disconnected"]
+status = "verified"
+evidence = ["apps/near-proc/src/main.rs", "crates/near-reference-providers/src/lib.rs", "crates/near-local-fs/src/device.rs", "crates/near-ui/src/workspace.rs", "docs/near-device-panels.md"]
+
+[[item]]
+id = "FAR-SHELL-006"
+area = "shell"
+title = "Native configurable shell profiles"
+priority = "must"
+status = "partial"
+acceptance = ["macOS defaults to the account login shell with normal startup files", "Login interactive clean and explicit shell modes are configurable", "Environment working directory integration and exit policies are inspectable", "Nested terminal applications preserve the shell and workspace"]
+evidence = ["crates/near-pty/src/lib.rs", "crates/near-ui/src/terminal_surface.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/shell.toml", "docs/near-production-workflow-testing-guide.md", "project/evidence/production-gap-closure.md"]
+
+[[item]]
+id = "FAR-VIEW-005"
+area = "viewer"
+title = "Configurable viewer defaults and external policy"
+priority = "must"
+status = "partial"
+acceptance = ["Viewer defaults are stored in a versioned layered document", "Internal external and association precedence are configurable", "Display encoding binary detection and persistence policies apply to new viewers", "Global defaults remain distinct from per-resource state"]
+evidence = ["crates/near-ui/src/viewer.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "specs/viewer.toml", "docs/near-production-workflow-testing-guide.md", "project/evidence/production-gap-closure.md"]
+
+[[item]]
+id = "FAR-EDIT-005"
+area = "editor"
+title = "Configurable editor defaults and external policy"
+priority = "must"
+status = "partial"
+acceptance = ["Editor interaction display save and safety defaults are versioned and layered", "Internal external and association precedence are configurable", "Settings declare whether they affect open editors new editors or restart", "Changes persist and retain provenance"]
+evidence = ["specs/editor.toml", "crates/near-ui/src/editor.rs", "crates/near-ui/src/workspace.rs", "apps/near-fm/src/main.rs", "docs/near-production-workflow-testing-guide.md", "project/evidence/production-gap-closure.md"]

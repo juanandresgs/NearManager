@@ -1,0 +1,27 @@
+[package]
+name = "near-app"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+
+[dependencies]
+near-core = { path = "../near-core" }
+near-config = { path = "../near-config" }
+near-handlers = { path = "../near-handlers" }
+near-macros = { path = "../near-macros" }
+near-ops = { path = "../near-ops" }
+near-pty = { path = "../near-pty" }
+near-runtime = { path = "../near-runtime" }
+near-search = { path = "../near-search" }
+near-terminal = { path = "../near-terminal" }
+near-ui = { path = "../near-ui" }
+thiserror.workspace = true
+
+[lints]
+workspace = true

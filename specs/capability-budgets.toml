@@ -1,0 +1,17 @@
+schema_version = 1
+
+[near_fm]
+base_features = []
+full_features = ["plugins"]
+base_binary_bytes_max = 10000000
+full_binary_bytes_max = 24000000
+plugin_binary_delta_bytes_min = 8500000
+# The native macOS Trash API bridge adds objc2, objc2-encode, and objc2-foundation.
+base_transitive_packages_max = 170
+full_transitive_packages_max = 221
+
+[targets]
+base_binary_bytes = 8000000
+full_binary_bytes = 16000000
+base_transitive_packages = 120
+full_transitive_packages = 150

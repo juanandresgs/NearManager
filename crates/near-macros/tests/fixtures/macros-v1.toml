@@ -1,0 +1,20 @@
+schema = 1
+
+[[macros]]
+id = "near.macro.next-two"
+title = "Move down twice"
+trust = "untrusted"
+
+[macros.when]
+required_contexts = ["workspace.panel"]
+current_resource = "present"
+
+[[macros.steps]]
+[macros.steps.invocation]
+id = "near.collection.move"
+arguments = { rows = 1 }
+
+[[macros.steps]]
+[macros.steps.invocation]
+id = "near.collection.move"
+arguments = { rows = 1 }

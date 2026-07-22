@@ -1,0 +1,556 @@
+schema_version = 1
+
+[policy]
+required_assertion_layers = ["binding", "command", "model", "render", "boundary"]
+case_statuses = ["implemented", "verified", "missing"]
+discovery_statuses = ["pending", "complete"]
+production_case_status = "implemented"
+production_discovery_status = "complete"
+
+[[suite]]
+id = "IC-PANEL-NAV"
+title = "File panel cursor and viewport navigation"
+context = "workspace.panel"
+owner_behavior = "ABST-COLLECTION-001"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-PANEL-001"]
+operator_scenario = "OP-PANEL-NAVIGATION-001"
+
+[[suite]]
+id = "IC-PANEL-SELECT"
+title = "Independent cursor and direct multi-selection"
+context = "workspace.panel"
+owner_behavior = "ABST-COLLECTION-001"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-SELECT-001"]
+operator_scenario = "OP-PANEL-NAVIGATION-001"
+
+[[suite]]
+id = "IC-RESOURCE-OPEN"
+title = "Container navigation and independent Open View Edit actions"
+context = "workspace.panel"
+owner_behavior = "ABST-COLLECTION-001"
+requirements = ["REQ-HANDLER-001", "REQ-EXT-001", "REQ-REL-002"]
+parity = ["FAR-AUTO-002"]
+operator_scenario = "OP-ASSOCIATION-001"
+
+[[suite]]
+id = "IC-PANEL-LAYOUT"
+title = "Dual-surface panel sizing and pointer geometry"
+context = "workspace.panel"
+owner_behavior = "ABST-LAYOUT-001"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-PANEL-001"]
+operator_scenario = "OP-PANEL-NAVIGATION-001"
+
+[[suite]]
+id = "IC-OPERATION-TARGET"
+title = "Mutation target resolution and post-operation selection"
+context = "workspace.panel"
+owner_behavior = "ABST-OPERATION-001"
+requirements = ["REQ-OPS-003", "REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-SELECT-001"]
+operator_scenario = "OP-OPERATION-TARGET-001"
+
+[[suite]]
+id = "IC-MENU-NAV"
+title = "Menu cursor paging and viewport navigation"
+context = "overlay.menu"
+owner_behavior = "ABST-LIST-001"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-MENU-002"]
+operator_scenario = "OP-SURFACE-NAVIGATION-001"
+
+[[suite]]
+id = "IC-SETTINGS-NAV"
+title = "Settings cursor paging and filtered viewport navigation"
+context = "surface.settings"
+owner_behavior = "ABST-LIST-001"
+requirements = ["REQ-TEST-002", "REQ-CONFIG-001"]
+parity = ["FAR-CUSTOM-004"]
+operator_scenario = "OP-SURFACE-NAVIGATION-001"
+
+[[suite]]
+id = "IC-TASK-NAV"
+title = "Task cursor paging and filtered viewport navigation"
+context = "surface.tasks"
+owner_behavior = "ABST-LIST-001"
+requirements = ["REQ-TEST-002"]
+parity = []
+operator_scenario = "OP-SURFACE-NAVIGATION-001"
+
+[[suite]]
+id = "IC-TASK-HISTORY"
+title = "User-visible background task lifecycle"
+context = "surface.tasks"
+owner_behavior = "ABST-TASK-001"
+requirements = ["REQ-TEST-002", "REQ-SEARCH-002"]
+parity = ["FAR-EXT-004"]
+operator_scenario = "OP-TEMP-PANEL-001"
+
+[[suite]]
+id = "IC-HELP-NAV"
+title = "Help page and boundary navigation"
+context = "surface.help"
+owner_behavior = "ABST-SEMANTIC-001"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-MENU-002"]
+operator_scenario = "OP-SURFACE-NAVIGATION-001"
+
+[[suite]]
+id = "IC-HISTORY-NAV"
+title = "History cursor paging and filtered viewport navigation"
+context = "surface.command-history"
+owner_behavior = "ABST-LIST-001"
+requirements = ["REQ-TEST-002", "REQ-REL-002"]
+parity = ["FAR-MENU-002"]
+operator_scenario = "OP-SURFACE-NAVIGATION-001"
+
+[[suite]]
+id = "IC-TERMINAL-INPUT"
+title = "Atomic terminal input normalization"
+context = "workspace.panel"
+owner_behavior = "ABST-TERMINAL-001"
+requirements = ["REQ-TERM-001", "REQ-REL-002"]
+parity = ["FAR-PLAT-001"]
+operator_scenario = "OP-INPUT-ALT-LOOKUP"
+
+[[suite]]
+id = "IC-COMMAND-LINE"
+title = "Panel command-line routing precedence"
+context = "workspace.panel"
+owner_behavior = "ABST-KEYMAP-001"
+requirements = ["REQ-TERM-001", "REQ-REL-002"]
+parity = ["FAR-SHELL-001"]
+operator_scenario = "OP-SHELL-001"
+
+[[case]]
+id = "IC-COMMAND-001"
+suite = "IC-COMMAND-LINE"
+title = "Space edits an active command line before panel selection"
+keys = ["Space"]
+commands = ["near.collection.toggle-selection"]
+precondition = "The panel command line already contains text"
+expected = ["Space appends to the command buffer", "the focused resource selection remains unchanged", "the rendered command line preserves the space"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "active_command_line_text_precedes_bindings"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-TERMINAL-001"
+suite = "IC-TERMINAL-INPUT"
+title = "Fragmented legacy escape sequences remain atomic before keymap dispatch"
+keys = ["F9", "Alt+Left"]
+commands = ["near.menu.main", "near.collection.scroll-horizontal"]
+precondition = "A legacy terminal or tmux delivers an escape-prefixed key sequence across multiple reads"
+expected = ["the shared reactor emits one normalized key event", "no suffix bytes reach an application command line", "a standalone Escape remains available after a bounded disambiguation delay"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "terminal_interaction_conformance_fragmented_legacy_sequences_remain_atomic"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-PANEL-001"
+suite = "IC-PANEL-NAV"
+title = "Up and Down move one row and clamp at collection boundaries"
+keys = ["Up", "Down"]
+commands = ["near.collection.move"]
+precondition = "A non-empty file panel has entries above and below the cursor"
+expected = ["plain movement never changes the selected set", "movement clamps at the first and last entries", "the focused entry remains visible"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_plain_arrows_preserve_selection_and_clamp"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-PANEL-002"
+suite = "IC-PANEL-NAV"
+title = "Left Right Home and End navigate to collection edges"
+keys = ["Left", "Right", "Home", "End"]
+commands = ["near.collection.first", "near.collection.last"]
+precondition = "The collection is larger than the visible viewport"
+expected = ["Left and Home focus the first entry", "Right and End focus the last entry", "the focused edge entry is rendered"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_edges_are_visible"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-PANEL-003"
+suite = "IC-PANEL-NAV"
+title = "PageUp and PageDown move by the current visible page"
+keys = ["PageUp", "PageDown"]
+commands = ["near.collection.page"]
+precondition = "The collection contains at least three visible pages"
+expected = ["each key moves by the current panel content height", "page movement clamps at collection boundaries", "the focused entry remains rendered"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_paging_and_resize_follow_viewport"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-PANEL-004"
+suite = "IC-PANEL-NAV"
+title = "Resize recalculates paging and keeps the cursor visible"
+keys = ["PageDown"]
+commands = ["near.collection.page"]
+precondition = "A scrolled collection is rendered at two different terminal heights"
+expected = ["the visible page size follows the latest render height", "the cursor remains visible after shrinking and expanding", "subsequent paging uses the new height"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_paging_and_resize_follow_viewport"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-PANEL-005"
+suite = "IC-PANEL-NAV"
+title = "Mouse rows target the visible scrolled collection slice"
+keys = []
+commands = []
+precondition = "The cursor and viewport are scrolled beyond the first page"
+expected = ["clicking the first visible row focuses its actual collection entry", "right-click selection targets the visible entry", "mouse wheel and keyboard retain a coherent viewport"]
+assertion_layers = ["model", "render", "boundary"]
+test = "panel_interaction_conformance_mouse_targets_scrolled_rows"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-PANEL-006"
+suite = "IC-PANEL-NAV"
+title = "Far horizontal scrolling shifts long names without changing focus"
+keys = ["Alt+Left", "Alt+Right", "Ctrl+Alt+Left", "Ctrl+Alt+Right", "Alt+Home", "Alt+End"]
+commands = ["near.collection.scroll-horizontal", "near.collection.horizontal-start", "near.collection.horizontal-end"]
+precondition = "A panel contains a Unicode filename wider than its visible name column"
+expected = ["horizontal movement changes only the visible name slice", "selection marks and focus remain visible", "Alt Home and Alt End align the name at its scroll boundaries"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_horizontal_scroll_uses_far_bindings"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-PANEL-009"
+suite = "IC-PANEL-NAV"
+title = "Enhanced keyboard repeat dispatches the same navigation command as the initial press"
+keys = ["Up", "Down", "PageUp", "PageDown", "Home", "End"]
+commands = ["near.collection.move", "near.collection.page", "near.collection.first", "near.collection.last"]
+precondition = "The terminal reports enhanced press repeat and release event kinds while a panel contains multiple rows"
+expected = ["every repeat event resolves the same semantic binding as a press", "holding navigation moves continuously in either pane", "release events remain non-dispatching"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_navigation_acknowledges_enhanced_key_repeat_on_both_panes"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-PANEL-007"
+suite = "IC-PANEL-LAYOUT"
+title = "Panel resizing uses one geometry for rendering and pointer targeting"
+keys = ["Ctrl+Shift+Left", "Ctrl+Shift+Right", "Ctrl+Shift+Up", "Ctrl+Shift+Down", "Ctrl+Shift+Home"]
+commands = ["near.workspace.resize-panels", "near.workspace.reset-panel-layout"]
+precondition = "Both panels are visible in a terminal large enough for the minimum panel sizes"
+expected = ["horizontal resize moves the panel boundary by ten columns", "vertical resize changes panel height by five rows", "mouse targeting follows the resized boundary and reset restores equal full-height panels"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_resize_updates_render_and_mouse_geometry"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-PANEL-008"
+suite = "IC-PANEL-NAV"
+title = "Refresh retains surviving cursor selection and horizontal state"
+keys = ["Ctrl+R"]
+commands = ["near.panel.refresh"]
+precondition = "The current provider collection changes while selected and focused resources survive"
+expected = ["refresh incorporates provider changes", "the surviving focused resource remains current", "all surviving selected resources and horizontal scroll state are restored"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_refresh_retains_surviving_cursor_and_selection"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-OPEN-001"
+suite = "IC-RESOURCE-OPEN"
+title = "Enter resolves Open while F3 and F4 retain independent policies"
+keys = ["Enter", "F3", "F4"]
+commands = ["near.resource.open", "near.resource.view", "near.resource.edit"]
+precondition = "The cursor is on an ordinary local file with a configured Open association"
+expected = ["Enter queues the first matching Open handler", "F3 follows Viewer policy and does not inherit Open", "F4 follows Editor policy and does not inherit Open", "missing Open handlers produce an explicit denial rather than viewer fallback"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "enter_uses_open_association_while_f3_remains_the_viewer"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-SELECT-001"
+suite = "IC-PANEL-SELECT"
+title = "Shift arrows toggle the current entry and move one row"
+keys = ["Shift+Up", "Shift+Down"]
+commands = ["near.collection.toggle-selection-move"]
+precondition = "The cursor is on an ordinary file entry"
+expected = ["the current entry toggles selected state", "the cursor moves in the requested direction", "selected state and focus use distinct semantic roles"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_shift_and_insert_select_while_moving"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-SELECT-002"
+suite = "IC-PANEL-SELECT"
+title = "Insert toggles the current entry and advances"
+keys = ["Insert"]
+commands = ["near.collection.toggle-selection-move"]
+precondition = "The cursor is on an ordinary file entry"
+expected = ["the current entry toggles selected state", "the cursor advances one row", "repeating on a selected entry deselects it"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_shift_and_insert_select_while_moving"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-SELECT-003"
+suite = "IC-PANEL-SELECT"
+title = "Plain arrows preserve non-contiguous selection"
+keys = ["Shift+Down", "Down", "Insert"]
+commands = ["near.collection.toggle-selection-move", "near.collection.move"]
+precondition = "One file has been selected and unselected files remain below it"
+expected = ["plain movement changes only the cursor", "files separated by unselected entries can both remain selected", "the focused unselected entry is visually distinct from selected non-focused entries"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_non_contiguous_selection"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-SELECT-004"
+suite = "IC-PANEL-SELECT"
+title = "Selection survives paging and edge navigation"
+keys = ["Shift+Down", "PageDown", "End", "Home"]
+commands = ["near.collection.toggle-selection-move", "near.collection.page", "near.collection.first", "near.collection.last"]
+precondition = "The collection is larger than the viewport and contains selected entries"
+expected = ["paging and edge navigation do not clear selection", "off-screen selected entries remain in the selected set", "returning to them restores visible selected styling"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "panel_interaction_conformance_selection_survives_navigation"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-SELECT-005"
+suite = "IC-PANEL-SELECT"
+title = "The parent navigation entry can never be selected"
+keys = ["Space", "Insert", "Shift+Down"]
+commands = ["near.collection.toggle-selection", "near.collection.toggle-selection-move"]
+precondition = "The cursor is on the parent navigation entry"
+expected = ["Space and Insert do not select the parent", "Shift movement may leave the parent but never marks it selected", "operations continue treating the parent as navigation-only"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "filesystem_provider_drives_navigation_parent_and_view_workflows"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-OPERATION-001"
+suite = "IC-OPERATION-TARGET"
+title = "Normal mutations prefer selection while Shift function keys use only the cursor"
+keys = ["F5", "Shift+F5", "Shift+F6", "Shift+F8"]
+commands = ["near.resource.copy-to-peer", "near.resource.copy-current-to-peer", "near.resource.move-current-to-peer", "near.resource.trash-current"]
+precondition = "Multiple resources are selected while the cursor rests on a different resource"
+expected = ["F5 targets the complete selected set", "Shift F5 and Shift F6 target only the cursor resource", "Shift F8 trashes only the cursor resource without changing the selected set"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "operation_target_conformance_shift_function_keys_ignore_selection"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-OPERATION-002"
+suite = "IC-OPERATION-TARGET"
+title = "Partial mutation failure retains failed selections after provider refresh"
+keys = ["F8"]
+commands = ["near.resource.trash"]
+precondition = "Two selected resources enter one mutation plan and exactly one item fails"
+expected = ["the preview declares both selected targets", "the completed resource disappears after refresh", "the failed surviving resource remains selected and task history records the partial failure"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "operation_target_conformance_partial_failure_retains_failed_selection"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-MENU-001"
+suite = "IC-MENU-NAV"
+title = "Menu Home End and paging keep the selected item rendered"
+keys = ["Home", "End", "PageUp", "PageDown"]
+commands = ["near.menu.first", "near.menu.last", "near.menu.page-up", "near.menu.page-down"]
+precondition = "A menu has more filtered items than fit in its viewport"
+expected = ["paging moves by the rendered item count", "Home and End select collection boundaries", "the selected item remains rendered with the focused semantic role"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "surface_interaction_conformance_menu_pages_and_keeps_focus_visible"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-MENU-002"
+suite = "IC-MENU-NAV"
+title = "An open F9 menu traverses Far categories and panel sides"
+keys = ["Left", "Right", "Tab", "Shift+Tab"]
+commands = ["near.menu.previous-category", "near.menu.next-category", "near.menu.switch-panel"]
+precondition = "F9 has opened the focused panel side menu and both panel sides are available"
+expected = ["Left and Right traverse Left Files Commands Options Right", "Tab and Shift+Tab switch between the exact left and right panel menus", "the selected category remains visibly marked in the menu bar"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "f9_opens_the_active_panel_menu_and_switches_far_categories"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-SETTINGS-001"
+suite = "IC-SETTINGS-NAV"
+title = "Settings Home End and paging keep the filtered setting rendered"
+keys = ["Home", "End", "PageUp", "PageDown"]
+commands = ["near.settings.first", "near.settings.last", "near.settings.page-up", "near.settings.page-down"]
+precondition = "The settings surface has more matching descriptors than fit in its viewport"
+expected = ["paging follows the rendered settings row count", "boundary commands operate on the filtered set", "the selected descriptor remains rendered with the focused semantic role"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "surface_interaction_conformance_settings_pages_and_keeps_focus_visible"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-TASK-001"
+suite = "IC-TASK-NAV"
+title = "Task Home End and paging keep the filtered task rendered"
+keys = ["Home", "End", "PageUp", "PageDown"]
+commands = ["near.tasks.first", "near.tasks.last", "near.tasks.page-up", "near.tasks.page-down"]
+precondition = "The task surface has more matching tasks than fit in its viewport"
+expected = ["paging follows the rendered task row count", "boundary commands operate on the filtered set", "the focused task remains visible after movement"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "surface_interaction_conformance_tasks_page_and_keep_focus_visible"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-TASK-002"
+suite = "IC-TASK-HISTORY"
+title = "User-visible background work remains in task history"
+keys = []
+commands = ["near.demo.tasks"]
+precondition = "A temporary-panel command is queued through the shared task runtime"
+expected = ["the task is registered as running before completion", "completion remains visible with the same runtime task identity", "copy-as-reference creates no operation task and failed or cancelled tasks never remain running"]
+assertion_layers = ["command", "model", "render", "boundary"]
+test = "temporary_panel_command_output_is_captured_asynchronously_with_prefix_modes"
+status = "implemented"
+
+[[case]]
+id = "IC-HELP-001"
+suite = "IC-HELP-NAV"
+title = "Help Home End and paging navigate the rendered document"
+keys = ["Home", "End", "PageUp", "PageDown"]
+commands = ["near.help.home", "near.help.end", "near.help.page-up", "near.help.page-down"]
+precondition = "A help topic contains more entries than fit in its viewport"
+expected = ["PageUp and PageDown move by the visible help body", "Home restores the topic start", "End renders the final help entry"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "surface_interaction_conformance_help_pages_home_and_end"
+status = "implemented"
+operator_required = true
+
+[[case]]
+id = "IC-HISTORY-001"
+suite = "IC-HISTORY-NAV"
+title = "History Home End and paging keep the filtered entry rendered"
+keys = ["Home", "End", "PageUp", "PageDown"]
+commands = ["near.command-history.first", "near.command-history.last", "near.command-history.page-up", "near.command-history.page-down"]
+precondition = "A history surface has more matching entries than fit in its viewport"
+expected = ["paging follows the rendered history row count", "boundary commands operate on the filtered set", "the selected history entry remains rendered with the focused semantic role"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "surface_interaction_conformance_histories_page_and_keep_focus_visible"
+status = "implemented"
+operator_required = true
+
+[[suite]]
+id = "IC-SHELL-LIFECYCLE"
+title = "Shared shell close and exit lifecycle"
+context = "surface.terminal"
+owner_behavior = "ABST-SHELL-001"
+requirements = ["REQ-PTY-001", "REQ-REL-002"]
+parity = ["FAR-SHELL-005", "FAR-SHELL-006"]
+operator_scenario = "OP-SHELL-001"
+
+[[case]]
+id = "IC-SHELL-001"
+suite = "IC-SHELL-LIFECYCLE"
+title = "Shell close policy never silently abandons a child"
+keys = ["Ctrl+Shift+Q"]
+commands = ["near.terminal.close", "near.terminal.open"]
+precondition = "A profile-backed shared shell is running or has completed"
+expected = ["warn presents explicit terminate hide and cancel decisions while running and retains completed output", "keep-open hides and resumes the same child", "close terminates a running child and removes a completed shell screen", "child exit wakes the blocking event reactor", "the resolved mode and close policy remain visible on the shell border"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "shell_close_policy_contract_is_explicit"
+status = "implemented"
+operator_required = true
+
+[[suite]]
+id = "IC-TERMINAL-WORKSPACE"
+title = "Retained terminal tabs and reversible pane presentation"
+context = "surface.terminal"
+owner_behavior = "ABST-SCREEN-001"
+requirements = ["REQ-PTY-001", "REQ-REL-002"]
+parity = []
+operator_scenario = "OP-SHELL-001"
+
+[[case]]
+id = "IC-WORKSPACE-001"
+suite = "IC-TERMINAL-WORKSPACE"
+title = "Independent terminals cycle inside a zoomable peer pane"
+keys = ["Ctrl+Alt+P"]
+commands = ["near.terminal.new", "near.terminal.previous", "near.terminal.next", "near.workspace.focus-peer", "near.terminal.open"]
+precondition = "Two retained shell tabs exist and one occupies a file-workspace peer pane"
+expected = ["each terminal retains independent output", "tab cycling changes only the projected terminal", "focus crosses between the terminal and file peer", "zoom hides the peer workspace and restores the exact prior pane"]
+assertion_layers = ["binding", "command", "model", "render", "boundary"]
+test = "terminal_tabs_cycle_inside_a_zoomable_peer_pane"
+status = "implemented"
+operator_required = true
+
+[[discovery]]
+id = "DISC-PANEL-001"
+title = "Complete panel navigation and layout behavior inventory"
+domain = "panels"
+owner_behavior = "ABST-COLLECTION-001"
+sources = ["docs/farmanager-3-hotkeys.md", "docs/farmanager-3-research.md", "direct Far observation"]
+required_outputs = ["edge and page movement semantics", "horizontal scrolling semantics", "panel resizing semantics", "refresh sort and filter cursor retention", "quick-view synchronization"]
+evidence = "project/evidence/interaction-discovery-inventory.md"
+status = "pending"
+
+[[discovery]]
+id = "DISC-SELECT-001"
+title = "Complete direct and group-selection behavior inventory"
+domain = "selection"
+owner_behavior = "ABST-COLLECTION-001"
+sources = ["docs/farmanager-3-hotkeys.md", "docs/farmanager-3-research.md", "direct Far observation"]
+required_outputs = ["non-contiguous selection semantics", "numeric-keypad protocol capability", "selection under selected-first sorting", "selection retention through refresh sort filter and operations", "folder and parent-entry rules"]
+evidence = "project/evidence/interaction-discovery-inventory.md"
+status = "pending"
+
+[[discovery]]
+id = "DISC-OPERATIONS-001"
+title = "Audit cursor-versus-selection semantics for every mutation"
+domain = "operations"
+owner_behavior = "ABST-OPERATION-001"
+sources = ["docs/farmanager-3-hotkeys.md", "docs/farmanager-3-advanced-workflows.md", "direct Far observation"]
+required_outputs = ["cursor fallback when selection is empty", "selection precedence when files are selected", "single-current-item modifier variants", "post-operation selection retention", "partial-failure selection behavior"]
+evidence = "project/evidence/interaction-discovery-inventory.md"
+status = "pending"
+
+[[discovery]]
+id = "DISC-SURFACES-001"
+title = "Audit navigation semantics across viewer editor menus dialogs and command line"
+domain = "surfaces"
+owner_behavior = "ABST-SEMANTIC-001"
+sources = ["docs/farmanager-3-hotkeys.md", "docs/farmanager-3-research.md", "direct Far observation"]
+required_outputs = ["context-specific arrow and paging behavior", "selection versus navigation modifiers", "boundary and wrap behavior", "focus restoration after overlays", "resize and terminal restoration behavior"]
+evidence = "project/evidence/interaction-discovery-inventory.md"
+status = "pending"
+
+[[discovery]]
+id = "DISC-TERMINAL-001"
+title = "Determine terminal protocol limits for keypad and modified navigation keys"
+domain = "terminal-input"
+owner_behavior = "ABST-TERMINAL-001"
+sources = ["Terminal.app", "iTerm2", "Ghostty", "GNOME Terminal", "Konsole", "tmux", "SSH"]
+required_outputs = ["keypad identity capability matrix", "modified-key encoding matrix", "legacy fallback behavior", "unsupported and degraded behavior declarations", "operator fixtures for every supported terminal"]
+evidence = "project/evidence/interaction-discovery-inventory.md"
+status = "pending"

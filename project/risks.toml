@@ -1,0 +1,71 @@
+schema = 1
+
+[[risk]]
+id = "RISK-001"
+title = "Framework abstractions diverge from real application needs"
+likelihood = "medium"
+impact = "high"
+owner = "architecture"
+requirements = ["REQ-CORE-001", "REQ-APP-001", "REQ-APP-002"]
+response = "Do not declare platform readiness until file viewer and non-filesystem applications share the runtime."
+trigger = "A public API is proposed with only near-fm as a consumer."
+
+[[risk]]
+id = "RISK-002"
+title = "Filesystem operation causes data loss"
+likelihood = "low"
+impact = "critical"
+owner = "filesystem"
+requirements = ["REQ-OPS-001", "REQ-OPS-002", "REQ-SEC-001"]
+response = "Use planning, Trash defaults, journaling, stale-context rejection, fault injection, and staged rollout."
+trigger = "An operation bypasses the plan executor or cannot report partial outcomes."
+
+[[risk]]
+id = "RISK-003"
+title = "Terminal incompatibility corrupts user session"
+likelihood = "medium"
+impact = "high"
+owner = "terminal"
+requirements = ["REQ-TERM-001", "REQ-TERM-002"]
+response = "Maintain capability fallbacks, restoration guards, fixtures, and a published terminal matrix."
+trigger = "A supported terminal cannot recover after panic or external tool execution."
+
+[[risk]]
+id = "RISK-004"
+title = "Embedded PTY delays useful product delivery"
+likelihood = "high"
+impact = "medium"
+owner = "product"
+requirements = ["REQ-EXT-001", "REQ-PTY-001"]
+response = "Treat suspend-and-run as the required path and embedded PTY as a later optional milestone."
+trigger = "M1 work becomes dependent on embedded PTY correctness."
+
+[[risk]]
+id = "RISK-005"
+title = "Plugin API stabilizes before internal contracts are proven"
+likelihood = "medium"
+impact = "high"
+owner = "extensions"
+requirements = ["REQ-PLUGIN-001", "REQ-PLUGIN-003", "REQ-API-002"]
+response = "Delay public WIT stability until multiple first-party extensions and application APIs are validated."
+trigger = "A third-party compatibility promise is proposed before M2 completion."
+
+[[risk]]
+id = "RISK-006"
+title = "Project records drift from implementation"
+likelihood = "medium"
+impact = "high"
+owner = "governance"
+requirements = ["REQ-GOV-001", "REQ-TEST-001"]
+response = "Require validation, evidence links, ADR review, and traceability updates in the same change."
+trigger = "A release contains implemented behavior without requirement or workflow coverage."
+
+[[risk]]
+id = "RISK-007"
+title = "Generic abstractions leak unsafe or confusing product semantics"
+likelihood = "high"
+impact = "critical"
+owner = "product-architecture"
+requirements = ["REQ-OPS-003", "REQ-TEST-002", "REQ-REL-002"]
+response = "Define intent-specific presentation contracts, classify protected resources before planning, test visible workflows against real platform boundaries, and block releases on autonomous qualification failures."
+trigger = "A workflow is engine-correct but presents impossible choices, misclassifies a platform object, or requires the operator to understand an internal policy to act safely."
