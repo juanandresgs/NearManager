@@ -772,6 +772,7 @@ impl PtySession {
 
     #[cfg(windows)]
     fn foreground_process_label(&self) -> Option<String> {
+        let _ = self;
         None
     }
 
