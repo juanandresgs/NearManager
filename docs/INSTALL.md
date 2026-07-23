@@ -1,8 +1,26 @@
-# Installing Near
+# Installing Near Manager
 
-Near is pre-release software. Release binaries are the simplest way to install `near-fm`; building from source is the fallback and the development path.
+Near Manager is pre-release software. The automatic installers are the simplest way to install `near-fm`; building from source is the fallback and the development path.
 
-## Release archive
+## Automatic install
+
+The installers take no parameters. They detect the operating system and CPU architecture, select the matching latest release, verify its SHA-256 checksum, and install `near-fm`, `near-view`, `near-proc`, and `near-demo` in a user-local binary directory.
+
+On macOS or x86_64 Linux:
+
+```sh
+curl --proto '=https' --tlsv1.2 -LsSf https://raw.githubusercontent.com/juanandresgs/NearManager/main/install.sh | sh
+```
+
+On x86_64 Windows, from PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/juanandresgs/NearManager/main/install.ps1 | iex
+```
+
+The Unix installer uses `~/.local/bin` and adds it to the active shell's login and interactive startup files when necessary. The Windows installer uses `%LOCALAPPDATA%\NearManager\bin` and adds it to the user `PATH`. Open a new terminal after installation, then run `near-fm`.
+
+## Manual release archive
 
 1. Open the [latest GitHub release](https://github.com/juanandresgs/NearManager/releases/latest).
 2. Download the archive for your platform, its `.sha256` sidecar, the matching provenance JSON, and `SHA256SUMS`.

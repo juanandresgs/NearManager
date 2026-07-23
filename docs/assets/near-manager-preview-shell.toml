@@ -1,0 +1,7 @@
+schema = 1
+program = "/bin/sh"
+mode = "clean"
+startup_command = "PS1='near> '; export PS1; exec /bin/sh -i"
+close_policy = "close"
+inherit_environment = false
+arguments = []

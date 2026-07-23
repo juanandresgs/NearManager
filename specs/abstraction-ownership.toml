@@ -64,6 +64,20 @@ consumer_evidence = ["crates/near-app/src/lib.rs", "project/evidence/tui-abstrac
 status = "implemented"
 
 [[behavior]]
+id = "ABST-INSTALL-001"
+title = "Automatic verified release installation"
+layer = "platform-adapter"
+owner = "install.sh"
+application_policy = "Near Manager publishes a zero-parameter install entry point for Unix-like shells and Windows PowerShell. Each adapter detects the host operating system and architecture, selects only a published target, downloads the latest matching release over HTTPS, verifies its SHA-256 sidecar before extraction, installs the complete application toolset in a user-local binary directory, and makes that directory discoverable to new shells. Unsupported targets fail explicitly rather than selecting a substitute artifact."
+public_api = ["install.sh", "install.ps1"]
+evidence_model = ["tools/test_installers.py"]
+evidence_render = ["README.md", "docs/INSTALL.md"]
+evidence_application = [".github/workflows/ci.yml", "install.sh", "install.ps1"]
+public_consumer = "not-required"
+consumer_evidence = []
+status = "implemented"
+
+[[behavior]]
 id = "ABST-DIST-001"
 title = "Verifiable cross-platform binary distribution"
 layer = "application-composition"
