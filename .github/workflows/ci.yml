@@ -31,6 +31,7 @@ jobs:
       - run: python3 tools/check_wit.py
       - run: python3 tools/check_process_protocol.py
       - run: python3 tools/validate_release.py
+      - run: python3 tools/test_installers.py
 
   portability:
     name: Portability (${{ matrix.os }})
@@ -47,3 +48,4 @@ jobs:
           components: rustfmt, clippy
       - run: cargo test --workspace
       - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: python3 tools/test_installers.py

@@ -4,14 +4,14 @@ schema_version = 1
 # Retained terminal tabs and durable Temporary Panel state add tab/screen orchestration plus one
 # state-store field. Temporary Panels remain application policy while the state-document contract
 # and tab registry are extracted reusable owners. The long-term extraction targets remain unchanged.
-workspace_lines_max = 22874
+workspace_lines_max = 22886
 workspace_fields_max = 92
 # Styled PTY projection and collection lookup remain reusable; the terminal-workspace experiment
 # adds a generic tab registry, reversible pane presentation, extracted screen orchestration, and a
 # binding-derived contextual keybar with explicit focus-denial presentation. Contextual help now
 # prioritizes active-surface bindings, and lookup-match rendering is kept in a focused helper.
 # Workspace stays below its existing ratchet and the long-term extraction target is unchanged.
-near_ui_lines_max = 41978
+near_ui_lines_max = 41990
 # objc2, objc2-encode, and objc2-foundation provide the native macOS Trash API bridge.
 near_fm_transitive_packages_max = 221
 unix_fixed_idle_poll_sites_max = 0

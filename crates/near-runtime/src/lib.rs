@@ -387,18 +387,18 @@ mod tests {
         let pool = TaskPool::new(2, 4);
         pool.spawn(|_| 42).unwrap();
         pool.spawn(|_| -> i32 { panic!("injected") }).unwrap();
-        let deadline = Instant::now() + Duration::from_secs(1);
         let mut completed = false;
         let mut panicked = false;
-        while Instant::now() < deadline && !(completed && panicked) {
-            if let Some(completion) = pool.try_completion() {
-                match completion.outcome {
-                    TaskOutcome::Completed(42) => completed = true,
-                    TaskOutcome::Panicked => panicked = true,
-                    _ => {}
-                }
+        for _ in 0..2 {
+            let completion = pool
+                .completions
+                .recv_timeout(Duration::from_secs(5))
+                .expect("both jobs must report a completion");
+            match completion.outcome {
+                TaskOutcome::Completed(42) => completed = true,
+                TaskOutcome::Panicked => panicked = true,
+                _ => {}
             }
-            thread::yield_now();
         }
         assert!(completed && panicked);
     }

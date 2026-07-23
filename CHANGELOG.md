@@ -4,6 +4,9 @@ All notable user-visible changes follow Keep a Changelog categories. Stable rele
 
 ## Unreleased
 
+- Add zero-parameter, checksum-verifying installers for macOS, Linux, and Windows.
+- Reframe the public project page around Near Manager with a real application preview.
+
 ### Added
 
 - Resumable developer, wave, and production qualification with immutable operator evidence,
