@@ -4,6 +4,13 @@ All notable user-visible changes follow Keep a Changelog categories. Stable rele
 
 ## Unreleased
 
+## 0.2.2 - 2026-07-31
+
+### Security
+
+- Update Wasmtime to 36.0.13 for `RUSTSEC-2026-0222` and update `anyhow` to 1.0.103 for
+  `RUSTSEC-2026-0190` before publishing binary release assets.
+
 ## 0.2.1 - 2026-07-31
 
 ### Added
