@@ -96,7 +96,7 @@ impl ConfigArguments {
                         PathBuf::from(path),
                     );
                 }
-                _ => return Err(format!("unknown near-fm argument: {argument}")),
+                _ => return Err(format!("unknown near argument: {argument}")),
             }
         }
         if std::env::var_os("NEAR_TRUST_WORKSPACE").is_some_and(|value| value == "1") {
@@ -130,7 +130,7 @@ impl ConfigArguments {
     }
 
     pub fn usage() -> &'static str {
-        "usage: near-fm [--portable DIR | --config-root DIR --data-root DIR] [--export-profile DIR | --import-profile DIR] [--keymap FILE] [--theme FILE] [--confirmations FILE] [--handlers FILE] [--macros FILE] [--panel-modes FILE] [--editor FILE] [--viewer FILE] [--history FILE] [--interface FILE] [--highlighting FILE] [--user-menu FILE] [--descriptions FILE] [--filters FILE] [--connections FILE] [--shell FILE] [--trust-workspace]"
+        "usage: near [--portable DIR | --config-root DIR --data-root DIR] [--export-profile DIR | --import-profile DIR] [--keymap FILE] [--theme FILE] [--confirmations FILE] [--handlers FILE] [--macros FILE] [--panel-modes FILE] [--editor FILE] [--viewer FILE] [--history FILE] [--interface FILE] [--highlighting FILE] [--user-menu FILE] [--descriptions FILE] [--filters FILE] [--connections FILE] [--shell FILE] [--trust-workspace]"
     }
 
     fn override_path(&self, document: &str) -> Option<&PathBuf> {

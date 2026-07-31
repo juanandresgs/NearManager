@@ -1,10 +1,10 @@
 # Installing Near Manager
 
-Near Manager is pre-release software. The automatic installers are the simplest way to install `near-fm`; building from source is the fallback and the development path.
+Near Manager is pre-release software. The automatic installers are the simplest way to install `near`; building from source is the fallback and the development path.
 
 ## Automatic install
 
-The installers take no parameters. They detect the operating system and CPU architecture, select the matching latest release, verify its SHA-256 checksum, and install `near-fm`, `near-view`, `near-proc`, and `near-demo` in a user-local binary directory.
+The installers take no parameters. They detect the operating system and CPU architecture, select the matching latest release, verify its SHA-256 checksum, and install `near`, `near-view`, `near-proc`, and `near-demo` in a user-local binary directory.
 
 On macOS or x86_64 Linux:
 
@@ -18,7 +18,7 @@ On x86_64 Windows, from PowerShell:
 irm https://raw.githubusercontent.com/juanandresgs/NearManager/main/install.ps1 | iex
 ```
 
-The Unix installer uses `~/.local/bin` and adds it to the active shell's login and interactive startup files when necessary. The Windows installer uses `%LOCALAPPDATA%\NearManager\bin` and adds it to the user `PATH`. Open a new terminal after installation, then run `near-fm`.
+The Unix installer uses `~/.local/bin` and adds it to the active shell's login and interactive startup files when necessary. The Windows installer uses `%LOCALAPPDATA%\NearManager\bin` and adds it to the user `PATH`. Open a new terminal after installation, then run `near`.
 
 ## Manual release archive
 
@@ -45,10 +45,10 @@ The Unix installer uses `~/.local/bin` and adds it to the active shell's login a
      --signer-workflow juanandresgs/NearManager/.github/workflows/release.yml
    ```
 
-4. Extract the archive and place `near-fm` and the companion binaries in a directory on `PATH`, such as `~/.local/bin`. Windows binaries use the `.exe` suffix.
-5. Run `near-fm --version`, then start `near-fm` from a terminal.
+4. Extract the archive and place `near` and the companion binaries in a directory on `PATH`, such as `~/.local/bin`. Windows binaries use the `.exe` suffix.
+5. Run `near --version`, then start `near` from a terminal.
 
-Release archives include `near-fm`, `near-view`, `near-proc`, and `near-demo`. They do not modify shell startup files or install system services.
+Release archives include `near`, `near-view`, `near-proc`, and `near-demo`. They do not modify shell startup files or install system services.
 
 ## Build from source
 
@@ -64,8 +64,8 @@ Then run:
 git clone https://github.com/juanandresgs/NearManager.git
 cd NearManager
 cargo install --path apps/near-fm --locked
-near-fm --version
-near-fm
+near --version
+near
 ```
 
 To install the companion applications, repeat `cargo install --path` for `apps/near-view`, `apps/near-proc`, and `apps/near-demo`.

@@ -166,7 +166,7 @@ def main() -> int:
     parser.add_argument("--maximum-ratio", type=float, default=0.15)
     args = parser.parse_args()
     binaries = [
-        ROOT / "target/debug/near-fm",
+        ROOT / "target/debug/near",
         ROOT / "target/debug/near-view",
         ROOT / "target/debug/near-input-probe",
     ]
@@ -190,7 +190,7 @@ def main() -> int:
         document = fixture / "document.txt"
         document.write_text("idle viewer\n", encoding="utf-8")
         commands = {
-            "near-fm": [str(binaries[0]), "--portable", str(fixture / "profile")],
+            "near": [str(binaries[0]), "--portable", str(fixture / "profile")],
             "near-view": [str(binaries[1]), str(document)],
             "near-input-probe": [
                 str(binaries[2]),

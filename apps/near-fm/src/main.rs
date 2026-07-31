@@ -98,7 +98,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .first()
         .is_some_and(|argument| argument == "--version")
     {
-        println!("near-fm {}", env!("CARGO_PKG_VERSION"));
+        println!("near {}", env!("CARGO_PKG_VERSION"));
         return Ok(());
     }
     if raw_arguments

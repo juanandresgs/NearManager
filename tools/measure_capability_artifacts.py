@@ -50,7 +50,7 @@ def main() -> int:
         return 1
     budget = spec["near_fm"]
     artifact_target = ROOT / "target/capability-artifacts"
-    binary = "near-fm.exe" if sys.platform == "win32" else "near-fm"
+    binary = "near.exe" if sys.platform == "win32" else "near"
     binary_path = artifact_target / "release" / binary
     run(
         ["cargo", "build", "--offline", "--locked", "--release", "-p", "near-fm"],

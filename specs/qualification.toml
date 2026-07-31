@@ -240,7 +240,7 @@ deterministic = true
 id = "settings-persistence"
 profiles = ["developer", "wave", "production"]
 dependencies = ["interface-settings"]
-command = ["cargo", "test", "-p", "near-fm", "--bin", "near-fm", "config::tests::atomic_settings_store"]
+command = ["cargo", "test", "-p", "near-fm", "--bin", "near", "config::tests::atomic_settings_store"]
 timeout_seconds = 300
 platforms = ["macos", "linux", "windows"]
 severity = "high"
@@ -406,7 +406,7 @@ timeout_seconds = 2400
 platforms = ["macos", "linux"]
 severity = "critical"
 deterministic = true
-artifacts = ["target/release/near-fm", "target/release/near-view", "target/release/near-proc", "target/release/near-demo"]
+artifacts = ["target/release/near", "target/release/near-view", "target/release/near-proc", "target/release/near-demo"]
 
 [[gates]]
 id = "release-package"

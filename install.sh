@@ -2,7 +2,7 @@
 set -eu
 
 REPOSITORY="juanandresgs/NearManager"
-BINARIES="near-fm near-view near-proc near-demo"
+COMPANION_BINARIES="near-view near-proc near-demo"
 
 fail() {
     printf 'Near Manager install: %s\n' "$*" >&2
@@ -68,7 +68,16 @@ curl --proto "$curl_protocol" --tlsv1.2 --fail --location --silent --show-error 
 
 tar -xzf "$temporary/$archive" -C "$temporary"
 mkdir -p "$install_dir"
-for binary in $BINARIES; do
+if [ -f "$temporary/near" ]; then
+    primary_source="$temporary/near"
+elif [ -f "$temporary/near-fm" ]; then
+    # v0.2.0 shipped the application under its internal package name.
+    primary_source="$temporary/near-fm"
+else
+    fail "release archive is missing near"
+fi
+install -m 0755 "$primary_source" "$install_dir/near"
+for binary in $COMPANION_BINARIES; do
     [ -f "$temporary/$binary" ] || fail "release archive is missing $binary"
     install -m 0755 "$temporary/$binary" "$install_dir/$binary"
 done
@@ -117,5 +126,5 @@ case ":${PATH:-}:" in
         ;;
 esac
 
-"$install_dir/near-fm" --version
-printf 'Near Manager is installed. Open a new terminal and run: near-fm\n'
+"$install_dir/near" --version
+printf 'Near Manager is installed. Open a new terminal and run: near\n'

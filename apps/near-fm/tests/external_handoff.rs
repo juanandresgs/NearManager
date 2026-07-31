@@ -107,7 +107,7 @@ fn assert_editor_round_trip(editor: &Path, arguments: &[&str]) {
     let handlers = fixture.handler_document(&wrapper);
     let mut child = Command::new("/usr/bin/script")
         .args(["-q", "/dev/null"])
-        .arg(env!("CARGO_BIN_EXE_near-fm"))
+        .arg(env!("CARGO_BIN_EXE_near"))
         .current_dir(fixture.0.join("work"))
         .env("HOME", fixture.0.join("home"))
         .env("NEAR_HANDLERS", handlers)

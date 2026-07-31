@@ -68,7 +68,7 @@ id = "ABST-INSTALL-001"
 title = "Automatic verified release installation"
 layer = "platform-adapter"
 owner = "install.sh"
-application_policy = "Near Manager publishes a zero-parameter install entry point for Unix-like shells and Windows PowerShell. Each adapter detects the host operating system and architecture, selects only a published target, downloads the latest matching release over HTTPS, verifies its SHA-256 sidecar before extraction, installs the complete application toolset in a user-local binary directory, and makes that directory discoverable to new shells. Unsupported targets fail explicitly rather than selecting a substitute artifact."
+application_policy = "Near Manager publishes a zero-parameter install entry point for Unix-like shells and Windows PowerShell. Each adapter detects the host operating system and architecture, selects only a published target, downloads the latest matching release over HTTPS, verifies its SHA-256 sidecar before extraction, installs the primary executable as near plus the companion toolset in a user-local binary directory, and makes that directory discoverable to new shells. Installers normalize the legacy v0.2.0 near-fm archive member to near without installing the internal package name as a command. Unsupported targets fail explicitly rather than selecting a substitute artifact."
 public_api = ["install.sh", "install.ps1"]
 evidence_model = ["tools/test_installers.py"]
 evidence_render = ["README.md", "docs/INSTALL.md"]
@@ -78,11 +78,25 @@ consumer_evidence = []
 status = "implemented"
 
 [[behavior]]
+id = "ABST-CLI-001"
+title = "Near Manager public command identity"
+layer = "application-composition"
+owner = "apps/near-fm/Cargo.toml"
+application_policy = "The application composes the Near platform into one public operator command named near. Help, version output, release archives, installers, documentation, workflow tests, and qualification artifacts use near. The near-fm name remains only where it identifies the internal Cargo package, source directory, stable semantic IDs, or legacy v0.2.0 archive input; it is not built or installed as a command."
+public_api = []
+evidence_model = ["apps/near-fm/Cargo.toml", "apps/near-fm/src/main.rs", "apps/near-fm/src/config.rs"]
+evidence_render = ["README.md", "docs/INSTALL.md", "apps/near-fm/src/config.rs"]
+evidence_application = ["tools/test_installers.py", "tools/test_release_packaging.py", "apps/near-fm/tests/external_handoff.rs"]
+public_consumer = "not-required"
+consumer_evidence = []
+status = "implemented"
+
+[[behavior]]
 id = "ABST-DIST-001"
 title = "Verifiable cross-platform binary distribution"
 layer = "application-composition"
 owner = "tools/package_release.py"
-application_policy = "Near release archives compose the supported application binaries with the public README and both project license texts. Platform artifacts use architecture-specific names, exact archive-member checks, extracted-binary help and version smoke tests, SHA-256 sidecars, portable provenance, SPDX SBOMs, and GitHub attestations. Third-party research media without an explicit redistribution license is excluded from the public tree and every release archive."
+application_policy = "Near release archives expose the Near Manager application as near, compose it with the supported companion binaries, public README, and both project license texts, and never publish the internal near-fm package name as an executable. Platform artifacts use architecture-specific names, exact archive-member checks, extracted-binary help and version smoke tests, SHA-256 sidecars, portable provenance, SPDX SBOMs, and GitHub attestations. Third-party research media without an explicit redistribution license is excluded from the public tree and every release archive."
 public_api = []
 evidence_model = ["tools/test_release_packaging.py", "tools/validate_release.py"]
 evidence_render = ["docs/INSTALL.md", "docs/releases/README.md", "tools/test_release_packaging.py"]
