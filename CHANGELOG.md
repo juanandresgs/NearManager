@@ -4,6 +4,12 @@ All notable user-visible changes follow Keep a Changelog categories. Stable rele
 
 ## Unreleased
 
+### Changed
+
+- Replace the synthetic README preview with a native terminal showcase of dual-panel navigation,
+  quick view, the F9 menu, and contextual shortcut help. Substantial user-facing pull requests now
+  reassess whether to keep, refresh, or complement the primary GIF.
+
 ## 0.2.2 - 2026-07-31
 
 ### Security

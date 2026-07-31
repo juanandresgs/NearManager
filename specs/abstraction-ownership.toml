@@ -8,6 +8,20 @@ public_consumer_values = ["required", "not-required", "pending"]
 exception_statuses = ["active", "expired", "closed"]
 
 [[behavior]]
+id = "ABST-SHOWCASE-001"
+title = "Representative public showcase media"
+layer = "application-policy"
+owner = "docs/showcase-media.md"
+application_policy = "Near Manager owns its public visual narrative. Every substantial user-facing change must explicitly keep the current primary GIF with rationale, refresh it when the baseline interaction story has drifted, or add a differentiated GIF when a major workflow deserves focused evidence without overloading the primary overview. Published captures use the real application in an isolated native terminal against disposable data and pass human visual approval before replacement."
+public_api = []
+evidence_model = ["docs/showcase-media.md", ".github/pull_request_template.md"]
+evidence_render = ["README.md", "docs/assets/near-manager-preview.gif"]
+evidence_application = ["CONTRIBUTING.md", ".github/workflows/ci.yml", "specs/qualification.toml", "tools/validate_showcase_media.py"]
+public_consumer = "not-required"
+consumer_evidence = []
+status = "verified"
+
+[[behavior]]
 id = "ABST-APPLICATION-001"
 title = "Backend-neutral surface application facade"
 layer = "runtime"

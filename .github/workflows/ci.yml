@@ -26,6 +26,7 @@ jobs:
       - run: cargo clippy --workspace --all-targets -- -D warnings
       - run: cargo test --workspace
       - run: python3 tools/validate_project.py
+      - run: python3 tools/validate_showcase_media.py
       - run: python3 tools/validate_far_parity.py
       - run: python3 tools/check_public_api.py
       - run: python3 tools/check_wit.py
