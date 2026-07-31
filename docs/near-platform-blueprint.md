@@ -750,7 +750,7 @@ Build a single binary with fake data that proves:
 - Internal text/hex quick view.
 - Suspend-and-run external viewer/editor/shell commands.
 
-**Exit gate:** a developer can use `near-fm` for ordinary daily local file navigation without data-loss-prone behavior.
+**Exit gate:** a developer can use `near` for ordinary daily local file navigation without data-loss-prone behavior.
 
 ### Phase 2 — platform extraction
 

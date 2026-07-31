@@ -70,6 +70,10 @@ try {
         }
         Copy-Item $Source (Join-Path $InstallDir "$Binary.exe") -Force
     }
+    $LegacyBinary = Join-Path $InstallDir "near-fm.exe"
+    if (Test-Path $LegacyBinary -PathType Leaf) {
+        Remove-Item $LegacyBinary -Force
+    }
 
     $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
     $PathEntries = @($UserPath -split ";" | Where-Object { $_ })

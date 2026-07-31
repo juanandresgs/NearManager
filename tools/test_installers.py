@@ -109,6 +109,10 @@ class InstallerTests(unittest.TestCase):
                         if shell == "bash":
                             (home / ".bash_profile").write_text("# existing login profile\n")
                         destination = home / ".local" / "bin"
+                        destination.mkdir(parents=True)
+                        legacy = destination / "near-fm"
+                        legacy.write_text("#!/bin/sh\nprintf 'stale v0.2.0\\n'\n")
+                        legacy.chmod(0o755)
                         result = run_shell(
                             {
                                 "HOME": str(home),
@@ -148,7 +152,11 @@ class InstallerTests(unittest.TestCase):
         self.assertIn("SetEnvironmentVariable", source)
         self.assertIn('Join-Path $InstallDir "near.exe"', source)
         self.assertIn('Join-Path $Extracted "near-fm.exe"', source)
-        self.assertNotIn('Join-Path $InstallDir "near-fm.exe"', source)
+        self.assertNotIn(
+            'Copy-Item $PrimarySource (Join-Path $InstallDir "near-fm.exe")', source
+        )
+        self.assertIn('$LegacyBinary = Join-Path $InstallDir "near-fm.exe"', source)
+        self.assertIn('Remove-Item $LegacyBinary -Force', source)
 
         powershell = shutil.which("pwsh") or shutil.which("powershell")
         if os.name == "nt" and powershell:

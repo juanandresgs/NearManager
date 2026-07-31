@@ -244,7 +244,7 @@ deterministic regression set associated with every operator workflow except the 
 mandatory precheck and can never replace the terminal/operator evidence below.
 
 For the practical tmux contract, run `python3 tools/test_tmux_terminal_workflows.py`. It opens a
-real `near-fm` binary in a fresh tmux PTY and verifies Home/End/PageDown viewport movement,
+real `near` binary in a fresh tmux PTY and verifies Home/End/PageDown viewport movement,
 non-contiguous Shift/plain/Insert selection, selection-preserving edge jumps, legacy keybar
 honesty, Alt lookup cycle/text/paste/Unicode/edit/accept/cancel/no-match and bound-chord behavior,
 persistent shell working directory, interactive REPL continuity across user-screen hiding,

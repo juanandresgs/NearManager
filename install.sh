@@ -81,6 +81,10 @@ for binary in $COMPANION_BINARIES; do
     [ -f "$temporary/$binary" ] || fail "release archive is missing $binary"
     install -m 0755 "$temporary/$binary" "$install_dir/$binary"
 done
+legacy_binary="$install_dir/near-fm"
+if [ -f "$legacy_binary" ] || [ -L "$legacy_binary" ]; then
+    rm -f -- "$legacy_binary"
+fi
 
 case ":${PATH:-}:" in
     *":$install_dir:"*) ;;
