@@ -9,6 +9,12 @@ Near Manager is a fast, keyboard-first terminal file manager for working across 
 
 ![Near Manager dual-panel quick view, menu, and contextual shortcuts](docs/assets/near-manager-preview.gif)
 
+## Inspiration
+
+Near Manager is an agentic coding project—an independent, multi-platform homage to [Far Manager](https://github.com/FarGroup/FarManager) and its keyboard-first, dual-panel interaction model.
+
+Far Manager was originally created by Eugene Roshal and has been developed and maintained since 2000 by the Far Group and its contributors. We love Far Manager and are deeply grateful for the original vision and decades of work that brought it to all of us.
+
 ## Install
 
 macOS and Linux:
