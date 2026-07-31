@@ -6,3 +6,4 @@
 - [ ] Security-sensitive changes update the threat model or explain why no review is required.
 - [ ] `python3 tools/validate_project.py` and relevant compatibility gates pass.
 - [ ] User-facing changes update `CHANGELOG.md`; release migrations have a versioned note.
+- [ ] Showcase impact is assessed as **keep**, **refresh**, or **differentiated**; substantial user-facing changes include the rationale described in `docs/showcase-media.md`.

@@ -74,6 +74,16 @@ severity = "high"
 deterministic = true
 
 [[gates]]
+id = "showcase-media"
+profiles = ["developer", "wave", "production"]
+dependencies = ["project-records"]
+command = ["python3", "tools/validate_showcase_media.py"]
+timeout_seconds = 120
+platforms = ["macos", "linux", "windows"]
+severity = "high"
+deterministic = true
+
+[[gates]]
 id = "qualification-status-contract"
 profiles = ["developer", "wave", "production"]
 dependencies = ["format"]

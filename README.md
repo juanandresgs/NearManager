@@ -7,7 +7,7 @@
 
 Near Manager is a fast, keyboard-first terminal file manager for working across files, remote systems, archives, processes, and command-line tools without leaving a cohesive two-panel workspace.
 
-![Near Manager dual-panel interface](docs/assets/near-manager-preview.gif)
+![Near Manager dual-panel quick view, menu, and contextual shortcuts](docs/assets/near-manager-preview.gif)
 
 ## Install
 
