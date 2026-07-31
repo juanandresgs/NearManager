@@ -4,8 +4,19 @@ All notable user-visible changes follow Keep a Changelog categories. Stable rele
 
 ## Unreleased
 
-- Add zero-parameter, checksum-verifying installers for macOS, Linux, and Windows.
-- Reframe the public project page around Near Manager with a real application preview.
+## 0.2.1 - 2026-07-31
+
+### Added
+
+- Zero-parameter, checksum-verifying installers for macOS, Linux, and Windows.
+- A concise Near Manager product page with an application preview.
+
+### Changed
+
+- The file manager is installed, packaged, documented, and invoked as `near`; `near-fm` remains
+  only the internal Cargo package name and a v0.2.0 installer compatibility input.
+
+## 0.2.0 - 2026-07-22
 
 ### Added
 

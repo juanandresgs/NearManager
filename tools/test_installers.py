@@ -18,7 +18,8 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 SHELL_INSTALLER = ROOT / "install.sh"
 POWERSHELL_INSTALLER = ROOT / "install.ps1"
-BINARIES = ("near-fm", "near-view", "near-proc", "near-demo")
+LEGACY_ARCHIVE_BINARIES = ("near-fm", "near-view", "near-proc", "near-demo")
+INSTALLED_BINARIES = ("near", "near-view", "near-proc", "near-demo")
 
 
 class QuietRequestHandler(http.server.SimpleHTTPRequestHandler):
@@ -75,7 +76,7 @@ class InstallerTests(unittest.TestCase):
             for path in (release, payload):
                 path.mkdir()
 
-            for binary in BINARIES:
+            for binary in LEGACY_ARCHIVE_BINARIES:
                 contents = "#!/bin/sh\nprintf '%s\\n' 'near-fm 0.2.0'\n"
                 path = payload / binary
                 path.write_text(contents)
@@ -83,7 +84,7 @@ class InstallerTests(unittest.TestCase):
 
             archive = release / "near-linux-x86_64.tar.gz"
             with tarfile.open(archive, "w:gz") as bundle:
-                for binary in BINARIES:
+                for binary in LEGACY_ARCHIVE_BINARIES:
                     bundle.add(payload / binary, arcname=binary)
             digest = hashlib.sha256(archive.read_bytes()).hexdigest()
             (release / f"{archive.name}.sha256").write_bytes(
@@ -108,6 +109,10 @@ class InstallerTests(unittest.TestCase):
                         if shell == "bash":
                             (home / ".bash_profile").write_text("# existing login profile\n")
                         destination = home / ".local" / "bin"
+                        destination.mkdir(parents=True)
+                        legacy = destination / "near-fm"
+                        legacy.write_text("#!/bin/sh\nprintf 'stale v0.2.0\\n'\n")
+                        legacy.chmod(0o755)
                         result = run_shell(
                             {
                                 "HOME": str(home),
@@ -124,10 +129,11 @@ class InstallerTests(unittest.TestCase):
                         )
                         self.assertEqual(result.returncode, 0, result.stderr)
                         self.assertIn("Near Manager is installed", result.stdout)
-                        for binary in BINARIES:
+                        for binary in INSTALLED_BINARIES:
                             installed = destination / binary
                             self.assertTrue(installed.is_file())
                             self.assertTrue(os.access(installed, os.X_OK))
+                        self.assertFalse((destination / "near-fm").exists())
                         for profile in profiles:
                             self.assertIn(
                                 'export PATH="$HOME/.local/bin:$PATH"',
@@ -144,6 +150,13 @@ class InstallerTests(unittest.TestCase):
         self.assertIn("RuntimeInformation]::OSArchitecture", source)
         self.assertIn("Get-FileHash", source)
         self.assertIn("SetEnvironmentVariable", source)
+        self.assertIn('Join-Path $InstallDir "near.exe"', source)
+        self.assertIn('Join-Path $Extracted "near-fm.exe"', source)
+        self.assertNotIn(
+            'Copy-Item $PrimarySource (Join-Path $InstallDir "near-fm.exe")', source
+        )
+        self.assertIn('$LegacyBinary = Join-Path $InstallDir "near-fm.exe"', source)
+        self.assertIn('Remove-Item $LegacyBinary -Force', source)
 
         powershell = shutil.which("pwsh") or shutil.which("powershell")
         if os.name == "nt" and powershell:

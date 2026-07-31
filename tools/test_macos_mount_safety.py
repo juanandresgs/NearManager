@@ -93,7 +93,7 @@ def main() -> int:
             "cargo", "build", "-p", "near-fm", "--locked",
         ], cwd=ROOT)
         native_environment = environment.copy()
-        native_environment["NEAR_NATIVE_TRASH_HELPER"] = str(ROOT / "target" / "debug" / "near-fm")
+        native_environment["NEAR_NATIVE_TRASH_HELPER"] = str(ROOT / "target" / "debug" / "near")
         native_trash_test = run([
             "cargo", "test", "-p", "near-local-fs", "--locked",
             "macos_native_trash_helper_preserves_colliding_items", "--", "--ignored", "--nocapture",

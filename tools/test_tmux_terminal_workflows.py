@@ -235,13 +235,13 @@ def text_documents(root: Path) -> dict[str, dict[str, str]]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--binary", default="target/debug/near-fm")
+    parser.add_argument("--binary", default="target/debug/near")
     parser.add_argument("--output", default=".near/qualification/tmux-terminal-workflows.json")
     args = parser.parse_args()
     if shutil.which("tmux") is None:
         parser.error("tmux is required")
     binary = (ROOT / args.binary).resolve()
-    if args.binary == "target/debug/near-fm":
+    if args.binary == "target/debug/near":
         run(["cargo", "build", "-p", "near-fm", "--locked"], cwd=ROOT)
     elif not binary.is_file():
         parser.error(f"binary does not exist: {binary}")

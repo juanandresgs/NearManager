@@ -10,7 +10,7 @@ Set Theme "TokyoNight"
 Set TypingSpeed 25ms
 
 Hide
-Type "cd /tmp/NearManager && HOME=/tmp/NearManager near-fm --portable /tmp/near-manager-preview --shell docs/assets/near-manager-preview-shell.toml"
+Type "cd /tmp/NearManager && HOME=/tmp/NearManager near --portable /tmp/near-manager-preview --shell docs/assets/near-manager-preview-shell.toml"
 Enter
 Sleep 4s
 Show

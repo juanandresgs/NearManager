@@ -26,7 +26,7 @@ irm https://raw.githubusercontent.com/juanandresgs/NearManager/main/install.ps1 
 The installer detects the operating system and CPU architecture, verifies the release checksum, installs the Near Manager tools, and configures a user-local command path. Then open a new terminal and run:
 
 ```sh
-near-fm
+near
 ```
 
 See the [installation guide](docs/INSTALL.md) for supported targets, manual verification, and building from source.
@@ -53,7 +53,7 @@ Near Manager is pre-release software. macOS is the primary proving platform; Lin
 ```sh
 git clone https://github.com/juanandresgs/NearManager.git
 cd NearManager
-cargo run -p near-fm --locked
+cargo run --bin near --locked
 ```
 
 Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md); architecture and validation documents live under [`docs/`](docs/) and [`project/`](project/).

@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $Repository = "juanandresgs/NearManager"
-$Binaries = @("near-fm", "near-view", "near-proc", "near-demo")
+$CompanionBinaries = @("near-view", "near-proc", "near-demo")
 $DetectedOS = if ($env:NEAR_INSTALL_OS) { $env:NEAR_INSTALL_OS } else { "windows" }
 if ($DetectedOS.ToLowerInvariant() -notin @("windows", "win32nt")) {
     throw "Near Manager install: unsupported operating system: $DetectedOS"
@@ -54,12 +54,25 @@ try {
     $Extracted = Join-Path $Temporary "extracted"
     Expand-Archive -Path $ArchivePath -DestinationPath $Extracted
     New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
-    foreach ($Binary in $Binaries) {
+    $PrimarySource = Join-Path $Extracted "near.exe"
+    if (-not (Test-Path $PrimarySource -PathType Leaf)) {
+        # v0.2.0 shipped the application under its internal package name.
+        $PrimarySource = Join-Path $Extracted "near-fm.exe"
+    }
+    if (-not (Test-Path $PrimarySource -PathType Leaf)) {
+        throw "Near Manager install: release archive is missing near.exe"
+    }
+    Copy-Item $PrimarySource (Join-Path $InstallDir "near.exe") -Force
+    foreach ($Binary in $CompanionBinaries) {
         $Source = Join-Path $Extracted "$Binary.exe"
         if (-not (Test-Path $Source -PathType Leaf)) {
             throw "Near Manager install: release archive is missing $Binary.exe"
         }
         Copy-Item $Source (Join-Path $InstallDir "$Binary.exe") -Force
+    }
+    $LegacyBinary = Join-Path $InstallDir "near-fm.exe"
+    if (Test-Path $LegacyBinary -PathType Leaf) {
+        Remove-Item $LegacyBinary -Force
     }
 
     $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
@@ -70,8 +83,8 @@ try {
         Write-Host "Added $InstallDir to the user PATH."
     }
 
-    & (Join-Path $InstallDir "near-fm.exe") --version
-    Write-Host "Near Manager is installed. Open a new terminal and run: near-fm"
+    & (Join-Path $InstallDir "near.exe") --version
+    Write-Host "Near Manager is installed. Open a new terminal and run: near"
 } finally {
     Remove-Item -Recurse -Force $Temporary -ErrorAction SilentlyContinue
 }

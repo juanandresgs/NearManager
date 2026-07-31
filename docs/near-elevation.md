@@ -16,7 +16,7 @@ Remote SFTP and archive mutation plans do not cross into the local elevation hel
 
 The current process serializes the exact recorded `OperationPlan`, `ExecutionAuthorization`, and `ConflictDecision` into a mode-0600 temporary request. A SHA-256 digest is passed separately to the helper and validated before deserialization.
 
-The elevated `near-fm --elevated-operation REQUEST DIGEST` mode accepts only a regular mode-0600 request with Near's reserved name inside the platform temporary directory. Response and audit paths are derived as private siblings, never accepted from caller data. The helper records an explicit `Elevated` event, executes the exact plan through `LocalOperationBackend`, and writes the itemized `ExecutionSummary`. The unprivileged process appends the temporary audit to the configured journal and removes all broker files.
+The elevated `near --elevated-operation REQUEST DIGEST` mode accepts only a regular mode-0600 request with Near's reserved name inside the platform temporary directory. Response and audit paths are derived as private siblings, never accepted from caller data. The helper records an explicit `Elevated` event, executes the exact plan through `LocalOperationBackend`, and writes the itemized `ExecutionSummary`. The unprivileged process appends the temporary audit to the configured journal and removes all broker files.
 
 No shell command, source list, destination, or policy is reconstructed from UI state after failure. Cancellation before launch remains available through the task model; once the native authorization helper owns execution, the final audited summary is authoritative.
 

@@ -52,7 +52,7 @@ Re-entry is attempted even when process launch or waiting fails. Child exit code
 
 Unit tests cover normal restoration, required initialization rollback, optional-capability degradation, cleanup after restoration failures, panic unwinding, successful and failed handoffs, child exit status, and signal notification.
 
-macOS PTY integration tests use `/usr/bin/script` to drive the real `near-fm` binary through F4 and F10. They run Vim and, when installed, Neovim; assert repeated workspace content before and after the child; and verify alternate-screen leave/re-entry sequences. A live SIGTERM smoke test additionally verified cursor, paste, and alternate-screen restoration before `Terminated(15)` was returned.
+macOS PTY integration tests use `/usr/bin/script` to drive the real `near` binary through F4 and F10. They run Vim and, when installed, Neovim; assert repeated workspace content before and after the child; and verify alternate-screen leave/re-entry sequences. A live SIGTERM smoke test additionally verified cursor, paste, and alternate-screen restoration before `Terminated(15)` was returned.
 
 Keyboard negotiation requests escape-code disambiguation, event types, and alternate-key reporting. Unsupported terminals retain deterministic legacy normalization, while enhanced events preserve press, repeat, and release kinds. Fixtures cover Escape, Alt, function keys, repeat/release, and distinct Tab versus Ctrl-I input.
 

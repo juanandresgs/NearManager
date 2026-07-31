@@ -20,7 +20,7 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BINARIES = ("near-fm", "near-view", "near-proc", "near-demo")
+BINARIES = ("near", "near-view", "near-proc", "near-demo")
 DISTRIBUTION_FILES = ("LICENSE-APACHE", "LICENSE-MIT", "README.md")
 
 
