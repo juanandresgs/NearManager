@@ -22,7 +22,7 @@ jobs:
           git verify-tag "$GITHUB_REF_NAME"
       - name: Require release and migration notes
         run: test -f "docs/releases/${GITHUB_REF_NAME}.md"
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
           toolchain: stable
       - name: Validate release definition
@@ -66,7 +66,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
           toolchain: stable
       - uses: actions/setup-python@v6
