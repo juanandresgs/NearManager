@@ -8,7 +8,7 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v5
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
           toolchain: stable
       - name: Enforce warm navigation p95 and idle wait policy
